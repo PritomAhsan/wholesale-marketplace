@@ -17,8 +17,4 @@ export const NAVIGATION = [
     title: "Request Quote",
     href: ROUTES.RFQ,
   },
-  {
-    title: "Become Seller",
-    href: ROUTES.SELLER,
-  },
 ];
