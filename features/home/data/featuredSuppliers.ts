@@ -7,7 +7,7 @@ export const featuredSuppliers = [
     verified: true,
     years: 12,
     products: 1250,
-    image: "/images/stores/store-1.jpg",
+    image: "https://placehold.co/600x400.png",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ export const featuredSuppliers = [
     verified: true,
     years: 8,
     products: 840,
-    image: "/images/stores/store-2.jpg",
+    image: "https://placehold.co/600x400.png",
   },
   {
     id: 3,
@@ -27,7 +27,7 @@ export const featuredSuppliers = [
     verified: true,
     years: 10,
     products: 650,
-    image: "/images/stores/store-3.jpg",
+    image: "https://placehold.co/600x400.png",
   },
   {
     id: 4,
@@ -37,6 +37,6 @@ export const featuredSuppliers = [
     verified: true,
     years: 15,
     products: 2140,
-    image: "/images/stores/store-4.jpg",
+    image: "https://placehold.co/600x400.png",
   },
 ];
