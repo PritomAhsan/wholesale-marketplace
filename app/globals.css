@@ -127,3 +127,15 @@
     @apply font-sans;
     }
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-slate-900 antialiased;
+}
+
+::selection {
+  @apply bg-blue-600 text-white;
+}
