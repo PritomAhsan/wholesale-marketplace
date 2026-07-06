@@ -3,6 +3,7 @@ import FeaturedCategories from "@/features/home/sections/FeaturedCategories";
 import FeaturedSuppliers from "@/features/home/sections/FeaturedSuppliers";
 import FeaturedProducts from "@/features/home/sections/FeaturedProducts";
 import HowItWorks from "@/features/home/sections/HowItWorks";
+import TrustedBusinesses from "@/features/home/sections/TrustedBusinesses";
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <FeaturedSuppliers />
       <FeaturedProducts />
       <HowItWorks />
+      <TrustedBusinesses />
     </>
   );
 }
