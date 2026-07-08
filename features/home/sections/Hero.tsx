@@ -8,7 +8,7 @@ import HeroStats from "../components/HeroStats";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 to-white">
+    <section className="relative overflow-hidden bg-gradient-to-b from-slate-100 to-violet-100">
       <Container className="grid min-h-[700px] items-center gap-20 py-20 lg:grid-cols-2">
 
         {/* LEFT */}
