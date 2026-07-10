@@ -3,6 +3,7 @@ export interface Product {
   slug: string;
   name: string;
   supplier: string;
+  supplierLogo: string;
   country: string;
   category: string;
   price: number;
@@ -10,7 +11,13 @@ export interface Product {
   rating: number;
   verified: boolean;
   image: string;
+  gallery: string[];
   shortDescription: string;
+  description: string;
+  specifications: {
+    label: string;
+    value: string;
+  }[];
 }
 
 export const products: Product[] = [
@@ -19,6 +26,7 @@ export const products: Product[] = [
     slug: "wireless-bluetooth-headphones",
     name: "Wireless Bluetooth Headphones",
     supplier: "Global Electronics",
+    supplierLogo: "",
     country: "China",
     category: "Electronics",
     price: 12.5,
@@ -26,7 +34,25 @@ export const products: Product[] = [
     rating: 4.8,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "Premium wireless headphones with noise cancellation.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
+  specifications: [
+  { label: "Model", value: "WH-500 Pro" },
+  { label: "Bluetooth Version", value: "5.3" },
+  { label: "Battery Life", value: "40 Hours" },
+  { label: "Charging Port", value: "USB Type-C" },
+  { label: "Noise Cancellation", value: "Active ANC" },
+  { label: "Material", value: "ABS Plastic" },
+  { label: "Certification", value: "CE, FCC, RoHS" },
+  { label: "Warranty", value: "12 Months" },
+],
   },
   {
     id: 2,
@@ -40,7 +66,15 @@ export const products: Product[] = [
     rating: 4.7,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "Energy-efficient smart LED bulb with Wi-Fi control.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
   {
     id: 3,
@@ -54,7 +88,15 @@ export const products: Product[] = [
     rating: 4.9,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "100% combed cotton wholesale t-shirts.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
   {
     id: 4,
@@ -68,7 +110,15 @@ export const products: Product[] = [
     rating: 4.6,
     verified: false,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "Durable ceramic mug with premium finish.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
   {
     id: 5,
@@ -82,7 +132,15 @@ export const products: Product[] = [
     rating: 4.9,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "Comfortable ergonomic office chair for long working hours.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
   {
     id: 6,
@@ -96,7 +154,15 @@ export const products: Product[] = [
     rating: 4.8,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "Premium handcrafted dining table.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
   {
     id: 7,
@@ -110,7 +176,15 @@ export const products: Product[] = [
     rating: 4.5,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "Eco-friendly recyclable packaging boxes.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
   {
     id: 8,
@@ -124,7 +198,15 @@ export const products: Product[] = [
     rating: 4.7,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "Food-grade vacuum storage bags.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
   {
     id: 9,
@@ -138,7 +220,15 @@ export const products: Product[] = [
     rating: 4.9,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "Heavy-duty industrial drilling equipment.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
   {
     id: 10,
@@ -152,7 +242,15 @@ export const products: Product[] = [
     rating: 4.8,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "Reliable automatic water pump for industrial use.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
   {
     id: 11,
@@ -166,7 +264,15 @@ export const products: Product[] = [
     rating: 4.7,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "Double-wall insulated stainless steel bottle.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
   {
     id: 12,
@@ -180,6 +286,18 @@ export const products: Product[] = [
     rating: 4.8,
     verified: true,
     image: "https://placehold.co/1200x900/png",
+    gallery: [
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+        "https://placehold.co/700x700/png",
+    ],
     shortDescription: "65W USB-C fast charging adapter.",
+    description:
+  "Our Wireless Bluetooth Headphones are designed for distributors, wholesalers, and retailers looking for premium audio products at competitive wholesale prices. Manufactured using high-quality components, they feature Bluetooth 5.3 connectivity, active noise cancellation, long battery life, and a lightweight ergonomic design. OEM and private label services are available for international buyers.",
   },
 ];
+
+export function getProductBySlug(slug: string) {
+  return products.find((product) => product.slug === slug);
+}
