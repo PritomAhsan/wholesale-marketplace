@@ -6,8 +6,8 @@ export const NAVIGATION = [
     href: ROUTES.CATEGORIES,
   },
   {
-    title: "Stores",
-    href: ROUTES.STORES,
+    title: "Suppliers",
+    href: ROUTES.SUPPLIERS,
   },
   {
     title: "Wholesale Deals",
