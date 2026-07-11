@@ -1,3 +1,5 @@
+import CategoriesPage from "@/features/categories/sections/CategoriesPage";
+
 export default function Page() {
-    return <div className="p-20">Categories Page</div>;
+  return <CategoriesPage />;
 }
