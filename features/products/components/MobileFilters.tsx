@@ -19,16 +19,16 @@ export default function MobileFilters() {
 
       <Sheet>
 
-        <SheetTrigger asChild>
-
-          <AppButton
-            variant="outline"
-            className="w-full justify-center"
-          >
-            <SlidersHorizontal className="mr-2 h-4 w-4" />
-            Filters
-          </AppButton>
-
+        <SheetTrigger
+          render={
+            <AppButton
+              variant="outline"
+              className="w-full justify-center"
+            />
+          }
+        >
+          <SlidersHorizontal className="mr-2 h-4 w-4" />
+          Filters
         </SheetTrigger>
 
         <SheetContent
