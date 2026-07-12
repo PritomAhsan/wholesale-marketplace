@@ -19,6 +19,8 @@ const buttonVariants = cva(
 
         dark:
           "bg-slate-900 text-white hover:bg-slate-800",
+          outline:
+  "border border-border bg-background hover:bg-accent hover:text-accent-foreground",
       },
 
       size: {
