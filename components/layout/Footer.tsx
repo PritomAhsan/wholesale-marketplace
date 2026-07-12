@@ -70,7 +70,7 @@ export default function Footer() {
               href="/"
               className="text-3xl font-black text-white"
             >
-              TradeHub
+              WholesaleHub
             </Link>
 
             <p className="mt-6 max-w-md leading-8 text-slate-400">
@@ -83,17 +83,19 @@ export default function Footer() {
 
               <div className="flex items-center gap-3">
                 <MapPin size={18} />
-                <span>Dhaka, Bangladesh</span>
+                <span>Mobile, Alabama</span>
               </div>
 
               <div className="flex items-center gap-3">
                 <Mail size={18} />
-                <span>hello@tradehub.com</span>
+                <span>hello@wholesalehub.com</span>
               </div>
 
               <div className="flex items-center gap-3">
                 <Phone size={18} />
-                <span>+880 1700-000000</span>
+                <span>
+                  +9283107911
+                </span>
               </div>
 
             </div>
@@ -182,7 +184,7 @@ export default function Footer() {
         <div className="flex flex-col items-center justify-between gap-6 border-t border-slate-800 py-8 md:flex-row">
 
           <p className="text-sm text-slate-500">
-            © {new Date().getFullYear()} TradeHub. All rights reserved.
+            © {new Date().getFullYear()} WholesaleHub. All rights reserved.
           </p>
 
           <div className="flex gap-4">
