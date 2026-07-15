@@ -5,6 +5,7 @@ import { AppButton } from "@/components/ui/app-button";
 
 import HeroSearch from "../components/HeroSearch";
 import HeroStats from "../components/HeroStats";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -36,7 +37,8 @@ export default function Hero() {
           <div className="mt-8 flex flex-wrap gap-4">
 
             <AppButton size="lg">
-              Explore Marketplace
+              <Link href="/products">Explore Marketplace</Link>
+              
             </AppButton>
 
             <AppButton
