@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { AppButton } from "@/components/ui/app-button";
-// import ProductQuickView from "@/components/product/ProductQuickView";
+import ProductQuickView from "@/components/product/ProductQuickView";
 import { Product } from "../data/products";
 
 interface Props {
@@ -140,12 +140,12 @@ export default function ProductCard({ product }: Props) {
         {/* Actions */}
 
         <div className="grid grid-cols-2 gap-3">
-          {/* <ProductQuickView product={product}> */}
+          <ProductQuickView product={product}>
             <AppButton className="w-full justify-center">
               Quick View
               <ArrowRight className="ml-2 h-4 w-4" />
             </AppButton>
-          {/* </ProductQuickView> */}
+          </ProductQuickView>
 
           <Link href={`/products/${product.slug}`}>
             <AppButton variant="secondary" className="w-full justify-center">
