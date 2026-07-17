@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { AppButton } from "@/components/ui/app-button";
-import ProductQuickView from "@/components/product/ProductQuickView";
+// import ProductQuickView from "@/components/product/ProductQuickView";
 import { Product } from "../data/products";
 
 interface Props {
