@@ -78,7 +78,7 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="mt-24 bg-slate-950 text-slate-300">
+    <footer className="bg-slate-950 text-slate-300">
 
       {/* CTA */}
 
@@ -133,7 +133,7 @@ export default function Footer() {
 
       {/* <FooterStats /> */}
 
-      <FooterNewsletter />
+      {/* <FooterNewsletter /> */}
 
       <Container>
 

@@ -16,7 +16,7 @@ export default function HomePage() {
       <FeaturedSuppliers />
       <FeaturedProducts />
       <HowItWorks />
-      <TrustedBusinesses />
+      {/* <TrustedBusinesses /> */}
       <BecomeSupplierCTA />
       <Testimonials />
       <Newsletter />
