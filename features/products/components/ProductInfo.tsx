@@ -1,239 +1,112 @@
+"use client";
+
 import {
   BadgeCheck,
-  Globe,
   Heart,
-  MapPin,
-  MessageSquare,
-  Package,
-  ShieldCheck,
+  Share2,
   Star,
+  MapPin,
+  Tag,
+  Package,
+  Building2,
 } from "lucide-react";
 
 import { AppButton } from "@/components/ui/app-button";
 import { Product } from "../data/products";
 
-interface Props {
+interface ProductInfoProps {
   product: Product;
 }
 
-export default function ProductInfo({ product }: Props) {
+export default function ProductInfo({ product }: ProductInfoProps) {
   return (
-    <div className="flex h-full flex-col">
-
+    <div className="space-y-6">
       {/* Category */}
-
-      <div className="mb-4">
-        <span className="inline-flex rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-          {product.category}
-        </span>
+      <div className="flex items-center gap-2 text-sm text-slate-500">
+        <Tag className="h-4 w-4" />
+        <span>{product.category}</span>
       </div>
 
-      {/* Product Name */}
-
-      <h1 className="text-4xl font-black tracking-tight text-slate-900 lg:text-5xl">
-        {product.name}
-      </h1>
-
-      {/* Rating */}
-
-      <div className="mt-6 flex flex-wrap items-center gap-5">
-
-        <div className="flex items-center gap-2">
-
-          <Star
-            className="fill-yellow-400 text-yellow-400"
-            size={18}
-          />
-
-          <span className="font-semibold">
-            {product.rating}
-          </span>
-
-          <span className="text-slate-500">
-            (128 Reviews)
-          </span>
-
-        </div>
+      {/* Title */}
+      <div className="space-y-3">
+        <h1 className="text-3xl font-bold leading-tight text-slate-900 lg:text-4xl">
+          {product.name}
+        </h1>
 
         {product.verified && (
-          <div className="flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
-
-            <BadgeCheck size={16} />
-
-            Verified Supplier
-
+          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
+            <BadgeCheck className="h-4 w-4" />
+            Verified Product
           </div>
         )}
+      </div>
 
+      {/* Rating */}
+      <div className="flex flex-wrap items-center gap-5 border-y border-slate-200 py-4">
+        <div className="flex items-center gap-2">
+          <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
+          <span className="font-semibold text-slate-900">
+            {product.rating.toFixed(1)}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 text-slate-600">
+          <Building2 className="h-4 w-4" />
+          <span>{product.supplier}</span>
+        </div>
+
+        <div className="flex items-center gap-2 text-slate-600">
+          <MapPin className="h-4 w-4" />
+          <span>{product.country}</span>
+        </div>
+      </div>
+
+      {/* MOQ */}
+      <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
+        <Package className="h-5 w-5 text-primary" />
+
+        <div>
+          <p className="text-xs uppercase tracking-wide text-slate-500">
+            Minimum Order Quantity
+          </p>
+
+          <p className="text-lg font-semibold text-slate-900">
+            {product.moq.toLocaleString()} Pieces
+          </p>
+        </div>
       </div>
 
       {/* Description */}
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold text-slate-900">
+          Short Description
+        </h3>
 
-      <p className="mt-8 text-lg leading-8 text-slate-600">
-        {product.shortDescription}
-      </p>
-
-      {/* Info Grid */}
-
-      <div className="mt-10 grid gap-5 rounded-3xl border border-slate-200 bg-white p-6">
-
-        <div className="flex items-center justify-between">
-
-          <div className="flex items-center gap-3">
-
-            <Package
-              size={18}
-              className="text-blue-600"
-            />
-
-            <span className="text-slate-500">
-              MOQ
-            </span>
-
-          </div>
-
-          <span className="font-semibold">
-            {product.moq} Units
-          </span>
-
-        </div>
-
-        <div className="flex items-center justify-between">
-
-          <div className="flex items-center gap-3">
-
-            <MapPin
-              size={18}
-              className="text-blue-600"
-            />
-
-            <span className="text-slate-500">
-              Origin
-            </span>
-
-          </div>
-
-          <span className="font-semibold">
-            {product.country}
-          </span>
-
-        </div>
-
-        <div className="flex items-center justify-between">
-
-          <div className="flex items-center gap-3">
-
-            <Globe
-              size={18}
-              className="text-blue-600"
-            />
-
-            <span className="text-slate-500">
-              Supplier
-            </span>
-
-          </div>
-
-          <span className="font-semibold">
-            {product.supplier}
-          </span>
-
-        </div>
-
-      </div>
-
-      {/* Price */}
-
-      <div className="mt-10 rounded-3xl bg-gradient-to-r from-blue-600 to-violet-600 p-8 text-white shadow-xl">
-
-        <p className="text-sm uppercase tracking-wider text-blue-100">
-          Starting From
+        <p className="leading-7 text-slate-600">
+          {product.shortDescription}
         </p>
-
-        <div className="mt-2 flex items-end gap-2">
-
-          <span className="text-5xl font-black">
-            ${product.price}
-          </span>
-
-          <span className="pb-2 text-lg text-blue-100">
-            / unit
-          </span>
-
-        </div>
-
       </div>
 
-      {/* Trust Badges */}
+      {/* Actions */}
+      <div className="flex flex-wrap gap-3">
+        {/* <AppButton variant="primary">
+          Contact Supplier
+        </AppButton> */}
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
-
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
-
-          <ShieldCheck
-            className="mx-auto mb-2 text-green-600"
-            size={22}
-          />
-
-          <p className="text-sm font-semibold">
-            Verified
-          </p>
-
-        </div>
-
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
-
-          <Package
-            className="mx-auto mb-2 text-blue-600"
-            size={22}
-          />
-
-          <p className="text-sm font-semibold">
-            Ready to Ship
-          </p>
-
-        </div>
-
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
-
-          <BadgeCheck
-            className="mx-auto mb-2 text-violet-600"
-            size={22}
-          />
-
-          <p className="text-sm font-semibold">
-            Trade Assurance
-          </p>
-
-        </div>
-
-      </div>
-
-      {/* Buttons */}
-
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
-
-        <AppButton
-          size="lg"
-          className="w-full"
-        >
-          <MessageSquare className="mr-2 h-5 w-5" />
-
-          Request Quote
+        <AppButton variant="secondary">
+          Send RFQ
         </AppButton>
 
-        <AppButton
-          size="lg"
-          variant="outline"
-          className="w-full"
-        >
-          <Heart className="mr-2 h-5 w-5" />
-
-          Save Product
+        <AppButton variant="ghost">
+          <Heart className="mr-2 h-4" />
+          Wishlist
         </AppButton>
 
+        <AppButton variant="ghost">
+          <Share2 className="mr-2 h-4" />
+          Share
+        </AppButton>
       </div>
-
     </div>
   );
 }

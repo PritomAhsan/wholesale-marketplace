@@ -1,11 +1,9 @@
 import Container from "@/components/layout/Container";
 
 import { Product, products } from "../data/products";
-import ProductGallery from "../components/ProductGallery";
-import ProductInfo from "../components/ProductInfo";
-import ProductDescription from "../components/ProductDescription";
 import ProductTabs from "../components/ProductTabs";
 import RelatedProducts from "../components/RelatedProducts";
+import { ProductHero } from "./ProductHero";
 
 interface Props {
   product: Product;
@@ -28,16 +26,7 @@ export default function ProductDetails({
           </span>
         </div>
 
-        <div className="grid gap-10 lg:grid-cols-2">
-
-          <ProductGallery
-            images={product.gallery}
-            alt={product.name}
-          />
-
-          <ProductInfo product={product} />
-
-        </div>
+        <ProductHero product={product}/> 
 
         <div className="mt-16">
             <ProductTabs product={product} />
