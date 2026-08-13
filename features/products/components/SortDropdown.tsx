@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowDownWideNarrow,
   Sparkles,
@@ -14,6 +15,26 @@ import {
 } from "@/components/ui/select";
 
 export default function SortDropdown() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const sort = searchParams.get("sort") ?? "newest";
+
+  function handleChange(value: string | null) {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (!value || value === "newest") {
+      params.delete("sort");
+    } else {
+      params.set("sort", value);
+    }
+
+    params.delete("page");
+
+    router.push(`${pathname}?${params.toString()}`);
+  }
+
   return (
     <div className="flex items-center gap-3">
 
@@ -29,7 +50,7 @@ export default function SortDropdown() {
 
       </div>
 
-      <Select defaultValue="featured">
+      <Select value={sort} onValueChange={handleChange}>
 
         <SelectTrigger
           className="
@@ -59,40 +80,16 @@ export default function SortDropdown() {
 
         <SelectContent className="rounded-2xl">
 
-          <SelectItem value="featured">
-            Featured Products
-          </SelectItem>
-
           <SelectItem value="newest">
             Newest Arrivals
           </SelectItem>
 
-          <SelectItem value="popular">
-            Most Popular
-          </SelectItem>
-
-          <SelectItem value="rating">
-            Highest Rated
-          </SelectItem>
-
-          <SelectItem value="orders">
-            Best Selling
-          </SelectItem>
-
-          <SelectItem value="price-low">
+          <SelectItem value="price_asc">
             Price: Low → High
           </SelectItem>
 
-          <SelectItem value="price-high">
+          <SelectItem value="price_desc">
             Price: High → Low
-          </SelectItem>
-
-          <SelectItem value="moq-low">
-            Lowest MOQ
-          </SelectItem>
-
-          <SelectItem value="verified">
-            Verified Suppliers
           </SelectItem>
 
         </SelectContent>

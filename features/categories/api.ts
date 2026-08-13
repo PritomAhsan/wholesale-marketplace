@@ -17,7 +17,7 @@ function toCategory(item: ApiCategory): Category {
     id: item.id,
     slug: item.slug,
     name: item.name,
-    image: item.image ?? "https://placehold.co/1200x800/png",
+    image: item.image ?? "/images/product-placeholder.svg",
     description: item.description ?? "",
     products: item.products_count,
     // Supplier counts per category aren't exposed by the API yet.

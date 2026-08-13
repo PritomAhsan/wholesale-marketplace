@@ -9,6 +9,7 @@ export interface HomeCategory {
 
 export interface HomeProduct {
   id: number;
+  slug: string;
   name: string;
   image: string;
   supplier: string;
@@ -32,6 +33,7 @@ export async function fetchFeaturedProducts(): Promise<HomeProduct[]> {
 
   return products.map((product) => ({
     id: product.id as unknown as number,
+    slug: product.slug,
     name: product.name,
     image: product.image,
     supplier: product.supplier,

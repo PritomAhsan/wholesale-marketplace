@@ -12,8 +12,13 @@ import {
 } from "@/components/ui/sheet";
 
 import ProductFilters from "./ProductFilters";
+import { Category } from "@/features/categories/data/categories";
 
-export default function MobileFilters() {
+interface Props {
+  categories: Category[];
+}
+
+export default function MobileFilters({ categories }: Props) {
   return (
     <div className="lg:hidden">
 
@@ -43,7 +48,7 @@ export default function MobileFilters() {
           </SheetHeader>
 
           <div className="p-6">
-            <ProductFilters mobile />
+            <ProductFilters mobile categories={categories} />
           </div>
 
         </SheetContent>

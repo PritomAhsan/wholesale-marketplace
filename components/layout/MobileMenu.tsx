@@ -6,16 +6,12 @@ import { usePathname } from "next/navigation";
 import { BRANDING } from "@/constants/branding";
 import {
   ChevronRight,
-  Globe,
   Heart,
-  HelpCircle,
   Home,
   LogIn,
   LogOut,
   Package,
   Search,
-  Settings,
-  ShieldCheck,
   ShoppingCart,
   UserPlus,
   Users,
@@ -60,21 +56,6 @@ const accountLinks = [
     title: "Saved Products",
     href: "/wishlist",
     icon: Heart,
-  },
-  {
-    title: "Buyer Protection",
-    href: "/buyer-protection",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Help Center",
-    href: "/help",
-    icon: HelpCircle,
-  },
-  {
-    title: "Language & Currency",
-    href: "/settings",
-    icon: Globe,
   },
 ];
 

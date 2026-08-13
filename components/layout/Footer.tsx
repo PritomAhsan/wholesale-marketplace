@@ -15,47 +15,21 @@ import {
 } from "react-icons/fa6";
 
 import Container from "./Container";
-import FooterNewsletter from "./FooterNewsletter";
-import FooterStats from "./FooterStats";
 import { BRANDING } from "@/constants/branding";
 
 const quickLinks = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
   { name: "Categories", href: "/categories" },
-  { name: "RFQ", href: "/rfq" },
 ];
 
 const buyerLinks = [
-  { name: "Buyer Protection", href: "#" },
-  { name: "How to Buy", href: "#" },
-  { name: "Request Quotation", href: "/rfq" },
-  { name: "Trade Assurance", href: "#" },
-  { name: "Shipping Guide", href: "#" },
+  { name: "Request a Quote", href: "/rfq" },
+  { name: "My Orders", href: "/orders" },
 ];
 
 const supplierLinks = [
-  { name: "Become Supplier", href: "/become-supplier" },
-  { name: "Supplier Membership", href: "#" },
-  { name: "Seller Center", href: "#" },
-  { name: "Advertising", href: "#" },
-  { name: "Success Stories", href: "#" },
-];
-
-const companyLinks = [
-  { name: "About Us", href: "#" },
-  { name: "Blog", href: "#" },
-  { name: "Careers", href: "#" },
-  { name: "Press", href: "#" },
-  { name: "Contact", href: "#" },
-];
-
-const supportLinks = [
-  { name: "Help Center", href: "#" },
-  { name: "Privacy Policy", href: "#" },
-  { name: "Terms & Conditions", href: "#" },
-  { name: "FAQs", href: "#" },
-  { name: "Report Abuse", href: "#" },
+  { name: "Become a Supplier", href: "/become-supplier" },
 ];
 
 const socials = [
@@ -132,13 +106,9 @@ export default function Footer() {
 
       </section>
 
-      {/* <FooterStats /> */}
-
-      {/* <FooterNewsletter /> */}
-
       <Container>
 
-        <div className="grid gap-12 py-20 lg:grid-cols-6">
+        <div className="grid gap-12 py-20 lg:grid-cols-5">
 
           {/* Company */}
 
@@ -302,58 +272,7 @@ export default function Footer() {
 
           </div>
 
-          {/* Company */}
-
-          <div>
-
-            <h3 className="mb-6 text-lg font-semibold text-white">
-              Company
-            </h3>
-
-            <ul className="space-y-4">
-
-              {companyLinks.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="transition hover:pl-2 hover:text-blue-400"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-
-            </ul>
-
-          </div>
-
         </div>
-
-                  {/* Support */}
-
-          {/* <div>
-
-            <h3 className="mb-6 text-lg font-semibold text-white">
-              Support
-            </h3>
-
-            <ul className="space-y-4">
-
-              {supportLinks.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="transition hover:pl-2 hover:text-blue-400"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-
-            </ul>
-
-          </div> */}
-
 
         <div className="border-t border-slate-800 py-8">
 

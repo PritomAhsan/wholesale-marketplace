@@ -1,19 +1,37 @@
 "use client";
 
-import {
-  Search,
-  Sparkles,
-} from "lucide-react";
+import { FormEvent, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Search } from "lucide-react";
 
 interface Props {
   placeholder?: string;
 }
 
 export default function SearchInput({
-  placeholder = "Search products, suppliers or categories...",
+  placeholder = "Search products by name, SKU or description...",
 }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [value, setValue] = useState(searchParams.get("search") ?? "");
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    const params = new URLSearchParams(searchParams.toString());
+
+    value ? params.set("search", value) : params.delete("search");
+    params.delete("page");
+
+    const target = pathname === "/products" ? pathname : "/products";
+
+    router.push(`${target}?${params.toString()}`);
+  }
+
   return (
-    <div className="relative">
+    <form onSubmit={handleSubmit} className="relative">
 
       <div className="group flex overflow-hidden rounded-[26px] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-xl focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100">
 
@@ -34,6 +52,8 @@ export default function SearchInput({
         <input
           type="search"
           placeholder={placeholder}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
           className="
             h-16
             flex-1
@@ -50,26 +70,19 @@ export default function SearchInput({
 
         {/* Right */}
 
-        <div className="hidden items-center gap-2 pr-5 lg:flex">
+        <div className="hidden items-center pr-3 lg:flex">
 
-          <span className="rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-500">
-            Products
-          </span>
-
-          <span className="rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-500">
-            Suppliers
-          </span>
-
-          <button className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-white transition-all duration-300 hover:scale-105 hover:bg-blue-700">
-
-            <Sparkles className="h-5 w-5" />
-
+          <button
+            type="submit"
+            className="rounded-2xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-blue-700"
+          >
+            Search
           </button>
 
         </div>
 
       </div>
 
-    </div>
+    </form>
   );
 }

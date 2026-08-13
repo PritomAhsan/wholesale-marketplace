@@ -10,12 +10,16 @@ import MobileFilters from "./MobileFilters";
 import SearchInput from "./SearchInput";
 import SortDropdown from "./SortDropdown";
 
+import { Category } from "@/features/categories/data/categories";
+
 interface Props {
   total: number;
+  categories: Category[];
 }
 
 export default function ProductToolbar({
   total,
+  categories,
 }: Props) {
   return (
     <div className="mt-12">
@@ -94,25 +98,7 @@ export default function ProductToolbar({
 
       <div className="mt-6 rounded-[30px] border border-slate-200 bg-white p-5 shadow-sm">
 
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-
-          {/* Left */}
-
-          <div className="flex flex-wrap items-center gap-3">
-
-            <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
-              Electronics
-            </span>
-
-            <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
-              Verified
-            </span>
-
-            <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
-              Ready to Ship
-            </span>
-
-          </div>
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-end">
 
           {/* Right */}
 
@@ -152,7 +138,7 @@ export default function ProductToolbar({
 
         <div className="mt-5 grid grid-cols-2 gap-4 lg:hidden">
 
-          <MobileFilters />
+          <MobileFilters categories={categories} />
 
           <SortDropdown />
 

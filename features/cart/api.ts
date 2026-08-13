@@ -41,6 +41,9 @@ export interface Order {
   uuid: string;
   order_number: string;
   status: string;
+  cancellation_reason: string | null;
+  cancelled_at: string | null;
+  can_cancel: boolean;
   subtotal: string;
   total: string;
   currency: string;
@@ -122,6 +125,33 @@ export async function fetchOrder(
   if (!res.ok) return null;
 
   const json = await res.json();
+
+  return json.data.order;
+}
+
+export async function cancelOrder(
+  token: string,
+  uuid: string,
+  reason?: string
+): Promise<Order> {
+  const res = await fetch(`${API_URL}/orders/${uuid}/cancel`, {
+    method: "PATCH",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ reason: reason || undefined }),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new CheckoutError(
+      json.message ?? "Unable to cancel order",
+      json.errors ?? {}
+    );
+  }
 
   return json.data.order;
 }

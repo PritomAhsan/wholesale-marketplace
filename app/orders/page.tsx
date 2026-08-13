@@ -99,7 +99,13 @@ export default function OrdersPage() {
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold capitalize text-amber-700">
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${
+                        order.status === "cancelled"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-amber-100 text-amber-700"
+                      }`}
+                    >
                       {order.status}
                     </span>
 

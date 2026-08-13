@@ -9,7 +9,7 @@ import { CheckCircle2 } from "lucide-react";
 import Container from "@/components/layout/Container";
 import { AppButton } from "@/components/ui/app-button";
 import { useAuth } from "@/features/auth/AuthContext";
-import { fetchOrder, Order } from "@/features/cart/api";
+import { cancelOrder, fetchOrder, Order } from "@/features/cart/api";
 
 export default function OrderDetailPage() {
   const { uuid } = useParams<{ uuid: string }>();
@@ -17,6 +17,10 @@ export default function OrderDetailPage() {
 
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+  const [cancelling, setCancelling] = useState(false);
+  const [showCancelForm, setShowCancelForm] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [cancelError, setCancelError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!token) {
@@ -29,6 +33,25 @@ export default function OrderDetailPage() {
       setLoading(false);
     });
   }, [token, uuid]);
+
+  async function handleCancel() {
+    if (!token) return;
+
+    setCancelling(true);
+    setCancelError(null);
+
+    try {
+      const updated = await cancelOrder(token, uuid, cancelReason);
+      setOrder(updated);
+      setShowCancelForm(false);
+    } catch (err) {
+      setCancelError(
+        err instanceof Error ? err.message : "Unable to cancel order."
+      );
+    } finally {
+      setCancelling(false);
+    }
+  }
 
   if (authLoading || loading) {
     return (
@@ -72,9 +95,66 @@ export default function OrderDetailPage() {
             · Placed {new Date(order.placed_at).toLocaleDateString()}
           </p>
 
-          <span className="mt-4 inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold capitalize text-amber-700">
+          <span
+            className={`mt-4 inline-flex rounded-full px-4 py-2 text-sm font-semibold capitalize ${
+              order.status === "cancelled"
+                ? "bg-red-100 text-red-700"
+                : "bg-amber-100 text-amber-700"
+            }`}
+          >
             {order.status}
           </span>
+
+          {order.status === "cancelled" && order.cancellation_reason && (
+            <p className="mt-3 text-sm text-slate-500">
+              Reason: {order.cancellation_reason}
+            </p>
+          )}
+
+          {order.can_cancel && !showCancelForm && (
+            <div className="mt-6">
+              <AppButton
+                variant="outline"
+                onClick={() => setShowCancelForm(true)}
+              >
+                Cancel Order
+              </AppButton>
+            </div>
+          )}
+
+          {order.can_cancel && showCancelForm && (
+            <div className="mx-auto mt-6 max-w-md rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left">
+              <label className="block text-sm font-medium text-slate-700">
+                Reason for cancelling (optional)
+              </label>
+
+              <textarea
+                className="mt-2 w-full rounded-xl border border-slate-300 p-3 text-sm"
+                rows={3}
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                placeholder="Let us know why you're cancelling..."
+              />
+
+              {cancelError && (
+                <p className="mt-2 text-sm text-red-600">{cancelError}</p>
+              )}
+
+              <div className="mt-3 flex justify-end gap-3">
+                <AppButton
+                  variant="ghost"
+                  onClick={() => setShowCancelForm(false)}
+                  disabled={cancelling}
+                >
+                  Never mind
+                </AppButton>
+
+                <AppButton onClick={handleCancel} disabled={cancelling}>
+                  {cancelling ? "Cancelling..." : "Confirm Cancellation"}
+                </AppButton>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">

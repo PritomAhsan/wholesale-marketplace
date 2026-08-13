@@ -1,0 +1,15 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="800" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#eef2ff"/>
+      <stop offset="1" stop-color="#e0e7ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <g transform="translate(400,265)" stroke="#94a3b8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <rect x="-70" y="-55" width="140" height="110" rx="14"/>
+    <circle cx="-30" cy="-20" r="12" fill="#94a3b8" stroke="none"/>
+    <path d="M -70 35 L -20 -5 L 10 20 L 40 -10 L 70 25"/>
+  </g>
+  <text x="400" y="368" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" fill="#64748b" text-anchor="middle">Image Coming Soon</text>
+</svg>

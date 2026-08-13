@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { AppButton } from "@/components/ui/app-button";
 
@@ -10,14 +11,54 @@ interface PaginationProps {
   perPage?: number;
 }
 
+function getPageNumbers(currentPage: number, totalPages: number): (number | "ellipsis")[] {
+  if (totalPages <= 1) return totalPages === 1 ? [1] : [];
+
+  const delta = 1;
+  const middle: number[] = [];
+  for (
+    let page = Math.max(2, currentPage - delta);
+    page <= Math.min(totalPages - 1, currentPage + delta);
+    page++
+  ) {
+    middle.push(page);
+  }
+
+  const pages: (number | "ellipsis")[] = [1];
+  if (middle[0] > 2) pages.push("ellipsis");
+  pages.push(...middle);
+  if (middle[middle.length - 1] < totalPages - 1) pages.push("ellipsis");
+  pages.push(totalPages);
+
+  return pages;
+}
+
 export default function Pagination({
   currentPage = 1,
   totalPages = 12,
   totalResults = 248,
   perPage = 20,
 }: PaginationProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const start = (currentPage - 1) * perPage + 1;
   const end = Math.min(currentPage * perPage, totalResults);
+  const pageNumbers = getPageNumbers(currentPage, totalPages);
+
+  function goToPage(page: number) {
+    if (page < 1 || page > totalPages || page === currentPage) return;
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (page === 1) {
+      params.delete("page");
+    } else {
+      params.set("page", String(page));
+    }
+
+    router.push(`${pathname}?${params.toString()}`);
+  }
 
   return (
     <section className="mt-16">
@@ -53,45 +94,42 @@ export default function Pagination({
             <AppButton
               variant="secondary"
               className="h-11 w-11 rounded-xl p-0"
+              disabled={currentPage <= 1}
+              onClick={() => goToPage(currentPage - 1)}
             >
               <ChevronLeft className="h-5 w-5" />
             </AppButton>
 
-            {[1, 2, 3].map((page) => (
-              <button
-                key={page}
-                className={`flex h-11 w-11 items-center justify-center rounded-xl font-semibold transition ${
-                  currentPage === page
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "border border-slate-200 hover:border-blue-500 hover:text-blue-600"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
+            {pageNumbers.map((page, index) =>
+              page === "ellipsis" ? (
+                <div
+                  key={`ellipsis-${index}`}
+                  className="flex h-11 w-11 items-center justify-center"
+                >
 
-            <div className="flex h-11 w-11 items-center justify-center">
+                  <MoreHorizontal className="h-5 w-5 text-slate-400" />
 
-              <MoreHorizontal className="h-5 w-5 text-slate-400" />
-
-            </div>
-
-            {[10, 11, 12].map((page) => (
-              <button
-                key={page}
-                className={`flex h-11 w-11 items-center justify-center rounded-xl font-semibold transition ${
-                  currentPage === page
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "border border-slate-200 hover:border-blue-500 hover:text-blue-600"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
+                </div>
+              ) : (
+                <button
+                  key={page}
+                  onClick={() => goToPage(page)}
+                  className={`flex h-11 w-11 items-center justify-center rounded-xl font-semibold transition ${
+                    currentPage === page
+                      ? "bg-blue-600 text-white shadow-lg"
+                      : "border border-slate-200 hover:border-blue-500 hover:text-blue-600"
+                  }`}
+                >
+                  {page}
+                </button>
+              )
+            )}
 
             <AppButton
               variant="secondary"
               className="h-11 w-11 rounded-xl p-0"
+              disabled={currentPage >= totalPages}
+              onClick={() => goToPage(currentPage + 1)}
             >
               <ChevronRight className="h-5 w-5" />
             </AppButton>
@@ -135,6 +173,8 @@ export default function Pagination({
             <AppButton
               variant="secondary"
               className="flex-1"
+              disabled={currentPage <= 1}
+              onClick={() => goToPage(currentPage - 1)}
             >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Previous
@@ -148,6 +188,8 @@ export default function Pagination({
 
             <AppButton
               className="flex-1"
+              disabled={currentPage >= totalPages}
+              onClick={() => goToPage(currentPage + 1)}
             >
               Next
               <ChevronRight className="ml-2 h-4 w-4" />

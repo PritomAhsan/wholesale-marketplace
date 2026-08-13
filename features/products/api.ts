@@ -80,7 +80,7 @@ export function toProduct(item: ApiProductListItem): Product {
     stock: item.stock,
     rating: 0,
     verified: true,
-    image: item.primary_image ?? "https://placehold.co/1200x900/png",
+    image: item.primary_image ?? "/images/product-placeholder.svg",
     gallery: item.primary_image ? [item.primary_image] : [],
     shortDescription: "",
     description: "",
@@ -91,7 +91,7 @@ export function toProduct(item: ApiProductListItem): Product {
 function toProductDetail(item: ApiProductDetail): Product {
   const images = item.images.length
     ? item.images.map((image) => image.image)
-    : ["https://placehold.co/1200x900/png"];
+    : ["/images/product-placeholder.svg"];
 
   return {
     id: item.uuid as unknown as number,
@@ -124,6 +124,9 @@ export async function fetchProducts(params?: {
   category?: string;
   brand?: string;
   supplier?: string;
+  min_price?: number;
+  max_price?: number;
+  sort?: string;
   page?: number;
   per_page?: number;
 }): Promise<{ products: Product[]; pagination: Pagination }> {

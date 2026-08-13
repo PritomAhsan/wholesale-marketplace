@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { BRANDING } from "@/constants/branding";
 import {
   Bell,
@@ -26,10 +26,24 @@ import { useCart } from "@/features/cart/CartContext";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, loading, logout } = useAuth();
   const { count: cartCount } = useCart();
 
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [mobileSearch, setMobileSearch] = useState(false);
+
+  function handleSearchSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    if (!search.trim()) {
+      router.push("/products");
+      return;
+    }
+
+    router.push(`/products?search=${encodeURIComponent(search.trim())}`);
+  }
 
   return (
     <>
@@ -59,31 +73,42 @@ export default function Navbar() {
 
           {/* Search */}
 
-          <div className="hidden flex-1 lg:block">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="hidden flex-1 lg:block"
+          >
             <div className="flex h-12 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-md">
 
-              <button className="flex items-center gap-2 border-r px-5 text-sm font-medium text-slate-600 hover:bg-slate-50">
+              <Link
+                href="/categories"
+                className="flex items-center gap-2 border-r px-5 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              >
                 Categories
                 <ChevronDown className="h-4 w-4" />
-              </button>
+              </Link>
 
               <div className="relative flex-1">
 
                 <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
 
                 <input
-                  placeholder="Search products, suppliers or categories..."
+                  placeholder="Search products by name, SKU or description..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   className="h-full w-full border-none bg-transparent pl-12 pr-5 text-sm outline-none"
                 />
 
               </div>
 
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 text-sm font-semibold text-white transition hover:opacity-90">
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 text-sm font-semibold text-white transition hover:opacity-90"
+              >
                 Search
               </button>
 
             </div>
-          </div>
+          </form>
 
           {/* Desktop Actions */}
 
@@ -165,7 +190,10 @@ export default function Navbar() {
 
           <div className="ml-auto flex items-center gap-2 lg:hidden">
 
-            <button className="rounded-xl p-2 hover:bg-slate-100">
+            <button
+              onClick={() => setMobileSearch((v) => !v)}
+              className="rounded-xl p-2 hover:bg-slate-100"
+            >
               <Search className="h-5 w-5" />
             </button>
 
@@ -191,6 +219,28 @@ export default function Navbar() {
 
         </Container>
 
+        {/* Mobile Search */}
+
+        {mobileSearch && (
+          <div className="border-t border-slate-100 px-4 py-3 lg:hidden">
+            <form onSubmit={handleSearchSubmit} className="flex gap-2">
+              <input
+                autoFocus
+                placeholder="Search products..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="h-11 flex-1 rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-blue-500"
+              />
+              <button
+                type="submit"
+                className="rounded-xl bg-blue-600 px-5 text-sm font-semibold text-white"
+              >
+                Search
+              </button>
+            </form>
+          </div>
+        )}
+
         {/* Secondary Navigation */}
 
         <div className="hidden border-t border-slate-100 bg-white lg:block">
@@ -212,27 +262,6 @@ export default function Navbar() {
                   {item.title}
                 </Link>
               ))}
-
-              <Link
-                href="/products"
-                className="whitespace-nowrap text-sm font-medium text-slate-600 hover:text-blue-600"
-              >
-                New Arrivals
-              </Link>
-
-              <Link
-                href="/categories"
-                className="whitespace-nowrap text-sm font-medium text-slate-600 hover:text-blue-600"
-              >
-                Popular Categories
-              </Link>
-
-              <Link
-                href="/rfq"
-                className="whitespace-nowrap text-sm font-medium text-slate-600 hover:text-blue-600"
-              >
-                Buyer Protection
-              </Link>
 
             </nav>
 

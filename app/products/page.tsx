@@ -6,21 +6,35 @@ import ProductFilters from "@/features/products/components/ProductFilters";
 import ProductGrid from "@/features/products/components/ProductGrid";
 import ProductToolbar from "@/features/products/components/ProductToolbar";
 import { fetchProducts } from "@/features/products/api";
+import { fetchCategories } from "@/features/categories/api";
 
 interface Props {
   searchParams: Promise<{
     page?: string;
+    search?: string;
+    category?: string;
+    min_price?: string;
+    max_price?: string;
+    sort?: string;
   }>;
 }
 
 export default async function ProductsPage({ searchParams }: Props) {
-  const { page } = await searchParams;
-  const currentPage = Number(page ?? 1);
+  const params = await searchParams;
+  const currentPage = Number(params.page ?? 1);
 
-  const { products, pagination } = await fetchProducts({
-    page: currentPage,
-    per_page: 20,
-  });
+  const [{ products, pagination }, categories] = await Promise.all([
+    fetchProducts({
+      page: currentPage,
+      per_page: 20,
+      search: params.search,
+      category: params.category,
+      min_price: params.min_price ? Number(params.min_price) : undefined,
+      max_price: params.max_price ? Number(params.max_price) : undefined,
+      sort: params.sort,
+    }),
+    fetchCategories(),
+  ]);
 
   return (
     <section className="relative overflow-hidden bg-slate-50 py-12">
@@ -111,7 +125,7 @@ export default async function ProductsPage({ searchParams }: Props) {
 
         <div className="mt-14">
 
-          <ProductToolbar total={pagination.total} />
+          <ProductToolbar total={pagination.total} categories={categories} />
 
         </div>
 
@@ -125,7 +139,7 @@ export default async function ProductsPage({ searchParams }: Props) {
 
             <div className="sticky top-24">
 
-              <ProductFilters />
+              <ProductFilters categories={categories} />
 
             </div>
 

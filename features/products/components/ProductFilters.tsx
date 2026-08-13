@@ -1,39 +1,82 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Globe2,
-  Search,
-  ShieldCheck,
-  SlidersHorizontal,
-  Star,
-  Truck,
-  X,
-} from "lucide-react";
+import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { SlidersHorizontal, X } from "lucide-react";
 
-const categories = [
-  { name: "Electronics", count: 1240 },
-  { name: "Fashion", count: 865 },
-  { name: "Furniture", count: 412 },
-  { name: "Packaging", count: 294 },
-  { name: "Machinery", count: 387 },
-  { name: "Home & Living", count: 538 },
-];
+import { Category } from "@/features/categories/data/categories";
 
-const countries = [
-  "China",
-  "Bangladesh",
-  "India",
-  "Turkey",
-  "Vietnam",
-  "Germany",
-];
+interface Props {
+  mobile?: boolean;
+  categories: Category[];
+}
 
 export default function ProductFilters({
   mobile = false,
-}: {
-  mobile?: boolean;
-}) {
+  categories,
+}: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const activeCategory = searchParams.get("category") ?? "";
+  const activeMinPrice = searchParams.get("min_price") ?? "";
+  const activeMaxPrice = searchParams.get("max_price") ?? "";
+
+  const [categorySearch, setCategorySearch] = useState("");
+  const [category, setCategory] = useState(activeCategory);
+  const [minPrice, setMinPrice] = useState(activeMinPrice);
+  const [maxPrice, setMaxPrice] = useState(activeMaxPrice);
+
+  const visibleCategories = categorySearch
+    ? categories.filter((c) =>
+        c.name.toLowerCase().includes(categorySearch.toLowerCase())
+      )
+    : categories;
+
+  function applyFilters() {
+    const params = new URLSearchParams(searchParams.toString());
+
+    category ? params.set("category", category) : params.delete("category");
+    minPrice ? params.set("min_price", minPrice) : params.delete("min_price");
+    maxPrice ? params.set("max_price", maxPrice) : params.delete("max_price");
+    params.delete("page");
+
+    router.push(`${pathname}?${params.toString()}`);
+  }
+
+  function clearFilters() {
+    setCategory("");
+    setMinPrice("");
+    setMaxPrice("");
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("category");
+    params.delete("min_price");
+    params.delete("max_price");
+    params.delete("page");
+
+    router.push(`${pathname}?${params.toString()}`);
+  }
+
+  function removeActiveFilter(key: "category" | "min_price" | "max_price") {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(key);
+    params.delete("page");
+
+    if (key === "category") setCategory("");
+    if (key === "min_price") setMinPrice("");
+    if (key === "max_price") setMaxPrice("");
+
+    router.push(`${pathname}?${params.toString()}`);
+  }
+
+  const activeCategoryName = categories.find(
+    (c) => c.slug === activeCategory
+  )?.name;
+
+  const hasActiveFilters = activeCategory || activeMinPrice || activeMaxPrice;
+
   return (
     <aside
       className={
@@ -45,128 +88,78 @@ export default function ProductFilters({
       {/* Header */}
 
       <div className="border-b border-slate-200 p-6">
-
         <div className="flex items-center justify-between">
-
           <div className="flex items-center gap-3">
-
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg">
-
               <SlidersHorizontal className="h-5 w-5 text-white" />
-
             </div>
 
             <div>
-
-              <h2 className="text-xl font-bold text-slate-900">
-                Filters
-              </h2>
-
-              <p className="text-sm text-slate-500">
-                Refine your search
-              </p>
-
+              <h2 className="text-xl font-bold text-slate-900">Filters</h2>
+              <p className="text-sm text-slate-500">Refine your search</p>
             </div>
-
           </div>
 
-          <button className="text-sm font-semibold text-blue-600 hover:text-blue-700">
+          <button
+            onClick={clearFilters}
+            className="text-sm font-semibold text-blue-600 hover:text-blue-700"
+          >
             Clear
           </button>
-
         </div>
 
-        {/* Search */}
+        {/* Category search */}
 
         <div className="relative mt-6">
-
-          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-
           <input
             placeholder="Search category..."
-            className="h-12 w-full rounded-2xl border border-slate-200 pl-11 pr-4 outline-none transition focus:border-blue-500"
+            value={categorySearch}
+            onChange={(e) => setCategorySearch(e.target.value)}
+            className="h-12 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-blue-500"
           />
-
         </div>
-
       </div>
 
       <div className="space-y-8 p-6">
-
         {/* Categories */}
 
         <div>
-
-          <h3 className="mb-5 font-bold text-slate-900">
-            Categories
-          </h3>
+          <h3 className="mb-5 font-bold text-slate-900">Categories</h3>
 
           <div className="space-y-3">
+            <label className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 transition hover:bg-slate-50">
+              <input
+                type="radio"
+                name="category"
+                checked={category === ""}
+                onChange={() => setCategory("")}
+                className="h-4 w-4 accent-blue-600"
+              />
+              <span className="text-sm font-medium">All Categories</span>
+            </label>
 
-            {categories.map((item) => (
+            {visibleCategories.map((item) => (
               <label
-                key={item.name}
+                key={item.slug}
                 className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 transition hover:bg-slate-50"
               >
-
                 <div className="flex items-center gap-3">
-
                   <input
-                    type="checkbox"
-                    className="h-4 w-4 rounded accent-blue-600"
+                    type="radio"
+                    name="category"
+                    checked={category === item.slug}
+                    onChange={() => setCategory(item.slug)}
+                    className="h-4 w-4 accent-blue-600"
                   />
-
-                  <span className="text-sm font-medium">
-                    {item.name}
-                  </span>
-
+                  <span className="text-sm font-medium">{item.name}</span>
                 </div>
 
                 <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-500">
-                  {item.count}
+                  {item.products}
                 </span>
-
               </label>
             ))}
-
           </div>
-
-        </div>
-
-        <hr />
-
-        {/* Countries */}
-
-        <div>
-
-          <h3 className="mb-5 font-bold">
-            Supplier Country
-          </h3>
-
-          <div className="space-y-3">
-
-            {countries.map((country) => (
-              <label
-                key={country}
-                className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 transition hover:bg-slate-50"
-              >
-
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 accent-blue-600"
-                />
-
-                <Globe2 className="h-4 w-4 text-slate-400" />
-
-                <span className="text-sm">
-                  {country}
-                </span>
-
-              </label>
-            ))}
-
-          </div>
-
         </div>
 
         <hr />
@@ -174,175 +167,82 @@ export default function ProductFilters({
         {/* Price */}
 
         <div>
+          <h3 className="mb-5 font-bold">Price Range</h3>
 
-          <h3 className="mb-5 font-bold">
-            Price Range
-          </h3>
-
-          <input
-            type="range"
-            min={0}
-            max={1000}
-            className="w-full accent-blue-600"
-          />
-
-          <div className="mt-3 flex justify-between">
-
-            <span className="rounded-xl bg-slate-100 px-3 py-2 text-sm">
-              $0
-            </span>
-
-            <span className="rounded-xl bg-slate-100 px-3 py-2 text-sm">
-              $1000+
-            </span>
-
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              min={0}
+              placeholder="Min"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              className="h-12 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-blue-500"
+            />
+            <span className="text-slate-400">–</span>
+            <input
+              type="number"
+              min={0}
+              placeholder="Max"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              className="h-12 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-blue-500"
+            />
           </div>
-
-        </div>
-
-        <hr />
-
-        {/* MOQ */}
-
-        <div>
-
-          <h3 className="mb-5 font-bold">
-            Minimum Order Quantity
-          </h3>
-
-          <input
-            placeholder="100"
-            className="h-12 w-full rounded-2xl border border-slate-200 px-4 outline-none transition focus:border-blue-500"
-          />
-
-        </div>
-
-        <hr />
-
-        {/* Supplier */}
-
-        <div>
-
-          <h3 className="mb-5 font-bold">
-            Supplier Features
-          </h3>
-
-          <div className="space-y-3">
-
-            <label className="flex items-center gap-3">
-
-              <input type="checkbox" className="accent-blue-600" />
-
-              <BadgeCheck className="h-4 w-4 text-blue-600" />
-
-              Verified Supplier
-
-            </label>
-
-            <label className="flex items-center gap-3">
-
-              <input type="checkbox" className="accent-blue-600" />
-
-              <ShieldCheck className="h-4 w-4 text-green-600" />
-
-              Trade Assurance
-
-            </label>
-
-            <label className="flex items-center gap-3">
-
-              <input type="checkbox" className="accent-blue-600" />
-
-              <Truck className="h-4 w-4 text-orange-500" />
-
-              Ready To Ship
-
-            </label>
-
-          </div>
-
-        </div>
-
-        <hr />
-
-        {/* Rating */}
-
-        <div>
-
-          <h3 className="mb-5 font-bold">
-            Rating
-          </h3>
-
-          {[5, 4, 3].map((rating) => (
-            <label
-              key={rating}
-              className="mb-3 flex items-center gap-3"
-            >
-
-              <input
-                type="radio"
-                name="rating"
-                className="accent-blue-600"
-              />
-
-              <div className="flex">
-
-                {Array.from({ length: rating }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-4 w-4 fill-yellow-400 text-yellow-400"
-                  />
-                ))}
-
-              </div>
-
-              <span className="text-sm">
-                & Up
-              </span>
-
-            </label>
-          ))}
-
         </div>
 
         {/* Active Filters */}
 
-        <div>
+        {hasActiveFilters && (
+          <>
+            <hr />
 
-          <h3 className="mb-4 font-bold">
-            Active Filters
-          </h3>
+            <div>
+              <h3 className="mb-4 font-bold">Active Filters</h3>
 
-          <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
+                {activeCategory && (
+                  <div className="flex items-center gap-2 rounded-full bg-blue-100 px-3 py-2 text-sm font-medium text-blue-700">
+                    {activeCategoryName ?? activeCategory}
+                    <X
+                      className="h-4 w-4 cursor-pointer"
+                      onClick={() => removeActiveFilter("category")}
+                    />
+                  </div>
+                )}
 
-            <div className="flex items-center gap-2 rounded-full bg-blue-100 px-3 py-2 text-sm font-medium text-blue-700">
+                {activeMinPrice && (
+                  <div className="flex items-center gap-2 rounded-full bg-blue-100 px-3 py-2 text-sm font-medium text-blue-700">
+                    Min ${activeMinPrice}
+                    <X
+                      className="h-4 w-4 cursor-pointer"
+                      onClick={() => removeActiveFilter("min_price")}
+                    />
+                  </div>
+                )}
 
-              Electronics
-
-              <X className="h-4 w-4 cursor-pointer" />
-
+                {activeMaxPrice && (
+                  <div className="flex items-center gap-2 rounded-full bg-blue-100 px-3 py-2 text-sm font-medium text-blue-700">
+                    Max ${activeMaxPrice}
+                    <X
+                      className="h-4 w-4 cursor-pointer"
+                      onClick={() => removeActiveFilter("max_price")}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-
-            <div className="flex items-center gap-2 rounded-full bg-green-100 px-3 py-2 text-sm font-medium text-green-700">
-
-              Verified
-
-              <X className="h-4 w-4 cursor-pointer" />
-
-            </div>
-
-          </div>
-
-        </div>
+          </>
+        )}
 
         {/* Button */}
 
-        <button className="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+        <button
+          onClick={applyFilters}
+          className="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+        >
           Apply Filters
         </button>
-
       </div>
-
     </aside>
   );
 }

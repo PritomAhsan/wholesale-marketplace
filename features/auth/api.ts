@@ -80,6 +80,61 @@ export async function logout(token: string): Promise<void> {
   });
 }
 
+export async function forgotPassword(
+  email: string
+): Promise<{ debug_token?: string }> {
+  const res = await fetch(`${API_URL}/auth/forgot-password`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      redirect_url:
+        typeof window !== "undefined"
+          ? `${window.location.origin}/reset-password`
+          : undefined,
+    }),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new AuthApiError(
+      json.message ?? "Unable to send reset link",
+      json.errors ?? {}
+    );
+  }
+
+  return json.data;
+}
+
+export async function resetPassword(payload: {
+  token: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}): Promise<void> {
+  const res = await fetch(`${API_URL}/auth/reset-password`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new AuthApiError(
+      json.message ?? "Unable to reset password",
+      json.errors ?? {}
+    );
+  }
+}
+
 export async function fetchMe(token: string): Promise<AuthUser | null> {
   const res = await fetch(`${API_URL}/auth/me`, {
     headers: {
