@@ -1,27 +1,35 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Minus,
   Plus,
   Package,
   Truck,
   ShieldCheck,
-  MessageCircle,
+  Check,
 } from "lucide-react";
 
 import { AppButton } from "@/components/ui/app-button";
 import { Product } from "../data/products";
+import { useCart } from "@/features/cart/CartContext";
 
 interface PriceCardProps {
   product: Product;
 }
 
 export default function PriceCard({ product }: PriceCardProps) {
+  const router = useRouter();
+  const { addItem } = useCart();
+
   const [quantity, setQuantity] = useState(product.moq);
+  const [added, setAdded] = useState(false);
+
+  const outOfStock = product.stock <= 0;
 
   const increase = () => {
-    setQuantity((q) => q + product.moq);
+    setQuantity((q) => Math.min(product.stock, q + product.moq));
   };
 
   const decrease = () => {
@@ -31,6 +39,31 @@ export default function PriceCard({ product }: PriceCardProps) {
   const total = useMemo(() => {
     return quantity * product.price;
   }, [quantity, product.price]);
+
+  function handleAddToCart() {
+    addItem(
+      {
+        productUuid: product.uuid,
+        slug: product.slug,
+        name: product.name,
+        image: product.image,
+        price: product.price,
+        moq: product.moq,
+        stock: product.stock,
+        supplierUuid: product.supplierUuid,
+        supplierName: product.supplier,
+      },
+      quantity
+    );
+
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  }
+
+  function handleBuyNow() {
+    handleAddToCart();
+    router.push("/cart");
+  }
 
   return (
     <aside className="sticky top-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -61,6 +94,12 @@ export default function PriceCard({ product }: PriceCardProps) {
           <p className="mt-2 text-xl font-semibold text-slate-900">
             {product.moq.toLocaleString()} Pieces
           </p>
+
+          <p className="mt-1 text-sm text-slate-500">
+            {outOfStock
+              ? "Out of stock"
+              : `${product.stock.toLocaleString()} available`}
+          </p>
         </div>
 
         {/* Quantity */}
@@ -72,7 +111,8 @@ export default function PriceCard({ product }: PriceCardProps) {
           <div className="flex items-center justify-between rounded-2xl border border-slate-200">
             <button
               onClick={decrease}
-              className="flex h-12 w-12 items-center justify-center transition hover:bg-slate-100"
+              disabled={outOfStock}
+              className="flex h-12 w-12 items-center justify-center transition hover:bg-slate-100 disabled:opacity-40"
             >
               <Minus className="h-4 w-4" />
             </button>
@@ -83,7 +123,8 @@ export default function PriceCard({ product }: PriceCardProps) {
 
             <button
               onClick={increase}
-              className="flex h-12 w-12 items-center justify-center transition hover:bg-slate-100"
+              disabled={outOfStock}
+              className="flex h-12 w-12 items-center justify-center transition hover:bg-slate-100 disabled:opacity-40"
             >
               <Plus className="h-4 w-4" />
             </button>
@@ -119,10 +160,30 @@ export default function PriceCard({ product }: PriceCardProps) {
 
         {/* Actions */}
         <div className="space-y-3">
-          <AppButton variant="primary" className="w-full">
-            Buy Now
+          <AppButton
+            variant="primary"
+            className="w-full"
+            disabled={outOfStock}
+            onClick={handleBuyNow}
+          >
+            {outOfStock ? "Out of Stock" : "Buy Now"}
           </AppButton>
 
+          <AppButton
+            variant="secondary"
+            className="w-full"
+            disabled={outOfStock}
+            onClick={handleAddToCart}
+          >
+            {added ? (
+              <>
+                <Check className="mr-2 h-4 w-4" />
+                Added to Cart
+              </>
+            ) : (
+              "Add to Cart"
+            )}
+          </AppButton>
         </div>
 
         {/* Trust */}

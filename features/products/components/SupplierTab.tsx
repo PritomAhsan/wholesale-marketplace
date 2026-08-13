@@ -6,12 +6,9 @@ import {
   MapPin,
   Factory,
   Clock3,
-  MessageCircle,
   Users,
   Boxes,
 } from "lucide-react";
-
-import { AppButton } from "@/components/ui/app-button";
 
 import { Product } from "../data/products";
 
@@ -83,27 +80,14 @@ export default function SupplierTab({ product }: Props) {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <AppButton variant="primary">
-              Contact Supplier
-            </AppButton>
-
-            <AppButton variant="secondary">
-              View Profile
-            </AppButton>
-
-            <AppButton variant="ghost">
-              <MessageCircle className="mr-2 h-4 w-4" />
-              Chat
-            </AppButton>
-          </div>
         </div>
 
         <p className="mt-8 leading-8 text-slate-600">
           {product.supplier} has been supplying wholesale products to
           international buyers with a strong focus on product quality,
           competitive pricing, OEM & ODM manufacturing, and reliable
-          worldwide delivery services.
+          worldwide delivery services. All communication and ordering is
+          handled through BULKARE.
         </p>
       </div>
 

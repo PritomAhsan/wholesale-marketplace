@@ -48,7 +48,7 @@ export default function FooterStats() {
           </h2>
 
           <p className="mx-auto mt-4 max-w-3xl leading-8 text-slate-400">
-            WholesaleHub helps businesses discover reliable suppliers,
+            BULKARE helps businesses discover reliable suppliers,
             negotiate better prices, and build long-term partnerships through
             a secure global wholesale marketplace.
           </p>

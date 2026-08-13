@@ -68,7 +68,7 @@ export default function BecomeSupplier() {
 
             <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300">
               Join thousands of manufacturers, exporters and wholesalers
-              already using WholesaleHub to showcase products, receive
+              already using BULKARE to showcase products, receive
               qualified RFQs and connect with serious buyers worldwide.
             </p>
 

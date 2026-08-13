@@ -1,28 +1,24 @@
 import Container from "@/components/layout/Container";
 
 import ProductGrid from "@/features/products/components/ProductGrid";
-import SupplierGrid from "@/features/suppliers/components/SupplierGrid";
 
-import { products } from "@/features/products/data/products";
-import { suppliers } from "@/features/suppliers/data/suppliers";
+import { Product } from "@/features/products/data/products";
 
 import { Category } from "../data/categories";
 
 interface Props {
     category: Category;
+    products: Product[];
+    productsTotal: number;
+    suppliersTotal: number;
 }
 
 export default function CategoryDetailsPage({
     category,
+    products,
+    productsTotal,
+    suppliersTotal,
 }: Props) {
-
-    const categoryProducts = products.filter(
-        (p) => p.category === category.name
-    );
-
-    const categorySuppliers = suppliers.filter(
-        (s) => s.category === category.name
-    );
 
     return (
         <section className="bg-slate-50 py-20">
@@ -43,14 +39,14 @@ export default function CategoryDetailsPage({
 
                         <div>
                             <div className="text-3xl font-bold">
-                                {category.products}
+                                {productsTotal}
                             </div>
                             Products
                         </div>
 
                         <div>
                             <div className="text-3xl font-bold">
-                                {category.suppliers}
+                                {suppliersTotal}
                             </div>
                             Suppliers
                         </div>
@@ -59,41 +55,19 @@ export default function CategoryDetailsPage({
 
                 </div>
 
-                <section className="mt-16">
+                {products.length > 0 && (
+                    <section className="mt-16">
 
-                    <h2 className="mb-8 text-3xl font-bold">
-                        Featured Products
-                    </h2>
+                        <h2 className="mb-8 text-3xl font-bold">
+                            Featured Products
+                        </h2>
 
-                    <ProductGrid
-                        products={categoryProducts.slice(0,4)}
-                    />
+                        <ProductGrid
+                            products={products.slice(0, 4)}
+                        />
 
-                </section>
-
-                <section className="mt-20">
-
-                    <h2 className="mb-8 text-3xl font-bold">
-                        Featured Suppliers
-                    </h2>
-
-                    <SupplierGrid
-                        suppliers={categorySuppliers.slice(0,2)}
-                    />
-
-                </section>
-
-                {/* <section className="mt-20">
-
-                    <h2 className="mb-8 text-3xl font-bold">
-                        Browse All Products
-                    </h2>
-
-                    <ProductGrid
-                        products={categoryProducts}
-                    />
-
-                </section> */}
+                    </section>
+                )}
 
             </Container>
 

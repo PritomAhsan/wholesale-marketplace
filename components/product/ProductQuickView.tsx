@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Product } from "@/features/products/data/products";
+import { useCart } from "@/features/cart/CartContext";
 
 import { ReactElement } from "react";
 
@@ -39,6 +40,7 @@ export default function ProductQuickView({
   children,
 }: Props) {
   const [imageIndex, setImageIndex] = useState(0);
+  const { addItem } = useCart();
 
   const images =
     product.gallery?.length > 0
@@ -482,8 +484,22 @@ export default function ProductQuickView({
                 variant="secondary"
                 className="w-full justify-center"
                 size="lg"
+                disabled={product.stock <= 0}
+                onClick={() =>
+                  addItem({
+                    productUuid: product.uuid,
+                    slug: product.slug,
+                    name: product.name,
+                    image: product.image,
+                    price: product.price,
+                    moq: product.moq,
+                    stock: product.stock,
+                    supplierUuid: product.supplierUuid,
+                    supplierName: product.supplier,
+                  })
+                }
               >
-                Contact Supplier
+                {product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
               </AppButton>
 
               <Link

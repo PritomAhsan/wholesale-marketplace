@@ -1,6 +1,5 @@
 import Hero from "@/features/home/sections/Hero";
 import FeaturedCategories from "@/features/home/sections/FeaturedCategories";
-import FeaturedSuppliers from "@/features/home/sections/FeaturedSuppliers";
 import FeaturedProducts from "@/features/home/sections/FeaturedProducts";
 import HowItWorks from "@/features/home/sections/HowItWorks";
 import TrustedBusinesses from "@/features/home/sections/TrustedBusinesses";
@@ -13,7 +12,6 @@ export default function HomePage() {
     <>
       <Hero />
       <FeaturedCategories />
-      <FeaturedSuppliers />
       <FeaturedProducts />
       <HowItWorks />
       {/* <TrustedBusinesses /> */}

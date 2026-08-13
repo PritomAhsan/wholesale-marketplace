@@ -89,10 +89,6 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Actions */}
       <div className="flex flex-wrap gap-3">
-        {/* <AppButton variant="primary">
-          Contact Supplier
-        </AppButton> */}
-
         <AppButton variant="secondary">
           Send RFQ
         </AppButton>

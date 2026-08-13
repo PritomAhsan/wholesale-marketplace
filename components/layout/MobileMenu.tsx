@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BRANDING } from "@/constants/branding";
 import {
   ChevronRight,
   Globe,
@@ -9,12 +11,12 @@ import {
   HelpCircle,
   Home,
   LogIn,
+  LogOut,
   Package,
   Search,
   Settings,
   ShieldCheck,
   ShoppingCart,
-  Store,
   UserPlus,
   Users,
   Wallet,
@@ -23,6 +25,7 @@ import {
 
 import { NAVIGATION } from "@/constants/navigation";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/features/auth/AuthContext";
 
 interface Props {
   open: boolean;
@@ -41,11 +44,6 @@ const quickLinks = [
     icon: ShoppingCart,
   },
   {
-    title: "Suppliers",
-    href: "/suppliers",
-    icon: Store,
-  },
-  {
     title: "Become Supplier",
     href: "/become-supplier",
     icon: Users,
@@ -54,8 +52,8 @@ const quickLinks = [
 
 const accountLinks = [
   {
-    title: "My RFQs",
-    href: "/dashboard/rfqs",
+    title: "My Orders",
+    href: "/orders",
     icon: Wallet,
   },
   {
@@ -85,6 +83,7 @@ export default function MobileMenu({
   onClose,
 }: Props) {
   const pathname = usePathname();
+  const { user, logout } = useAuth();
 
   if (!open) return null;
 
@@ -107,14 +106,14 @@ export default function MobileMenu({
 
           <div className="mb-6 flex items-center justify-between">
 
-            <div>
-              <h2 className="text-xl font-bold">
-                WholesaleHub
-              </h2>
-
-              <p className="text-sm text-blue-100">
-                Global B2B Marketplace
-              </p>
+            <div className="rounded-xl bg-white px-3 py-2">
+              <Image
+                src={BRANDING.logo}
+                alt={BRANDING.siteName}
+                width={132}
+                height={45}
+                className="h-9 w-auto"
+              />
             </div>
 
             <button
@@ -148,35 +147,60 @@ export default function MobileMenu({
 
             <div className="mb-4 rounded-2xl border bg-slate-50 p-4">
 
-              <h3 className="font-semibold text-slate-900">
-                Welcome
-              </h3>
+              {user ? (
+                <>
+                  <h3 className="font-semibold text-slate-900">
+                    Welcome, {user.first_name}
+                  </h3>
 
-              <p className="mt-1 text-sm text-slate-500">
-                Sign in to manage RFQs, orders and suppliers.
-              </p>
+                  <p className="mt-1 text-sm text-slate-500">
+                    {user.email}
+                  </p>
 
-              <div className="mt-4 grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => {
+                      logout();
+                      onClose();
+                    }}
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold transition hover:border-red-400 hover:text-red-600"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <h3 className="font-semibold text-slate-900">
+                    Welcome
+                  </h3>
 
-                <Link
-                  href="/login"
-                  onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold transition hover:border-blue-500 hover:text-blue-600"
-                >
-                  <LogIn className="h-4 w-4" />
-                  Login
-                </Link>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Sign in to manage RFQs, orders and suppliers.
+                  </p>
 
-                <Link
-                  href="/register"
-                  onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
-                >
-                  <UserPlus className="h-4 w-4" />
-                  Register
-                </Link>
+                  <div className="mt-4 grid grid-cols-2 gap-3">
 
-              </div>
+                    <Link
+                      href="/login"
+                      onClick={onClose}
+                      className="flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold transition hover:border-blue-500 hover:text-blue-600"
+                    >
+                      <LogIn className="h-4 w-4" />
+                      Login
+                    </Link>
+
+                    <Link
+                      href="/register"
+                      onClick={onClose}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+                    >
+                      <UserPlus className="h-4 w-4" />
+                      Register
+                    </Link>
+
+                  </div>
+                </>
+              )}
 
             </div>
 

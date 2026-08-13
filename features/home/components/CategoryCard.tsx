@@ -1,19 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, LucideIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Baby,
+  Car,
+  Package,
+  Shirt,
+  Smartphone,
+  Sofa,
+  Sparkles,
+  Wrench,
+} from "lucide-react";
+
+const CATEGORY_ICONS: Record<string, typeof Package> = {
+  fashion: Shirt,
+  electronics: Smartphone,
+  "home & living": Sofa,
+  industrial: Wrench,
+  machinery: Wrench,
+  packaging: Package,
+  beauty: Sparkles,
+  automotive: Car,
+  baby: Baby,
+};
 
 interface Props {
   name: string;
   products: string;
-  icon: LucideIcon;
 }
 
 export default function CategoryCard({
   name,
   products,
-  icon: Icon,
 }: Props) {
+  const Icon = CATEGORY_ICONS[name.toLowerCase()] ?? Package;
+
   return (
     <Link
       href="/categories"

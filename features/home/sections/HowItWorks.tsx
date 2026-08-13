@@ -64,7 +64,7 @@ export default function WhyChooseUs() {
           <div>
 
             <span className="inline-flex rounded-full bg-blue-100 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-blue-700">
-              Why Choose WholesaleHub
+              Why Choose BULKARE
             </span>
 
             <h2 className="mt-6 text-5xl font-black tracking-tight text-slate-900">

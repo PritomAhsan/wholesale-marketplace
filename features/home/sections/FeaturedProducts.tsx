@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -7,9 +5,11 @@ import Container from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 import ProductCard from "../components/ProductCard";
-import { featuredProducts } from "../data/featuredProducts";
+import { fetchFeaturedProducts } from "../api";
 
-export default function FeaturedProducts() {
+export default async function FeaturedProducts() {
+  const featuredProducts = await fetchFeaturedProducts();
+
   return (
     <section className="relative overflow-hidden py-24">
 

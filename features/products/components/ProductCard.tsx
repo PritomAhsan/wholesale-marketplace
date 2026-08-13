@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import {
   ArrowRight,
   BadgeCheck,
+  Check,
   Heart,
   MapPin,
-  MessageSquare,
+  ShoppingCart,
   ShieldCheck,
   Star,
 } from "lucide-react";
@@ -15,12 +17,33 @@ import {
 import { AppButton } from "@/components/ui/app-button";
 import ProductQuickView from "@/components/product/ProductQuickView";
 import { Product } from "../data/products";
+import { useCart } from "@/features/cart/CartContext";
 
 interface Props {
   product: Product;
 }
 
 export default function ProductCard({ product }: Props) {
+  const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
+
+  function handleAddToCart() {
+    addItem({
+      productUuid: product.uuid,
+      slug: product.slug,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      moq: product.moq,
+      stock: product.stock,
+      supplierUuid: product.supplierUuid,
+      supplierName: product.supplier,
+    });
+
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  }
+
   return (
     <div className="group overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-sm transition-all duration-500 hover:-translate-y-3 hover:border-blue-300 hover:shadow-2xl">
       {/* Image */}
@@ -154,9 +177,23 @@ export default function ProductCard({ product }: Props) {
           </Link>
         </div>
 
-        <AppButton variant="ghost" className="mt-3 w-full justify-center">
-          <MessageSquare className="mr-2 h-4 w-4" />
-          Send RFQ
+        <AppButton
+          variant="ghost"
+          className="mt-3 w-full justify-center"
+          disabled={product.stock <= 0}
+          onClick={handleAddToCart}
+        >
+          {added ? (
+            <>
+              <Check className="mr-2 h-4 w-4" />
+              Added to Cart
+            </>
+          ) : (
+            <>
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              {product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
+            </>
+          )}
         </AppButton>
       </div>
     </div>

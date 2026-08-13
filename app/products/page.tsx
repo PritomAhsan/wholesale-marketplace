@@ -1,16 +1,27 @@
-"use client";
-
 import Container from "@/components/layout/Container";
-import { SectionHeading } from "@/components/ui/section-heading";
 import Pagination from "@/features/products/components/Pagination";
 
 import ProductBreadcrumb from "@/features/products/components/ProductBreadcrumb";
 import ProductFilters from "@/features/products/components/ProductFilters";
 import ProductGrid from "@/features/products/components/ProductGrid";
 import ProductToolbar from "@/features/products/components/ProductToolbar";
-import { products } from "@/features/products/data/products";
+import { fetchProducts } from "@/features/products/api";
 
-export default function ProductsPage() {
+interface Props {
+  searchParams: Promise<{
+    page?: string;
+  }>;
+}
+
+export default async function ProductsPage({ searchParams }: Props) {
+  const { page } = await searchParams;
+  const currentPage = Number(page ?? 1);
+
+  const { products, pagination } = await fetchProducts({
+    page: currentPage,
+    per_page: 20,
+  });
+
   return (
     <section className="relative overflow-hidden bg-slate-50 py-12">
 
@@ -57,7 +68,7 @@ export default function ProductsPage() {
               <div className="rounded-2xl border border-white/10 bg-white/10 px-6 py-4 backdrop-blur">
 
                 <h3 className="text-3xl font-black">
-                  {products.length}+
+                  {pagination.total}+
                 </h3>
 
                 <p className="mt-1 text-sm text-slate-300">
@@ -96,23 +107,11 @@ export default function ProductsPage() {
 
         </div>
 
-        {/* Heading */}
-
-        {/* <div className="mt-20">
-
-          <SectionHeading
-            badge="Marketplace"
-            title="Explore Wholesale Products"
-            description="Browse premium wholesale products from verified suppliers across electronics, fashion, machinery, home, industrial and many more categories."
-          />
-
-        </div> */}
-
         {/* Toolbar */}
 
         <div className="mt-14">
 
-          <ProductToolbar total={products.length} />
+          <ProductToolbar total={pagination.total} />
 
         </div>
 
@@ -139,10 +138,10 @@ export default function ProductsPage() {
             <ProductGrid products={products} />
 
             <Pagination
-              currentPage={1}
-              totalPages={12}
-              totalResults={248}
-              perPage={20}
+              currentPage={pagination.current_page}
+              totalPages={pagination.last_page}
+              totalResults={pagination.total}
+              perPage={pagination.per_page}
             />
 
           </div>

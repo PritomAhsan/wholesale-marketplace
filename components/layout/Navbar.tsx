@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BRANDING } from "@/constants/branding";
 import {
   Bell,
   Heart,
+  LogOut,
   Menu,
   Search,
   ShoppingCart,
@@ -18,9 +21,13 @@ import Container from "./Container";
 import MobileMenu from "./MobileMenu";
 import { NAVIGATION } from "@/constants/navigation";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/features/auth/AuthContext";
+import { useCart } from "@/features/cart/CartContext";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { user, loading, logout } = useAuth();
+  const { count: cartCount } = useCart();
 
   const [open, setOpen] = useState(false);
 
@@ -34,21 +41,20 @@ export default function Navbar() {
 
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-2"
+            className="flex shrink-0 items-center gap-3"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-lg font-bold text-white shadow-lg">
-              W
-            </div>
+            <Image
+              src={BRANDING.logo}
+              alt={BRANDING.siteName}
+              width={132}
+              height={45}
+              className="h-10 w-auto"
+              priority
+            />
 
-            <div className="hidden xl:block">
-              <h2 className="text-xl font-bold tracking-tight text-slate-900">
-                WholesaleHub
-              </h2>
-
-              <p className="-mt-1 text-xs text-slate-500">
-                Global B2B Marketplace
-              </p>
-            </div>
+            <p className="hidden -ml-1 text-xs text-slate-500 xl:block">
+              {BRANDING.tagline}
+            </p>
           </Link>
 
           {/* Search */}
@@ -105,27 +111,53 @@ export default function Navbar() {
               </span>
             </button>
 
-            <button className="relative rounded-xl p-3 transition hover:bg-slate-100">
+            <Link
+              href="/cart"
+              className="relative rounded-xl p-3 transition hover:bg-slate-100"
+            >
               <ShoppingCart className="h-5 w-5 text-slate-700" />
 
-              <span className="absolute right-2 top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold text-white">
-                2
-              </span>
-            </button>
-
-            <Link
-              href="/login"
-              className="ml-2 rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold transition hover:border-blue-300 hover:bg-blue-50"
-            >
-              Login
+              {cartCount > 0 && (
+                <span className="absolute right-2 top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold text-white">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
-            <Link
-              href="/register"
-              className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
-            >
-              Register
-            </Link>
+            {!loading && user ? (
+              <div className="ml-2 flex items-center gap-2">
+
+                <div className="flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700">
+                  <User className="h-4 w-4" />
+                  {user.first_name}
+                </div>
+
+                <button
+                  onClick={() => logout()}
+                  className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="ml-2 rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold transition hover:border-blue-300 hover:bg-blue-50"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  href="/register"
+                  className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                >
+                  Register
+                </Link>
+              </>
+            )}
 
           </div>
 
@@ -137,11 +169,16 @@ export default function Navbar() {
               <Search className="h-5 w-5" />
             </button>
 
-            <button className="relative rounded-xl p-2 hover:bg-slate-100">
+            <Link
+              href="/cart"
+              className="relative rounded-xl p-2 hover:bg-slate-100"
+            >
               <ShoppingCart className="h-5 w-5" />
 
-              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
-            </button>
+              {cartCount > 0 && (
+                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
+              )}
+            </Link>
 
             <button
               onClick={() => setOpen(true)}
@@ -175,13 +212,6 @@ export default function Navbar() {
                   {item.title}
                 </Link>
               ))}
-
-              <Link
-                href="/suppliers"
-                className="whitespace-nowrap text-sm font-medium text-slate-600 hover:text-blue-600"
-              >
-                Top Suppliers
-              </Link>
 
               <Link
                 href="/products"

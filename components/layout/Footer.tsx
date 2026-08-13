@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -16,11 +17,11 @@ import {
 import Container from "./Container";
 import FooterNewsletter from "./FooterNewsletter";
 import FooterStats from "./FooterStats";
+import { BRANDING } from "@/constants/branding";
 
 const quickLinks = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
-  { name: "Suppliers", href: "/suppliers" },
   { name: "Categories", href: "/categories" },
   { name: "RFQ", href: "/rfq" },
 ];
@@ -34,7 +35,7 @@ const buyerLinks = [
 ];
 
 const supplierLinks = [
-  { name: "Become Supplier", href: "#" },
+  { name: "Become Supplier", href: "/become-supplier" },
   { name: "Supplier Membership", href: "#" },
   { name: "Seller Center", href: "#" },
   { name: "Advertising", href: "#" },
@@ -143,17 +144,21 @@ export default function Footer() {
 
           <div className="lg:col-span-2">
 
-            <Link
-              href="/"
-              className="text-3xl font-black text-white"
-            >
-              WholesaleHub
+            <Link href="/" className="inline-block rounded-xl bg-white px-3 py-2">
+              <Image
+                src={BRANDING.logo}
+                alt={BRANDING.siteName}
+                width={132}
+                height={45}
+                className="h-10 w-auto"
+              />
             </Link>
 
             <p className="mt-6 max-w-md leading-8 text-slate-400">
-              WholesaleHub is a modern global B2B marketplace connecting buyers
-              with verified suppliers across electronics, fashion, machinery,
-              industrial equipment and thousands of wholesale products.
+              {BRANDING.shortName} is a modern global B2B marketplace connecting
+              buyers with verified suppliers across electronics, fashion,
+              machinery, industrial equipment and thousands of wholesale
+              products.
             </p>
 
             <div className="mt-10 space-y-5">
@@ -191,7 +196,7 @@ export default function Footer() {
                   </p>
 
                   <p className="text-slate-400">
-                    hello@wholesalehub.com
+                    {BRANDING.supportEmail}
                   </p>
 
                 </div>
@@ -357,7 +362,7 @@ export default function Footer() {
             <div>
 
               <p className="text-sm text-slate-500">
-                © {new Date().getFullYear()} WholesaleHub. All rights reserved.
+                © {new Date().getFullYear()} {BRANDING.shortName}. All rights reserved.
               </p>
 
               <div className="mt-3 flex flex-wrap gap-5 text-sm text-slate-500">

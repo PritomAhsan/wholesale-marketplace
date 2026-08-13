@@ -1,0 +1,127 @@
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ??
+  "http://localhost/wholesale-api/public/api/v1";
+
+export interface ShippingInfo {
+  name: string;
+  phone: string;
+  address: string;
+  city: string;
+  country: string;
+  postal_code?: string;
+  notes?: string;
+}
+
+export interface CheckoutItemPayload {
+  product_uuid: string;
+  quantity: number;
+}
+
+export interface OrderItem {
+  uuid: string;
+  product: { uuid: string; slug: string } | null;
+  product_name: string;
+  product_sku: string | null;
+  product_image: string | null;
+  unit_price: string;
+  quantity: number;
+  line_total: string;
+}
+
+export interface SellerOrder {
+  uuid: string;
+  seller_order_number: string;
+  supplier: { uuid: string; display_name: string } | null;
+  status: string;
+  subtotal: string;
+  items: OrderItem[];
+}
+
+export interface Order {
+  uuid: string;
+  order_number: string;
+  status: string;
+  subtotal: string;
+  total: string;
+  currency: string;
+  shipping: {
+    name: string;
+    phone: string;
+    address: string;
+    city: string;
+    country: string;
+    postal_code: string | null;
+  };
+  notes: string | null;
+  placed_at: string;
+  seller_orders: SellerOrder[];
+}
+
+export class CheckoutError extends Error {
+  errors: Record<string, string[]>;
+
+  constructor(message: string, errors: Record<string, string[]>) {
+    super(message);
+    this.errors = errors;
+  }
+}
+
+export async function checkout(
+  token: string,
+  items: CheckoutItemPayload[],
+  shipping: ShippingInfo
+): Promise<Order> {
+  const res = await fetch(`${API_URL}/checkout`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ items, shipping }),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new CheckoutError(
+      json.message ?? "Checkout failed",
+      json.errors ?? {}
+    );
+  }
+
+  return json.data.order;
+}
+
+export async function fetchMyOrders(token: string): Promise<Order[]> {
+  const res = await fetch(`${API_URL}/orders`, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) return [];
+
+  const json = await res.json();
+
+  return json.data.orders;
+}
+
+export async function fetchOrder(
+  token: string,
+  uuid: string
+): Promise<Order | null> {
+  const res = await fetch(`${API_URL}/orders/${uuid}`, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) return null;
+
+  const json = await res.json();
+
+  return json.data.order;
+}
