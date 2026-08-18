@@ -72,7 +72,7 @@ export default function Navbar() {
             <Image
               src={BRANDING.logo}
               alt={BRANDING.siteName}
-              width={132}
+              width={150}
               height={45}
               className="h-12 w-auto"
               priority

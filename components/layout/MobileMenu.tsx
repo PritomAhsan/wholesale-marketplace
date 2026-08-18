@@ -84,7 +84,7 @@ export default function MobileMenu({
             <Image
               src={BRANDING.logoDark}
               alt={BRANDING.siteName}
-              width={132}
+              width={150}
               height={45}
               className="h-10 w-auto"
             />

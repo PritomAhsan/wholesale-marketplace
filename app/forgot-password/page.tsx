@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
           <Image
             src={BRANDING.logo}
             alt={BRANDING.siteName}
-            width={130}
+            width={147}
             height={44}
             className="h-8 w-auto"
           />

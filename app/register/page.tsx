@@ -71,7 +71,7 @@ export default function RegisterPage() {
         <Image
           src={BRANDING.logoDark}
           alt={BRANDING.siteName}
-          width={150}
+          width={167}
           height={50}
           className="h-10 w-auto"
         />
@@ -96,7 +96,7 @@ export default function RegisterPage() {
           <Image
             src={BRANDING.logo}
             alt={BRANDING.siteName}
-            width={130}
+            width={147}
             height={44}
             className="h-8 w-auto lg:hidden"
           />

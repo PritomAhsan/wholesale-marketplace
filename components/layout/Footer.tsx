@@ -88,7 +88,7 @@ export default function Footer() {
               <Image
                 src={BRANDING.logoDark}
                 alt={BRANDING.siteName}
-                width={150}
+                width={167}
                 height={50}
                 className="h-10 w-auto"
               />
