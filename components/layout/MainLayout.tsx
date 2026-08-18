@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import Announcement from "./Announcement";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 
@@ -10,7 +9,6 @@ interface Props {
 export default function MainLayout({ children }: Props) {
   return (
     <>
-      <Announcement />
       <Navbar />
       <main>{children}</main>
       <Footer />

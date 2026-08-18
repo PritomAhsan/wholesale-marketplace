@@ -7,7 +7,6 @@ import {
   BadgeCheck,
   Check,
   Eye,
-  Heart,
   ShoppingCart,
   Star,
 } from "lucide-react";
@@ -43,99 +42,81 @@ export default function ProductCard({ product }: Props) {
   }
 
   return (
-    <div className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg">
+    <div className="group overflow-hidden rounded-lg border border-border bg-white transition hover:border-sapphire hover:shadow-sm">
       {/* Image */}
 
-      <div className="relative overflow-hidden">
+      <Link href={`/products/${product.slug}`} className="relative block overflow-hidden">
         <Image
           src={product.image}
           alt={product.name}
-          width={700}
-          height={520}
-          className="h-44 w-full object-cover transition duration-500 group-hover:scale-105"
+          width={400}
+          height={300}
+          className="h-28 w-full object-cover transition duration-300 group-hover:scale-105"
         />
 
-        {/* Category */}
-
-        <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-slate-700 shadow">
+        <span className="absolute left-1.5 top-1.5 rounded bg-white/95 px-1.5 py-0.5 text-[9px] font-semibold text-obsidian/60">
           {product.category}
         </span>
 
-        {/* Wishlist */}
-
-        <button className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-xl bg-white/95 shadow transition hover:bg-blue-600 hover:text-white">
-          <Heart className="h-4 w-4" />
-        </button>
-      </div>
+        {product.verified && (
+          <span className="absolute right-1.5 top-1.5 flex items-center gap-0.5 rounded bg-white/95 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700">
+            <BadgeCheck className="h-2.5 w-2.5" />
+            Verified
+          </span>
+        )}
+      </Link>
 
       {/* Content */}
 
-      <div className="space-y-3 p-4">
-        {/* Rating + Verified */}
-
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="font-semibold text-slate-700">{product.rating}</span>
-          </div>
-
-          {product.verified && (
-            <div className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-[11px] font-bold text-green-700">
-              <BadgeCheck className="h-3.5 w-3.5" />
-              Verified
-            </div>
-          )}
-        </div>
-
-        {/* Title */}
-
+      <div className="p-2.5">
         <Link href={`/products/${product.slug}`}>
-          <h3 className="line-clamp-2 text-base font-bold leading-snug transition group-hover:text-blue-600">
+          <h3 className="line-clamp-2 text-xs font-semibold leading-4 text-obsidian transition group-hover:text-sapphire">
             {product.name}
           </h3>
         </Link>
 
-        {/* Supplier */}
-
-        <p className="truncate text-sm text-slate-500">
-          {product.supplier}
-        </p>
-
-        {/* Price + MOQ */}
-
-        <div className="flex items-end justify-between border-t border-slate-100 pt-3">
-          <div>
-            <p className="text-[11px] uppercase tracking-wide text-slate-400">
-              Starting From
-            </p>
-            <p className="text-lg font-black text-blue-600">
-              ${product.price}
-            </p>
-          </div>
-
-          <p className="text-xs text-slate-500">
-            MOQ <span className="font-semibold text-slate-700">{product.moq}</span>
+        <div className="mt-1 flex items-center gap-1.5">
+          <p className="text-base font-bold text-sapphire">
+            ${product.price}
           </p>
+
+          {product.averageRating !== null && product.reviewsCount > 0 && (
+            <span className="flex items-center gap-0.5 text-[10px] font-medium text-obsidian/50">
+              <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" />
+              {product.averageRating.toFixed(1)}
+            </span>
+          )}
+        </div>
+
+        <div className="mt-1 flex items-center justify-between text-[10px] text-obsidian/50">
+          <span>MOQ {product.moq}</span>
+          {product.sellerId && (
+            <Link
+              href={`/sellers/${product.sellerId}`}
+              className="truncate transition hover:text-sapphire"
+            >
+              {product.supplier}
+            </Link>
+          )}
         </div>
 
         {/* Actions */}
 
-        <div className="flex gap-2 pt-1">
+        <div className="mt-2 flex gap-1.5">
           <AppButton
-            className="flex-1 justify-center"
-            size="sm"
+            className="h-8 flex-1 justify-center px-2 text-xs"
             disabled={product.stock <= 0}
             onClick={handleAddToCart}
           >
             {added ? (
               <>
-                <Check className="mr-2 h-4 w-4" />
+                <Check className="mr-1 h-3.5 w-3.5" />
                 Added
               </>
             ) : (
               <>
-                <ShoppingCart className="mr-2 h-4 w-4" />
-                {product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
+                <ShoppingCart className="mr-1 h-3.5 w-3.5" />
+                {product.stock <= 0 ? "Out of stock" : "Add to cart"}
               </>
             )}
           </AppButton>
@@ -143,10 +124,9 @@ export default function ProductCard({ product }: Props) {
           <ProductQuickView product={product}>
             <AppButton
               variant="secondary"
-              size="sm"
-              className="!w-11 justify-center px-0"
+              className="h-8 !w-8 justify-center px-0"
             >
-              <Eye className="h-4 w-4" />
+              <Eye className="h-3.5 w-3.5" />
             </AppButton>
           </ProductQuickView>
         </div>

@@ -12,6 +12,8 @@ export interface SupplierApplication {
   email: string;
   phone: string;
   website: string | null;
+  logo: string | null;
+  banner: string | null;
   status: SupplierStatus;
   created_at: string;
 }
@@ -26,6 +28,8 @@ export interface SupplierApplicationPayload {
   registration_number?: string;
   tax_number?: string;
   description?: string;
+  logo?: File | null;
+  banner?: File | null;
 }
 
 export class SupplierApiError extends Error {
@@ -58,14 +62,21 @@ export async function applyAsSupplier(
   token: string,
   payload: SupplierApplicationPayload
 ): Promise<SupplierApplication> {
+  const formData = new FormData();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === "") return;
+
+    formData.append(key, value as string | Blob);
+  });
+
   const res = await fetch(`${API_URL}/supplier/register`, {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(payload),
+    body: formData,
   });
 
   const json = await res.json();

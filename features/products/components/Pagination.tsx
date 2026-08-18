@@ -116,8 +116,8 @@ export default function Pagination({
                   onClick={() => goToPage(page)}
                   className={`flex h-11 w-11 items-center justify-center rounded-xl font-semibold transition ${
                     currentPage === page
-                      ? "bg-blue-600 text-white shadow-lg"
-                      : "border border-slate-200 hover:border-blue-500 hover:text-blue-600"
+                      ? "bg-sapphire text-white shadow-lg"
+                      : "border border-slate-200 hover:border-sapphire hover:text-sapphire"
                   }`}
                 >
                   {page}

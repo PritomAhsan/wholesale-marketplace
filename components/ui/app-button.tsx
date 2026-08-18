@@ -9,18 +9,19 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-gradient-to-r from-blue-600 to-violet-600 text-white shadow-lg shadow-blue-500/20 hover:-translate-y-1 hover:shadow-xl transition-all",
+          "bg-sapphire text-white shadow-sm hover:bg-sapphire-strong transition-colors",
 
         secondary:
-          "border bg-white hover:bg-slate-50",
+          "border border-border bg-white text-obsidian hover:bg-muted",
 
         ghost:
-          "hover:bg-slate-100",
+          "hover:bg-muted",
 
         dark:
-          "bg-slate-900 text-white hover:bg-slate-800",
-          outline:
-  "border border-border bg-background hover:bg-accent hover:text-accent-foreground",
+          "bg-obsidian text-white hover:bg-obsidian-soft",
+
+        outline:
+          "border border-border bg-background hover:bg-accent hover:text-accent-foreground",
       },
 
       size: {

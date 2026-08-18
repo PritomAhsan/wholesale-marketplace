@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { BRANDING } from "@/constants/branding";
 import {
   ChevronRight,
-  Heart,
   Home,
   LogIn,
   LogOut,
@@ -52,11 +51,6 @@ const accountLinks = [
     href: "/orders",
     icon: Wallet,
   },
-  {
-    title: "Saved Products",
-    href: "/wishlist",
-    icon: Heart,
-  },
 ];
 
 export default function MobileMenu({
@@ -83,19 +77,17 @@ export default function MobileMenu({
 
         {/* Header */}
 
-        <div className="border-b bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 px-6 py-6 text-white">
+        <div className="border-b border-obsidian-soft bg-obsidian px-6 py-6 text-white">
 
           <div className="mb-6 flex items-center justify-between">
 
-            <div className="rounded-xl bg-white px-3 py-2">
-              <Image
-                src={BRANDING.logo}
-                alt={BRANDING.siteName}
-                width={132}
-                height={45}
-                className="h-9 w-auto"
-              />
-            </div>
+            <Image
+              src={BRANDING.logoDark}
+              alt={BRANDING.siteName}
+              width={132}
+              height={45}
+              className="h-10 w-auto"
+            />
 
             <button
               onClick={onClose}
@@ -108,13 +100,17 @@ export default function MobileMenu({
 
           {/* Search */}
 
-          <button className="flex h-12 w-full items-center rounded-xl bg-white px-4 text-left text-sm text-slate-500 shadow-lg">
+          <Link
+            href="/products"
+            onClick={onClose}
+            className="flex h-12 w-full items-center rounded-xl bg-white px-4 text-left text-sm text-muted-foreground shadow-lg"
+          >
 
-            <Search className="mr-3 h-5 w-5 text-slate-400" />
+            <Search className="mr-3 h-5 w-5 text-muted-foreground" />
 
             Search products...
 
-          </button>
+          </Link>
 
         </div>
 
@@ -126,15 +122,15 @@ export default function MobileMenu({
 
           <div className="border-b p-6">
 
-            <div className="mb-4 rounded-2xl border bg-slate-50 p-4">
+            <div className="mb-4 rounded-2xl border bg-muted p-4">
 
               {user ? (
                 <>
-                  <h3 className="font-semibold text-slate-900">
+                  <h3 className="font-semibold text-obsidian">
                     Welcome, {user.first_name}
                   </h3>
 
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     {user.email}
                   </p>
 
@@ -151,11 +147,11 @@ export default function MobileMenu({
                 </>
               ) : (
                 <>
-                  <h3 className="font-semibold text-slate-900">
+                  <h3 className="font-semibold text-obsidian">
                     Welcome
                   </h3>
 
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     Sign in to manage RFQs, orders and suppliers.
                   </p>
 
@@ -164,7 +160,7 @@ export default function MobileMenu({
                     <Link
                       href="/login"
                       onClick={onClose}
-                      className="flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold transition hover:border-blue-500 hover:text-blue-600"
+                      className="flex items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold transition hover:border-sapphire hover:text-sapphire"
                     >
                       <LogIn className="h-4 w-4" />
                       Login
@@ -173,7 +169,7 @@ export default function MobileMenu({
                     <Link
                       href="/register"
                       onClick={onClose}
-                      className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-sapphire py-3 text-sm font-semibold text-white transition hover:bg-sapphire-strong"
                     >
                       <UserPlus className="h-4 w-4" />
                       Register
@@ -191,7 +187,7 @@ export default function MobileMenu({
 
           <div className="border-b px-6 py-5">
 
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-slate-400">
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">
               Quick Access
             </h4>
 
@@ -205,11 +201,11 @@ export default function MobileMenu({
                     key={item.href}
                     href={item.href}
                     onClick={onClose}
-                    className="rounded-2xl border p-4 transition hover:border-blue-300 hover:bg-blue-50"
+                    className="rounded-2xl border p-4 transition hover:border-sapphire hover:bg-sapphire-soft"
                   >
-                    <Icon className="mb-3 h-6 w-6 text-blue-600" />
+                    <Icon className="mb-3 h-6 w-6 text-sapphire" />
 
-                    <p className="text-sm font-medium text-slate-700">
+                    <p className="text-sm font-medium text-obsidian/80">
                       {item.title}
                     </p>
 
@@ -225,7 +221,7 @@ export default function MobileMenu({
 
           <div className="border-b px-6 py-5">
 
-            <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">
+            <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
               Navigation
             </h4>
 
@@ -239,8 +235,8 @@ export default function MobileMenu({
                   className={cn(
                     "flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition",
                     pathname === item.href
-                      ? "bg-blue-50 text-blue-700"
-                      : "hover:bg-slate-50"
+                      ? "bg-sapphire-soft text-sapphire-strong"
+                      : "hover:bg-muted"
                   )}
                 >
                   <span>{item.title}</span>
@@ -258,7 +254,7 @@ export default function MobileMenu({
 
           <div className="px-6 py-5">
 
-            <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">
+            <h4 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
               Buyer Services
             </h4>
 
@@ -272,11 +268,11 @@ export default function MobileMenu({
                     key={item.href}
                     href={item.href}
                     onClick={onClose}
-                    className="flex items-center justify-between rounded-xl px-4 py-3 transition hover:bg-slate-50"
+                    className="flex items-center justify-between rounded-xl px-4 py-3 transition hover:bg-muted"
                   >
                     <div className="flex items-center gap-3">
 
-                      <Icon className="h-5 w-5 text-slate-500" />
+                      <Icon className="h-5 w-5 text-muted-foreground" />
 
                       <span className="text-sm font-medium">
                         {item.title}
@@ -284,7 +280,7 @@ export default function MobileMenu({
 
                     </div>
 
-                    <ChevronRight className="h-4 w-4 text-slate-400" />
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
 
                   </Link>
                 );
@@ -298,12 +294,12 @@ export default function MobileMenu({
 
         {/* Bottom */}
 
-        <div className="border-t bg-slate-50 p-5">
+        <div className="border-t bg-muted p-5">
 
           <Link
             href="/rfq"
             onClick={onClose}
-            className="mb-3 flex h-12 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 font-semibold text-white shadow-lg transition hover:opacity-90"
+            className="mb-3 flex h-12 items-center justify-center rounded-xl bg-sapphire font-semibold text-white shadow-sm transition hover:bg-sapphire-strong"
           >
             Get Quotations
           </Link>
@@ -311,7 +307,7 @@ export default function MobileMenu({
           <Link
             href="/"
             onClick={onClose}
-            className="flex items-center justify-center gap-2 rounded-xl border bg-white py-3 text-sm font-medium transition hover:border-blue-300"
+            className="flex items-center justify-center gap-2 rounded-xl border bg-white py-3 text-sm font-medium transition hover:border-sapphire"
           >
             <Home className="h-4 w-4" />
             Back to Home

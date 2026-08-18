@@ -1,20 +1,28 @@
 import Container from "@/components/layout/Container";
 import Pagination from "@/features/products/components/Pagination";
 
-import ProductBreadcrumb from "@/features/products/components/ProductBreadcrumb";
+import CatalogSearchHero from "@/components/shared/CatalogSearchHero";
 import ProductFilters from "@/features/products/components/ProductFilters";
-import ProductGrid from "@/features/products/components/ProductGrid";
+import ProductGridWithCompare from "@/features/products/components/ProductGridWithCompare";
 import ProductToolbar from "@/features/products/components/ProductToolbar";
+import NoResultsState from "@/features/products/components/NoResultsState";
+import InventoryLanesTabs from "@/features/home/components/InventoryLanesTabs";
 import { fetchProducts } from "@/features/products/api";
 import { fetchCategories } from "@/features/categories/api";
+import { fetchBrands } from "@/features/products/brandsApi";
+import { fetchInventoryLanes } from "@/features/home/api";
 
 interface Props {
   searchParams: Promise<{
     page?: string;
     search?: string;
     category?: string;
+    brand?: string;
     min_price?: string;
     max_price?: string;
+    min_moq?: string;
+    max_moq?: string;
+    in_stock?: string;
     sort?: string;
   }>;
 }
@@ -23,147 +31,104 @@ export default async function ProductsPage({ searchParams }: Props) {
   const params = await searchParams;
   const currentPage = Number(params.page ?? 1);
 
-  const [{ products, pagination }, categories] = await Promise.all([
-    fetchProducts({
-      page: currentPage,
-      per_page: 20,
-      search: params.search,
-      category: params.category,
-      min_price: params.min_price ? Number(params.min_price) : undefined,
-      max_price: params.max_price ? Number(params.max_price) : undefined,
-      sort: params.sort,
-    }),
-    fetchCategories(),
-  ]);
+  const hasActiveFilters = Boolean(
+    params.search ||
+      params.category ||
+      params.brand ||
+      params.min_price ||
+      params.max_price ||
+      params.min_moq ||
+      params.max_moq ||
+      params.in_stock ||
+      currentPage > 1
+  );
+
+  const [{ products, pagination }, categories, brands, inventoryLanes] =
+    await Promise.all([
+      fetchProducts({
+        page: currentPage,
+        per_page: 20,
+        search: params.search,
+        category: params.category,
+        brand: params.brand,
+        min_price: params.min_price ? Number(params.min_price) : undefined,
+        max_price: params.max_price ? Number(params.max_price) : undefined,
+        min_moq: params.min_moq ? Number(params.min_moq) : undefined,
+        max_moq: params.max_moq ? Number(params.max_moq) : undefined,
+        in_stock: params.in_stock === "1" ? true : undefined,
+        sort: params.sort,
+      }),
+      fetchCategories(),
+      fetchBrands(),
+      hasActiveFilters ? Promise.resolve(null) : fetchInventoryLanes(),
+    ]);
 
   return (
-    <section className="relative overflow-hidden bg-slate-50 py-12">
+    <section className="py-10">
+      <Container>
 
-      {/* Background */}
+        <CatalogSearchHero
+          eyebrow="Bulkare wholesale"
+          headline="Wholesale products ready for business buyers"
+          copy="Compare case packs, minimums, lead times and verified seller terms."
+        />
 
-      <div className="absolute inset-0">
+        {/* Merchandising rail — curated, so hidden once the buyer is filtering/searching */}
 
-        <div className="absolute -left-40 top-20 h-[420px] w-[420px] rounded-full bg-blue-100/40 blur-3xl" />
-
-        <div className="absolute right-0 top-80 h-[450px] w-[450px] rounded-full bg-indigo-100/40 blur-3xl" />
-
-      </div>
-
-      <Container className="relative">
-
-        {/* Breadcrumb */}
-
-        <ProductBreadcrumb />
-
-        {/* Hero */}
-
-        <div className="mt-8 overflow-hidden rounded-[36px] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 px-8 py-14 text-white shadow-[0_30px_80px_rgba(15,23,42,.30)] lg:px-14">
-
-          <div className="max-w-4xl">
-
-            <span className="inline-flex rounded-full bg-blue-500/20 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-blue-300">
-              B2B Marketplace
-            </span>
-
-            <h1 className="mt-6 text-4xl font-black leading-tight lg:text-6xl">
-              Discover Premium
-              <span className="block text-blue-400">
-                Wholesale Products
-              </span>
-            </h1>
-
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-              Compare suppliers, request quotations, negotiate pricing,
-              and source products from trusted manufacturers worldwide.
-            </p>
-
-            <div className="mt-10 flex flex-wrap gap-5">
-
-              <div className="rounded-2xl border border-white/10 bg-white/10 px-6 py-4 backdrop-blur">
-
-                <h3 className="text-3xl font-black">
-                  {pagination.total}+
-                </h3>
-
-                <p className="mt-1 text-sm text-slate-300">
-                  Products
-                </p>
-
+        {inventoryLanes &&
+          (inventoryLanes.newThisWeek.length >= 4 || inventoryLanes.lowMoq.length >= 4) && (
+            <div className="mt-8 rounded-xl border border-border bg-white p-5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-sapphire">
+                Current opportunities
+              </p>
+              <h2 className="mt-1 text-lg font-bold text-obsidian">
+                Inventory selected for the way you buy
+              </h2>
+              <div className="mt-4">
+                <InventoryLanesTabs
+                  newThisWeek={inventoryLanes.newThisWeek}
+                  lowMoq={inventoryLanes.lowMoq}
+                />
               </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/10 px-6 py-4 backdrop-blur">
-
-                <h3 className="text-3xl font-black">
-                  25K+
-                </h3>
-
-                <p className="mt-1 text-sm text-slate-300">
-                  Suppliers
-                </p>
-
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/10 px-6 py-4 backdrop-blur">
-
-                <h3 className="text-3xl font-black">
-                  180+
-                </h3>
-
-                <p className="mt-1 text-sm text-slate-300">
-                  Countries
-                </p>
-
-              </div>
-
             </div>
-
-          </div>
-
-        </div>
+          )}
 
         {/* Toolbar */}
 
-        <div className="mt-14">
-
-          <ProductToolbar total={pagination.total} categories={categories} />
-
+        <div className="mt-10">
+          <ProductToolbar total={pagination.total} categories={categories} brands={brands} />
         </div>
 
         {/* Content */}
 
-        <div className="mt-10 grid gap-8 xl:grid-cols-[320px_1fr]">
-
-          {/* Filters */}
+        <div className="mt-8 grid gap-8 xl:grid-cols-[280px_1fr]">
 
           <aside className="hidden xl:block">
-
             <div className="sticky top-24">
-
-              <ProductFilters categories={categories} />
-
+              <ProductFilters categories={categories} brands={brands} />
             </div>
-
           </aside>
 
-          {/* Products */}
-
           <div>
+            {products.length > 0 ? (
+              <>
+                <ProductGridWithCompare products={products} />
 
-            <ProductGrid products={products} />
-
-            <Pagination
-              currentPage={pagination.current_page}
-              totalPages={pagination.last_page}
-              totalResults={pagination.total}
-              perPage={pagination.per_page}
-            />
-
+                <Pagination
+                  currentPage={pagination.current_page}
+                  totalPages={pagination.last_page}
+                  totalResults={pagination.total}
+                  perPage={pagination.per_page}
+                />
+              </>
+            ) : (
+              <NoResultsState search={params.search} />
+            )}
           </div>
 
         </div>
 
       </Container>
-
     </section>
   );
 }

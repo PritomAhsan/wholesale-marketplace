@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, Clock3, ShieldAlert, XCircle } from "lucide-react";
 
@@ -13,17 +13,26 @@ import {
   SupplierApiError,
   SupplierApplication,
 } from "@/features/become-supplier/api";
+import SupplierHero from "@/features/become-supplier/components/SupplierHero";
+import ValueGrid from "@/features/become-supplier/components/ValueGrid";
+import EligibilityGrid from "@/features/become-supplier/components/EligibilityGrid";
+import StorefrontPreview from "@/features/become-supplier/components/StorefrontPreview";
+import ApplicationForm, {
+  ApplicationFormState,
+} from "@/features/become-supplier/components/ApplicationForm";
 
-const initialForm = {
+const DRAFT_KEY = "bulkare_supplier_application_draft";
+
+const initialForm: ApplicationFormState = {
   company_name: "",
   business_type: "manufacturer",
+  description: "",
   contact_person: "",
   email: "",
   phone: "",
   website: "",
   registration_number: "",
   tax_number: "",
-  description: "",
 };
 
 export default function BecomeSupplierPage() {
@@ -31,7 +40,13 @@ export default function BecomeSupplierPage() {
 
   const [application, setApplication] = useState<SupplierApplication | null>(null);
   const [checking, setChecking] = useState(true);
-  const [form, setForm] = useState(initialForm);
+
+  const [step, setStep] = useState(0);
+  const [form, setForm] = useState<ApplicationFormState>(initialForm);
+  const [restoredDraft, setRestoredDraft] = useState(false);
+  const [logo, setLogo] = useState<File | null>(null);
+  const [banner, setBanner] = useState<File | null>(null);
+
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [errorMessage, setErrorMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -44,21 +59,46 @@ export default function BecomeSupplierPage() {
 
     fetchMySupplierApplication(token).then((app) => {
       setApplication(app);
-      if (user) {
-        setForm((prev) => ({
-          ...prev,
-          contact_person: prev.contact_person || user.full_name,
-          email: prev.email || user.email,
-          phone: prev.phone || user.phone || "",
-        }));
+
+      if (!app) {
+        const draft = typeof window !== "undefined" ? localStorage.getItem(DRAFT_KEY) : null;
+
+        if (draft) {
+          try {
+            setForm(JSON.parse(draft));
+            setRestoredDraft(true);
+          } catch {
+            // ignore malformed draft
+          }
+        } else if (user) {
+          setForm((prev) => ({
+            ...prev,
+            contact_person: prev.contact_person || user.full_name,
+            email: prev.email || user.email,
+            phone: prev.phone || user.phone || "",
+          }));
+        }
       }
+
       setChecking(false);
     });
   }, [token, user]);
 
-  function update<K extends keyof typeof initialForm>(key: K, value: string) {
+  // Real saved progress: persist to this browser as the user fills the
+  // form, restored above on return. No backend draft-saving exists, so
+  // this doesn't claim to sync across devices.
+  useEffect(() => {
+    if (!application && typeof window !== "undefined") {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(form));
+    }
+  }, [form, application]);
+
+  function update<K extends keyof ApplicationFormState>(key: K, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
+
+  const logoPreview = useMemo(() => (logo ? URL.createObjectURL(logo) : null), [logo]);
+  const bannerPreview = useMemo(() => (banner ? URL.createObjectURL(banner) : null), [banner]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -76,9 +116,12 @@ export default function BecomeSupplierPage() {
         registration_number: form.registration_number || undefined,
         tax_number: form.tax_number || undefined,
         description: form.description || undefined,
+        logo,
+        banner,
       });
 
       setApplication(result);
+      localStorage.removeItem(DRAFT_KEY);
     } catch (err) {
       if (err instanceof SupplierApiError) {
         setErrorMessage(err.message);
@@ -93,8 +136,8 @@ export default function BecomeSupplierPage() {
 
   if (authLoading || checking) {
     return (
-      <section className="bg-slate-50 py-24">
-        <Container className="max-w-lg text-center text-slate-500">
+      <section className="bg-ivory py-24">
+        <Container className="max-w-lg text-center text-obsidian/50">
           Loading...
         </Container>
       </section>
@@ -103,14 +146,14 @@ export default function BecomeSupplierPage() {
 
   if (!user) {
     return (
-      <section className="bg-slate-50 py-24">
+      <section className="bg-ivory py-24">
         <Container className="max-w-lg">
-          <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
-            <ShieldAlert className="mx-auto mb-4 text-blue-600" size={48} />
+          <div className="rounded-xl border border-border bg-white p-10 text-center shadow-sm">
+            <ShieldAlert className="mx-auto mb-4 text-sapphire" size={48} />
 
             <h1 className="text-2xl font-bold">Sign In Required</h1>
 
-            <p className="mt-3 text-slate-500">
+            <p className="mt-3 text-obsidian/50">
               Create a buyer account first, then apply to become a verified
               BULKARE supplier.
             </p>
@@ -134,7 +177,7 @@ export default function BecomeSupplierPage() {
 
   if (application) {
     return (
-      <section className="bg-slate-50 py-24">
+      <section className="bg-ivory py-24">
         <Container className="max-w-lg">
           <StatusCard application={application} />
         </Container>
@@ -143,182 +186,45 @@ export default function BecomeSupplierPage() {
   }
 
   return (
-    <section className="bg-slate-50 py-16">
-      <Container className="max-w-2xl">
-        <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
+    <>
+      <SupplierHero
+        companyName={form.company_name}
+        logoPreview={logoPreview}
+        bannerPreview={bannerPreview}
+      />
 
-          <h1 className="text-3xl font-bold">Become a BULKARE Supplier</h1>
+      <ValueGrid />
 
-          <p className="mt-2 text-slate-500">
-            Tell us about your business. Our team reviews every application
-            before your store goes live.
-          </p>
+      <EligibilityGrid />
 
-          {errorMessage && (
-            <div className="mt-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
-              {errorMessage}
-            </div>
-          )}
+      <StorefrontPreview
+        companyName={form.company_name}
+        businessType={form.business_type}
+        registrationNumber={form.registration_number}
+        taxNumber={form.tax_number}
+        website={form.website}
+      />
 
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-
-            <div>
-              <label className="mb-2 block text-sm font-semibold">
-                Company Name *
-              </label>
-
-              <input
-                type="text"
-                required
-                value={form.company_name}
-                onChange={(e) => update("company_name", e.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-              />
-
-              <FieldError errors={errors.company_name} />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-semibold">
-                Business Type *
-              </label>
-
-              <select
-                value={form.business_type}
-                onChange={(e) => update("business_type", e.target.value)}
-                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue-500"
-              >
-                <option value="manufacturer">Manufacturer</option>
-                <option value="wholesaler">Wholesaler</option>
-                <option value="distributor">Distributor</option>
-                <option value="exporter">Exporter</option>
-                <option value="retailer">Retailer</option>
-              </select>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-semibold">
-                  Contact Person *
-                </label>
-
-                <input
-                  type="text"
-                  required
-                  value={form.contact_person}
-                  onChange={(e) => update("contact_person", e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-                />
-
-                <FieldError errors={errors.contact_person} />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-semibold">
-                  Business Email *
-                </label>
-
-                <input
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={(e) => update("email", e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-                />
-
-                <FieldError errors={errors.email} />
-              </div>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-semibold">
-                  Phone *
-                </label>
-
-                <input
-                  type="text"
-                  required
-                  value={form.phone}
-                  onChange={(e) => update("phone", e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-                />
-
-                <FieldError errors={errors.phone} />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-semibold">
-                  Website
-                </label>
-
-                <input
-                  type="text"
-                  placeholder="https://"
-                  value={form.website}
-                  onChange={(e) => update("website", e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-                />
-
-                <FieldError errors={errors.website} />
-              </div>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-semibold">
-                  Business Registration Number
-                </label>
-
-                <input
-                  type="text"
-                  value={form.registration_number}
-                  onChange={(e) => update("registration_number", e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-semibold">
-                  Tax ID
-                </label>
-
-                <input
-                  type="text"
-                  value={form.tax_number}
-                  onChange={(e) => update("tax_number", e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-semibold">
-                Tell Us About Your Business
-              </label>
-
-              <textarea
-                rows={5}
-                placeholder="Products you sell, warehouse location, years in business, export markets, etc."
-                value={form.description}
-                onChange={(e) => update("description", e.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-              />
-            </div>
-
-            <AppButton
-              type="submit"
-              disabled={submitting}
-              className="w-full justify-center py-6 text-lg"
-            >
-              {submitting ? "Submitting..." : "Submit Application"}
-            </AppButton>
-
-          </form>
-
-        </div>
-      </Container>
-    </section>
+      <section className="bg-ivory py-14">
+        <Container className="max-w-2xl">
+          <ApplicationForm
+            step={step}
+            setStep={setStep}
+            form={form}
+            update={update}
+            logo={logo}
+            banner={banner}
+            onLogoChange={setLogo}
+            onBannerChange={setBanner}
+            errors={errors}
+            errorMessage={errorMessage}
+            submitting={submitting}
+            restoredDraft={restoredDraft}
+            onSubmit={handleSubmit}
+          />
+        </Container>
+      </section>
+    </>
   );
 }
 
@@ -347,19 +253,19 @@ function StatusCard({ application }: { application: SupplierApplication }) {
   }[application.status];
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
+    <div className="rounded-xl border border-border bg-white p-10 text-center shadow-sm">
       {config.icon}
 
       <h1 className="text-2xl font-bold">{config.title}</h1>
 
-      <p className="mt-3 text-slate-500">{config.body}</p>
+      <p className="mt-3 text-obsidian/50">{config.body}</p>
 
-      <div className="mt-8 rounded-2xl bg-slate-50 p-6 text-left">
-        <p className="text-sm font-semibold text-slate-900">
+      <div className="mt-8 rounded-lg bg-ivory p-6 text-left">
+        <p className="text-sm font-semibold text-obsidian">
           {application.company_name}
         </p>
 
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-obsidian/50">
           Submitted {new Date(application.created_at).toLocaleDateString()}
         </p>
       </div>
@@ -369,10 +275,4 @@ function StatusCard({ application }: { application: SupplierApplication }) {
       </Link>
     </div>
   );
-}
-
-function FieldError({ errors }: { errors?: string[] }) {
-  if (!errors?.length) return null;
-
-  return <p className="mt-2 text-sm text-red-600">{errors[0]}</p>;
 }

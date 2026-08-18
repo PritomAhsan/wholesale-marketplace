@@ -3,8 +3,9 @@ import { Product } from "./data/products";
 
 interface ApiSupplierRef {
   uuid: string;
-  // Sellers are anonymized on the storefront — only a generated
-  // display label is ever sent to buyer-facing requests.
+  // Sellers are anonymized on the storefront — only a protected,
+  // generated Seller ID is ever sent to buyer-facing requests.
+  seller_id: string | null;
   display_name: string;
 }
 
@@ -25,6 +26,8 @@ export interface ApiProductListItem {
   categories: string[];
   stock: number;
   primary_image: string | null;
+  average_rating?: number | null;
+  reviews_count?: number;
 }
 
 interface ApiProductImage {
@@ -55,6 +58,13 @@ interface ApiProductDetail {
   min_order_quantity: string | null;
   stock_quantity: number;
   images: ApiProductImage[];
+  price_tiers?: {
+    min_quantity: number;
+    discount_percent: number | null;
+    discount_price: string | null;
+  }[];
+  average_rating?: number | null;
+  reviews_count?: number;
 }
 
 interface Pagination {
@@ -72,19 +82,22 @@ export function toProduct(item: ApiProductListItem): Product {
     name: item.name,
     supplier: item.supplier?.display_name ?? "BULKARE Seller",
     supplierUuid: item.supplier?.uuid ?? "",
+    sellerId: item.supplier?.seller_id ?? "",
     supplierLogo: "",
     country: "",
     category: item.categories[0] ?? "Uncategorized",
     price: Number(item.selling_price ?? 0),
     moq: Number(item.min_order_quantity ?? 1),
     stock: item.stock,
-    rating: 0,
     verified: true,
     image: item.primary_image ?? "/images/product-placeholder.svg",
     gallery: item.primary_image ? [item.primary_image] : [],
     shortDescription: "",
     description: "",
     specifications: [],
+    priceTiers: [],
+    averageRating: item.average_rating ?? null,
+    reviewsCount: item.reviews_count ?? 0,
   };
 }
 
@@ -100,13 +113,13 @@ function toProductDetail(item: ApiProductDetail): Product {
     name: item.name,
     supplier: item.supplier?.display_name ?? "BULKARE Seller",
     supplierUuid: item.supplier?.uuid ?? "",
+    sellerId: item.supplier?.seller_id ?? "",
     supplierLogo: "",
     country: "",
     category: item.categories[0]?.name ?? "Uncategorized",
     price: Number(item.selling_price ?? 0),
     moq: Number(item.min_order_quantity ?? 1),
     stock: item.stock_quantity,
-    rating: 0,
     verified: true,
     image: images[0],
     gallery: images,
@@ -116,6 +129,13 @@ function toProductDetail(item: ApiProductDetail): Product {
       label: attr.attribute.name,
       value: attr.value.value,
     })),
+    priceTiers: (item.price_tiers ?? []).map((tier) => ({
+      minQuantity: tier.min_quantity,
+      discountPercent: tier.discount_percent,
+      discountPrice: tier.discount_price ? Number(tier.discount_price) : null,
+    })),
+    averageRating: item.average_rating ?? null,
+    reviewsCount: item.reviews_count ?? 0,
   };
 }
 
@@ -126,6 +146,10 @@ export async function fetchProducts(params?: {
   supplier?: string;
   min_price?: number;
   max_price?: number;
+  min_moq?: number;
+  max_moq?: number;
+  created_after?: string;
+  in_stock?: boolean;
   sort?: string;
   page?: number;
   per_page?: number;

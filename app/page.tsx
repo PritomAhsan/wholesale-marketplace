@@ -1,23 +1,31 @@
 import Hero from "@/features/home/sections/Hero";
+import AssuranceRail from "@/features/home/sections/AssuranceRail";
+import ShopByNeed from "@/features/home/sections/ShopByNeed";
 import FeaturedCategories from "@/features/home/sections/FeaturedCategories";
-import FeaturedProducts from "@/features/home/sections/FeaturedProducts";
+import InventoryLanes from "@/features/home/sections/InventoryLanes";
+import ReadyToOrder from "@/features/home/sections/ReadyToOrder";
+import RestockPlanner from "@/features/home/sections/RestockPlanner";
+import RfqDesk from "@/features/home/sections/RfqDesk";
+import WhatBulkareIs from "@/features/home/sections/WhatBulkareIs";
+import ProtectedSupplierNetwork from "@/features/home/sections/ProtectedSupplierNetwork";
 import HowItWorks from "@/features/home/sections/HowItWorks";
-import TrustedBusinesses from "@/features/home/sections/TrustedBusinesses";
-import BecomeSupplierCTA from "@/features/home/sections/BecomeSupplierCTA";
-import Testimonials from "@/features/home/sections/Testimonials";
-import Newsletter from "@/features/home/sections/Newsletter";
+import BuyerSupplierCTA from "@/components/shared/BuyerSupplierCTA";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <AssuranceRail />
+      <ShopByNeed />
       <FeaturedCategories />
-      <FeaturedProducts />
+      <InventoryLanes />
+      <ReadyToOrder />
+      <RestockPlanner />
+      <RfqDesk />
+      <WhatBulkareIs />
+      <ProtectedSupplierNetwork />
       <HowItWorks />
-      {/* <TrustedBusinesses /> */}
-      <BecomeSupplierCTA />
-      <Testimonials />
-      <Newsletter />
+      <BuyerSupplierCTA />
     </>
   );
 }

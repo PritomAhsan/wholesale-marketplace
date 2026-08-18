@@ -42,7 +42,7 @@ export default function SortDropdown() {
 
       <div className="hidden h-12 items-center gap-2 rounded-2xl bg-slate-100 px-4 lg:flex">
 
-        <ArrowDownWideNarrow className="h-4 w-4 text-blue-600" />
+        <ArrowDownWideNarrow className="h-4 w-4 text-sapphire" />
 
         <span className="text-sm font-semibold text-slate-700">
           Sort By
@@ -62,7 +62,7 @@ export default function SortDropdown() {
             shadow-sm
             transition-all
             duration-300
-            hover:border-blue-400
+            hover:border-sapphire
             hover:shadow-lg
             md:w-72
           "
@@ -70,7 +70,7 @@ export default function SortDropdown() {
 
           <div className="flex items-center gap-2">
 
-            <Sparkles className="h-4 w-4 text-blue-600" />
+            <Sparkles className="h-4 w-4 text-sapphire" />
 
             <SelectValue />
 

@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Heart,
+  Lock,
   MapPin,
   MessageSquare,
   Package,
@@ -47,6 +48,8 @@ export default function ProductQuickView({
       ? product.gallery
       : [product.image];
 
+  const outOfStock = product.stock <= 0;
+
   const nextImage = () => {
     setImageIndex((prev) =>
       prev === images.length - 1 ? 0 : prev + 1
@@ -74,7 +77,7 @@ export default function ProductQuickView({
                     LEFT
           ============================================ */}
 
-          <div className="border-r border-slate-200 bg-slate-50">
+          <div className="border-r border-border bg-ivory">
 
             {/* Image */}
 
@@ -189,8 +192,8 @@ export default function ProductQuickView({
 
                     ${
                       imageIndex === index
-                        ? "border-blue-600 ring-2 ring-blue-100"
-                        : "border-slate-200 hover:border-blue-300"
+                        ? "border-sapphire ring-2 ring-sapphire-soft"
+                        : "border-border hover:border-sapphire/50"
                     }
                   `}
                 >
@@ -212,38 +215,22 @@ export default function ProductQuickView({
 
           {/* ===========================================
                     RIGHT
-                    (Continue in Part 2)
           ============================================ */}
 
           <div className="p-8">
-                        {/* Rating */}
+
+            {/* Verified badge */}
 
             <div className="flex items-center justify-between">
 
-              <div className="flex items-center gap-3">
-
-                <div className="flex items-center gap-1">
-
-                  <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-
-                  <span className="text-lg font-bold">
-                    {product.rating}
-                  </span>
-
-                </div>
-
-                <span className="text-slate-400">
-                  •
+              {product.sellerId && (
+                <span className="text-xs font-semibold uppercase tracking-wide text-obsidian/40">
+                  {product.sellerId}
                 </span>
-
-                <span className="text-sm text-slate-500">
-                  286 Reviews
-                </span>
-
-              </div>
+              )}
 
               {product.verified && (
-                <div className="flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700">
+                <div className="flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700">
 
                   <BadgeCheck className="h-4 w-4" />
 
@@ -256,15 +243,27 @@ export default function ProductQuickView({
 
             {/* Product Name */}
 
-            <h2 className="mt-6 text-4xl font-black leading-tight text-slate-900">
+            <h2 className="mt-6 text-3xl font-black leading-tight text-obsidian">
 
               {product.name}
 
             </h2>
 
+            {product.averageRating !== null && product.reviewsCount > 0 && (
+              <div className="mt-2 flex items-center gap-1.5 text-sm text-obsidian/60">
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <span className="font-semibold text-obsidian">
+                  {product.averageRating.toFixed(1)}
+                </span>
+                <span className="text-obsidian/40">
+                  ({product.reviewsCount} review{product.reviewsCount !== 1 ? "s" : ""})
+                </span>
+              </div>
+            )}
+
             {/* Description */}
 
-            <p className="mt-5 text-[15px] leading-8 text-slate-600">
+            <p className="mt-5 text-[15px] leading-8 text-obsidian/60">
 
               {product.shortDescription}
 
@@ -272,11 +271,11 @@ export default function ProductQuickView({
 
             {/* Supplier */}
 
-            <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6">
+            <div className="mt-8 rounded-3xl border border-border bg-ivory p-6">
 
               <div className="flex items-start gap-4">
 
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-xl font-black text-white shadow-lg">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-obsidian text-xl font-black text-white shadow-lg">
 
                   {product.supplier.charAt(0)}
 
@@ -286,45 +285,27 @@ export default function ProductQuickView({
 
                   <div className="flex items-center gap-2">
 
-                    <h3 className="text-lg font-bold">
+                    <h3 className="text-lg font-bold text-obsidian">
 
                       {product.supplier}
 
                     </h3>
 
-                    <ShieldCheck className="h-5 w-5 text-green-500" />
+                    {product.verified && (
+                      <ShieldCheck className="h-5 w-5 text-emerald-500" />
+                    )}
 
                   </div>
 
-                  <div className="mt-2 flex items-center gap-2 text-sm text-slate-500">
+                  {product.country && (
+                    <div className="mt-2 flex items-center gap-2 text-sm text-obsidian/50">
 
-                    <MapPin className="h-4 w-4" />
+                      <MapPin className="h-4 w-4" />
 
-                    {product.country}
+                      {product.country}
 
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap gap-3">
-
-                    <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
-
-                      12 Years
-
-                    </span>
-
-                    <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
-
-                      Gold Supplier
-
-                    </span>
-
-                    <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">
-
-                      Trade Assurance
-
-                    </span>
-
-                  </div>
+                    </div>
+                  )}
 
                 </div>
 
@@ -334,15 +315,15 @@ export default function ProductQuickView({
 
             {/* Price */}
 
-            <div className="mt-8 rounded-3xl bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white shadow-xl">
+            <div className="mt-8 rounded-3xl bg-obsidian p-6 text-white shadow-xl">
 
               <div className="flex items-end justify-between">
 
                 <div>
 
-                  <p className="text-sm text-blue-100">
+                  <p className="text-sm text-ivory/50">
 
-                    Starting Price
+                    Unit Price
 
                   </p>
 
@@ -350,11 +331,11 @@ export default function ProductQuickView({
 
                     <span className="text-5xl font-black">
 
-                      ${product.price}
+                      ${product.price.toFixed(2)}
 
                     </span>
 
-                    <span className="pb-2 text-blue-100">
+                    <span className="pb-2 text-ivory/50">
 
                       / unit
 
@@ -364,9 +345,9 @@ export default function ProductQuickView({
 
                 </div>
 
-                <div className="rounded-2xl bg-white/15 px-5 py-4 text-center backdrop-blur">
+                <div className="rounded-2xl bg-white/10 px-5 py-4 text-center backdrop-blur">
 
-                  <p className="text-xs uppercase tracking-wider">
+                  <p className="text-xs uppercase tracking-wider text-ivory/50">
 
                     MOQ
 
@@ -386,87 +367,37 @@ export default function ProductQuickView({
 
             {/* Quick Information */}
 
-            <div className="mt-8 grid grid-cols-3 gap-4">
+            <div className="mt-8 grid grid-cols-2 gap-4">
 
-              <div className="rounded-2xl border border-slate-200 p-5 text-center">
+              <div className="rounded-2xl border border-border p-5 text-center">
 
-                <Building2 className="mx-auto h-6 w-6 text-blue-600" />
+                <Building2 className="mx-auto h-6 w-6 text-sapphire" />
 
-                <p className="mt-3 text-xs uppercase tracking-wider text-slate-500">
+                <p className="mt-3 text-xs uppercase tracking-wider text-obsidian/40">
                   Supplier
                 </p>
 
-                <p className="mt-1 font-bold">
-                  Verified
+                <p className="mt-1 font-bold text-obsidian">
+                  {product.verified ? "Verified" : "Standard"}
                 </p>
 
               </div>
 
-              <div className="rounded-2xl border border-slate-200 p-5 text-center">
+              <div className="rounded-2xl border border-border p-5 text-center">
 
-                <Package className="mx-auto h-6 w-6 text-blue-600" />
+                <Package className="mx-auto h-6 w-6 text-sapphire" />
 
-                <p className="mt-3 text-xs uppercase tracking-wider text-slate-500">
+                <p className="mt-3 text-xs uppercase tracking-wider text-obsidian/40">
                   Availability
                 </p>
 
-                <p className="mt-1 font-bold">
-                  In Stock
-                </p>
-
-              </div>
-
-              <div className="rounded-2xl border border-slate-200 p-5 text-center">
-
-                <ShieldCheck className="mx-auto h-6 w-6 text-blue-600" />
-
-                <p className="mt-3 text-xs uppercase tracking-wider text-slate-500">
-                  Payment
-                </p>
-
-                <p className="mt-1 font-bold">
-                  Secure
+                <p className="mt-1 font-bold text-obsidian">
+                  {outOfStock ? "Out of Stock" : "In Stock"}
                 </p>
 
               </div>
 
             </div>
-
-            {/* Continue with Part 3 */}
-                        {/* Specifications */}
-
-            {/* <div className="mt-8">
-
-              <h3 className="text-xl font-bold text-slate-900">
-                Specifications
-              </h3>
-
-              <div className="mt-5 overflow-hidden rounded-3xl border border-slate-200">
-
-                {product.specifications.map((spec, index) => (
-                  <div
-                    key={spec.label}
-                    className={`grid grid-cols-[170px_1fr] gap-6 px-6 py-4 ${
-                      index !== product.specifications.length - 1
-                        ? "border-b border-slate-100"
-                        : ""
-                    }`}
-                  >
-
-                    <p className="font-semibold text-slate-500">
-                      {spec.label}
-                    </p>
-
-                    <p className="font-medium text-slate-900">
-                      {spec.value}
-                    </p>
-
-                  </div>
-                ))}
-
-              </div>
-
-            </div> */}
 
             {/* Actions */}
 
@@ -484,7 +415,7 @@ export default function ProductQuickView({
                 variant="secondary"
                 className="w-full justify-center"
                 size="lg"
-                disabled={product.stock <= 0}
+                disabled={outOfStock}
                 onClick={() =>
                   addItem({
                     productUuid: product.uuid,
@@ -499,7 +430,7 @@ export default function ProductQuickView({
                   })
                 }
               >
-                {product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
+                {outOfStock ? "Out of Stock" : "Add to Cart"}
               </AppButton>
 
               <Link
@@ -539,11 +470,11 @@ export default function ProductQuickView({
 
             </div>
 
-            {/* Trust Badges */}
+            {/* Trust — real, platform-level claims only */}
 
-            <div className="mt-10 rounded-3xl bg-slate-50 p-6">
+            <div className="mt-10 rounded-3xl bg-ivory p-6">
 
-              <h4 className="font-bold text-slate-900">
+              <h4 className="font-bold text-obsidian">
                 Why Buy Here?
               </h4>
 
@@ -551,30 +482,31 @@ export default function ProductQuickView({
 
                 <div className="flex items-center gap-3">
 
-                  <ShieldCheck className="h-5 w-5 text-green-600" />
+                  <ShieldCheck className="h-5 w-5 text-emerald-600" />
 
-                  <span className="text-sm text-slate-600">
-                    Verified supplier with business authentication.
+                  <span className="text-sm text-obsidian/60">
+                    Privately verified suppliers, reviewed before listing.
                   </span>
 
                 </div>
 
                 <div className="flex items-center gap-3">
 
-                  <BadgeCheck className="h-5 w-5 text-blue-600" />
+                  <Lock className="h-5 w-5 text-sapphire" />
 
-                  <span className="text-sm text-slate-600">
-                    Trade Assurance available for eligible orders.
+                  <span className="text-sm text-obsidian/60">
+                    Protected seller identity — direct contact stays private
+                    until you engage.
                   </span>
 
                 </div>
 
                 <div className="flex items-center gap-3">
 
-                  <Package className="h-5 w-5 text-amber-600" />
+                  <MessageSquare className="h-5 w-5 text-champagne" />
 
-                  <span className="text-sm text-slate-600">
-                    Bulk orders with worldwide shipping support.
+                  <span className="text-sm text-obsidian/60">
+                    Send a structured RFQ for custom quantities or terms.
                   </span>
 
                 </div>

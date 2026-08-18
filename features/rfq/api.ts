@@ -17,6 +17,37 @@ export interface RfqPayload {
   contact_phone?: string;
 }
 
+export interface MyRfq {
+  uuid: string;
+  product_name: string;
+  quantity: string;
+  unit: string;
+  destination_country: string;
+  status: string;
+  admin_response: string | null;
+  responded_at: string | null;
+  created_at: string;
+  supplier: { uuid: string; display_name: string } | null;
+}
+
+export async function fetchMyRfqs(token: string): Promise<MyRfq[]> {
+  const res = await fetch(`${API_URL}/rfqs`, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    cache: "no-store",
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new Error(json.message ?? "Failed to load your RFQs");
+  }
+
+  return json.data.rfqs;
+}
+
 export class RfqValidationError extends Error {
   errors: Record<string, string[]>;
 

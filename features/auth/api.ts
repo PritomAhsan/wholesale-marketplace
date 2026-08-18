@@ -39,7 +39,7 @@ export class AuthApiError extends Error {
 
 async function post(
   path: string,
-  body: Record<string, unknown>
+  body: LoginPayload | RegisterPayload
 ): Promise<{ user: AuthUser; token: string }> {
   const res = await fetch(`${API_URL}${path}`, {
     method: "POST",

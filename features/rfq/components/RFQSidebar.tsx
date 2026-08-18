@@ -1,60 +1,55 @@
 import {
     BadgeCheck,
-    Globe,
+    Lock,
     MessageCircle,
     ShieldCheck,
 } from "lucide-react";
 
 export default function RFQSidebar() {
     return (
-        <aside className="sticky top-24 space-y-6">
+        <aside className="sticky top-24 space-y-4">
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-xl border border-border bg-white p-5">
 
-                <h3 className="text-xl font-bold">
+                <h3 className="text-sm font-bold text-obsidian">
                     Why send an RFQ?
                 </h3>
 
-                <div className="mt-6 space-y-5">
+                <div className="mt-4 space-y-3">
 
                     <Item
-                        icon={<BadgeCheck size={18} />}
-                        text="Verified Suppliers"
+                        icon={<BadgeCheck size={16} />}
+                        text="Routed only to privately verified suppliers"
                     />
 
                     <Item
-                        icon={<MessageCircle size={18} />}
-                        text="Multiple Quotations"
+                        icon={<MessageCircle size={16} />}
+                        text="Compare multiple qualified offers in one place"
                     />
 
                     <Item
-                        icon={<ShieldCheck size={18} />}
-                        text="Secure Communication"
+                        icon={<ShieldCheck size={16} />}
+                        text="Direct contact stays private until you accept"
                     />
 
                     <Item
-                        icon={<Globe size={18} />}
-                        text="Worldwide Suppliers"
+                        icon={<Lock size={16} />}
+                        text="No obligation to purchase"
                     />
 
                 </div>
 
             </div>
 
-            <div className="rounded-3xl bg-blue-600 p-8 text-white">
-
-                <div className="grid grid-cols-2 gap-6 text-center">
-
-                    <Stat value="98%" label="Response Rate" />
-
-                    <Stat value="120+" label="Countries" />
-
-                    <Stat value="10K+" label="Suppliers" />
-
-                    <Stat value="<24h" label="Avg Reply" />
-
-                </div>
-
+            <div id="how-offers-work" className="rounded-xl bg-obsidian p-5 text-white">
+                <p className="text-xs font-semibold uppercase tracking-wide text-champagne">
+                    How offers work
+                </p>
+                <ol className="mt-3 space-y-2 text-xs text-ivory/70">
+                    <li>1. Bulkare reviews the request.</li>
+                    <li>2. Matching approved suppliers respond.</li>
+                    <li>3. You compare terms and continue securely.</li>
+                </ol>
             </div>
 
         </aside>
@@ -69,29 +64,9 @@ function Item({
     text: string;
 }) {
     return (
-        <div className="flex items-center gap-3">
-            {icon}
+        <div className="flex items-start gap-2.5 text-sm text-obsidian/70">
+            <span className="mt-0.5 text-sapphire">{icon}</span>
             <span>{text}</span>
-        </div>
-    );
-}
-
-function Stat({
-    value,
-    label,
-}: {
-    value: string;
-    label: string;
-}) {
-    return (
-        <div>
-            <div className="text-2xl font-black">
-                {value}
-            </div>
-
-            <div className="text-sm text-blue-100">
-                {label}
-            </div>
         </div>
     );
 }

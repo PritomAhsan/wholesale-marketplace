@@ -33,18 +33,12 @@ export default function SearchInput({
   return (
     <form onSubmit={handleSubmit} className="relative">
 
-      <div className="group flex overflow-hidden rounded-[26px] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-xl focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100">
+      <div className="group flex overflow-hidden rounded-xl border border-border bg-white transition-colors duration-200 focus-within:border-sapphire">
 
         {/* Left */}
 
-        <div className="flex items-center gap-3 px-5">
-
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg">
-
-            <Search className="h-5 w-5 text-white" />
-
-          </div>
-
+        <div className="flex items-center pl-5">
+          <Search className="h-4.5 w-4.5 text-muted-foreground" />
         </div>
 
         {/* Input */}
@@ -55,26 +49,26 @@ export default function SearchInput({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           className="
-            h-16
+            h-14
             flex-1
             border-0
             bg-transparent
-            px-1
-            text-[15px]
+            px-4
+            text-sm
             font-medium
-            text-slate-900
-            placeholder:text-slate-400
+            text-obsidian
+            placeholder:text-muted-foreground
             outline-none
           "
         />
 
         {/* Right */}
 
-        <div className="hidden items-center pr-3 lg:flex">
+        <div className="hidden items-center pr-2 lg:flex">
 
           <button
             type="submit"
-            className="rounded-2xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-blue-700"
+            className="rounded-lg bg-sapphire px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-sapphire-strong"
           >
             Search
           </button>

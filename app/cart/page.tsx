@@ -17,18 +17,18 @@ export default function CartPage() {
 
   if (count === 0) {
     return (
-      <section className="bg-slate-50 py-24">
+      <section className="bg-ivory py-24">
         <Container className="max-w-lg text-center">
-          <ShoppingBag className="mx-auto mb-4 text-slate-300" size={64} />
+          <ShoppingBag className="mx-auto mb-4 text-obsidian/20" size={56} />
 
-          <h1 className="text-2xl font-bold">Your Cart is Empty</h1>
+          <h1 className="text-xl font-bold text-obsidian">Your cart is empty</h1>
 
-          <p className="mt-3 text-slate-500">
+          <p className="mt-2 text-sm text-obsidian/50">
             Browse wholesale products and add items to get started.
           </p>
 
           <Link href="/products">
-            <AppButton className="mt-8">Browse Products</AppButton>
+            <AppButton className="mt-7">Browse Products</AppButton>
           </Link>
         </Container>
       </section>
@@ -36,55 +36,55 @@ export default function CartPage() {
   }
 
   return (
-    <section className="bg-slate-50 py-12">
+    <section className="bg-ivory py-10">
       <Container>
-        <h1 className="text-3xl font-bold">Shopping Cart</h1>
+        <h1 className="text-2xl font-bold text-obsidian">Shopping Cart</h1>
 
-        <p className="mt-2 text-slate-500">
+        <p className="mt-1.5 text-sm text-obsidian/50">
           {count} item{count !== 1 ? "s" : ""} across {supplierGroups.length}{" "}
           supplier{supplierGroups.length !== 1 ? "s" : ""}
         </p>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
-          <div className="space-y-8">
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
+          <div className="space-y-4">
             {supplierGroups.map(([supplierUuid, group]) => (
               <div
                 key={supplierUuid}
-                className="rounded-3xl border border-slate-200 bg-white p-6"
+                className="rounded-xl border border-border bg-white p-4"
               >
-                <h2 className="mb-4 text-lg font-bold text-slate-900">
+                <h2 className="mb-3 text-sm font-bold text-obsidian">
                   {group.supplierName}
                 </h2>
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {group.items.map((item) => (
                     <div
                       key={item.productUuid}
-                      className="flex flex-col gap-4 border-b border-slate-100 pb-4 last:border-0 last:pb-0 sm:flex-row sm:items-center"
+                      className="flex flex-col gap-3 border-b border-border pb-3 last:border-0 last:pb-0 sm:flex-row sm:items-center"
                     >
                       <Image
                         src={item.image}
                         alt={item.name}
-                        width={80}
-                        height={80}
-                        className="h-20 w-20 rounded-xl object-cover"
+                        width={56}
+                        height={56}
+                        className="h-14 w-14 rounded-lg object-cover"
                       />
 
                       <div className="flex-1">
                         <Link
                           href={`/products/${item.slug}`}
-                          className="font-semibold text-slate-900 hover:text-blue-600"
+                          className="text-sm font-semibold text-obsidian hover:text-sapphire"
                         >
                           {item.name}
                         </Link>
 
-                        <p className="mt-1 text-sm text-slate-500">
+                        <p className="mt-0.5 text-xs text-obsidian/50">
                           ${item.price.toFixed(2)} / unit · MOQ {item.moq}
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center rounded-xl border border-slate-200">
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center rounded-lg border border-border">
                           <button
                             onClick={() =>
                               updateQuantity(
@@ -92,12 +92,12 @@ export default function CartPage() {
                                 item.quantity - item.moq
                               )
                             }
-                            className="flex h-10 w-10 items-center justify-center hover:bg-slate-100"
+                            className="flex h-8 w-8 items-center justify-center hover:bg-ivory"
                           >
-                            <Minus className="h-4 w-4" />
+                            <Minus className="h-3.5 w-3.5" />
                           </button>
 
-                          <span className="w-14 text-center font-semibold">
+                          <span className="w-10 text-center text-sm font-semibold text-obsidian">
                             {item.quantity}
                           </span>
 
@@ -108,13 +108,13 @@ export default function CartPage() {
                                 item.quantity + item.moq
                               )
                             }
-                            className="flex h-10 w-10 items-center justify-center hover:bg-slate-100"
+                            className="flex h-8 w-8 items-center justify-center hover:bg-ivory"
                           >
-                            <Plus className="h-4 w-4" />
+                            <Plus className="h-3.5 w-3.5" />
                           </button>
                         </div>
 
-                        <p className="w-24 text-right font-bold text-slate-900">
+                        <p className="w-20 text-right text-sm font-bold text-obsidian">
                           ${(item.quantity * item.price).toLocaleString(undefined, {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
@@ -123,18 +123,18 @@ export default function CartPage() {
 
                         <button
                           onClick={() => removeItem(item.productUuid)}
-                          className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                          className="rounded-lg p-1.5 text-obsidian/30 hover:bg-red-50 hover:text-red-600"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-4 flex justify-end text-sm text-slate-500">
+                <div className="mt-3 flex justify-end text-xs text-obsidian/50">
                   Supplier subtotal:{" "}
-                  <span className="ml-2 font-bold text-slate-900">
+                  <span className="ml-1.5 font-bold text-obsidian">
                     ${group.subtotal.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
@@ -145,13 +145,13 @@ export default function CartPage() {
             ))}
           </div>
 
-          <aside className="sticky top-24 h-fit rounded-3xl border border-slate-200 bg-white p-6">
-            <h2 className="text-lg font-bold">Order Summary</h2>
+          <aside className="sticky top-24 h-fit rounded-xl border border-border bg-white p-4">
+            <h2 className="text-sm font-bold text-obsidian">Order Summary</h2>
 
-            <div className="mt-6 flex items-center justify-between border-t border-dashed border-slate-200 pt-6">
-              <span className="text-slate-600">Total</span>
+            <div className="mt-4 flex items-center justify-between border-t border-dashed border-border pt-4">
+              <span className="text-sm text-obsidian/60">Total</span>
 
-              <span className="text-2xl font-bold text-blue-600">
+              <span className="text-xl font-bold text-sapphire">
                 ${total.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
@@ -159,18 +159,18 @@ export default function CartPage() {
               </span>
             </div>
 
-            <p className="mt-2 text-xs text-slate-400">
+            <p className="mt-1.5 text-[11px] text-obsidian/40">
               Shipping and taxes calculated at checkout.
             </p>
 
             <Link href={user ? "/checkout" : "/login"} className="block">
-              <AppButton className="mt-6 w-full justify-center py-6">
+              <AppButton className="mt-4 w-full justify-center py-4">
                 Proceed to Checkout
               </AppButton>
             </Link>
 
             {!user && (
-              <p className="mt-3 text-center text-xs text-slate-500">
+              <p className="mt-2.5 text-center text-xs text-obsidian/50">
                 You&apos;ll need to sign in first.
               </p>
             )}

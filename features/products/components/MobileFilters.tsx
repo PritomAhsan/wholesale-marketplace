@@ -13,12 +13,15 @@ import {
 
 import ProductFilters from "./ProductFilters";
 import { Category } from "@/features/categories/data/categories";
+import { Brand } from "../brandsApi";
 
 interface Props {
   categories: Category[];
+  brands?: Brand[];
+  hideCategories?: boolean;
 }
 
-export default function MobileFilters({ categories }: Props) {
+export default function MobileFilters({ categories, brands = [], hideCategories = false }: Props) {
   return (
     <div className="lg:hidden">
 
@@ -48,7 +51,7 @@ export default function MobileFilters({ categories }: Props) {
           </SheetHeader>
 
           <div className="p-6">
-            <ProductFilters mobile categories={categories} />
+            <ProductFilters mobile categories={categories} brands={brands} hideCategories={hideCategories} />
           </div>
 
         </SheetContent>

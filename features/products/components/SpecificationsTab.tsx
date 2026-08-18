@@ -2,7 +2,7 @@ import {
   FileText,
   Package,
   ShieldCheck,
-  BadgeCheck,
+  Boxes,
 } from "lucide-react";
 
 import { Product } from "../data/products";
@@ -58,14 +58,14 @@ export default function SpecificationsTab({ product }: Props) {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-          <BadgeCheck className="mb-3 h-6 w-6 text-amber-500" />
+          <Boxes className="mb-3 h-6 w-6 text-amber-500" />
 
           <p className="text-sm text-slate-500">
-            Product Rating
+            Available Stock
           </p>
 
           <p className="mt-1 text-xl font-bold">
-            ⭐ {product.rating}
+            {product.stock.toLocaleString()} units
           </p>
         </div>
       </div>

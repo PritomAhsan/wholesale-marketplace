@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Package, ShieldAlert } from "lucide-react";
+import { Package, RefreshCw, ShieldAlert } from "lucide-react";
 
 import Container from "@/components/layout/Container";
 import { AppButton } from "@/components/ui/app-button";
@@ -14,24 +14,71 @@ export default function OrdersPage() {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
+  const load = useCallback(() => {
     if (!token) {
       setLoading(false);
       return;
     }
 
-    fetchMyOrders(token).then((data) => {
-      setOrders(data);
-      setLoading(false);
-    });
+    setLoading(true);
+    setError(false);
+
+    fetchMyOrders(token)
+      .then((data) => {
+        setOrders(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
   }, [token]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   if (authLoading || loading) {
     return (
-      <section className="bg-slate-50 py-24">
-        <Container className="max-w-lg text-center text-slate-500">
-          Loading...
+      <section className="bg-ivory py-12">
+        <Container className="max-w-4xl">
+          <h1 className="text-3xl font-bold text-obsidian">My Orders</h1>
+
+          <div className="mt-8 space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="animate-pulse rounded-xl border border-border bg-white p-6"
+              >
+                <div className="h-4 w-40 rounded bg-muted" />
+                <div className="mt-3 h-3 w-64 rounded bg-muted" />
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+    );
+  }
+
+  if (!authLoading && token && error) {
+    return (
+      <section className="bg-ivory py-24">
+        <Container className="max-w-lg">
+          <div className="rounded-xl border border-border bg-white p-10 text-center">
+            <RefreshCw className="mx-auto mb-4 text-obsidian/30" size={48} />
+            <h1 className="text-xl font-bold text-obsidian">
+              We could not load this page
+            </h1>
+            <p className="mt-2 text-sm text-obsidian/50">
+              Retry, or contact support with a case reference if this keeps
+              happening.
+            </p>
+            <AppButton className="mt-6" onClick={load}>
+              Retry
+            </AppButton>
+          </div>
         </Container>
       </section>
     );
@@ -39,14 +86,14 @@ export default function OrdersPage() {
 
   if (!user) {
     return (
-      <section className="bg-slate-50 py-24">
+      <section className="bg-ivory py-24">
         <Container className="max-w-lg">
-          <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
-            <ShieldAlert className="mx-auto mb-4 text-blue-600" size={48} />
+          <div className="rounded-xl border border-border bg-white p-10 text-center shadow-sm">
+            <ShieldAlert className="mx-auto mb-4 text-sapphire" size={48} />
 
             <h1 className="text-2xl font-bold">Sign In Required</h1>
 
-            <p className="mt-3 text-slate-500">
+            <p className="mt-3 text-obsidian/50">
               Sign in to view your order history.
             </p>
 
@@ -60,17 +107,17 @@ export default function OrdersPage() {
   }
 
   return (
-    <section className="bg-slate-50 py-12">
+    <section className="bg-ivory py-12">
       <Container className="max-w-4xl">
         <h1 className="text-3xl font-bold">My Orders</h1>
 
         {orders.length === 0 ? (
-          <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-12 text-center">
-            <Package className="mx-auto mb-4 text-slate-300" size={56} />
+          <div className="mt-8 rounded-xl border border-border bg-white p-12 text-center">
+            <Package className="mx-auto mb-4 text-obsidian/20" size={56} />
 
             <h2 className="text-xl font-bold">No Orders Yet</h2>
 
-            <p className="mt-2 text-slate-500">
+            <p className="mt-2 text-obsidian/50">
               Your placed orders will show up here.
             </p>
 
@@ -84,14 +131,14 @@ export default function OrdersPage() {
               <Link
                 key={order.uuid}
                 href={`/orders/${order.uuid}`}
-                className="block rounded-3xl border border-slate-200 bg-white p-6 transition hover:border-blue-300 hover:shadow-md"
+                className="block rounded-xl border border-border bg-white p-6 transition hover:border-sapphire hover:shadow-md"
               >
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
-                    <p className="font-bold text-slate-900">
+                    <p className="font-bold text-obsidian">
                       {order.order_number}
                     </p>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-obsidian/50">
                       Placed {new Date(order.placed_at).toLocaleDateString()}{" "}
                       · {order.seller_orders.length} supplier
                       {order.seller_orders.length !== 1 ? "s" : ""}
@@ -109,7 +156,7 @@ export default function OrdersPage() {
                       {order.status}
                     </span>
 
-                    <span className="text-lg font-bold text-slate-900">
+                    <span className="text-lg font-bold text-obsidian">
                       ${order.total}
                     </span>
                   </div>

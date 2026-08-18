@@ -6,8 +6,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { BRANDING } from "@/constants/branding";
 import {
-  Bell,
-  Heart,
   LogOut,
   Menu,
   Search,
@@ -47,11 +45,25 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
-        {/* Top Navigation */}
-        <Container className="flex h-[74px] items-center gap-6">
+      <header className="sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-xl">
 
-          {/* Logo */}
+        {/* Row 1 — commercial message */}
+
+        <div className="hidden bg-obsidian text-ivory/90 lg:block">
+          <Container className="flex h-9 items-center justify-between text-xs">
+            <p>Private wholesale sourcing for qualified businesses.</p>
+            <Link
+              href="/products"
+              className="font-medium text-champagne transition hover:text-champagne-soft"
+            >
+              Explore the marketplace
+            </Link>
+          </Container>
+        </div>
+
+        {/* Row 2 — logo, search, account */}
+
+        <Container className="flex h-[74px] items-center gap-6">
 
           <Link
             href="/"
@@ -62,13 +74,9 @@ export default function Navbar() {
               alt={BRANDING.siteName}
               width={132}
               height={45}
-              className="h-10 w-auto"
+              className="h-12 w-auto"
               priority
             />
-
-            <p className="hidden -ml-1 text-xs text-slate-500 xl:block">
-              {BRANDING.tagline}
-            </p>
           </Link>
 
           {/* Search */}
@@ -77,11 +85,11 @@ export default function Navbar() {
             onSubmit={handleSearchSubmit}
             className="hidden flex-1 lg:block"
           >
-            <div className="flex h-12 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-md">
+            <div className="flex h-12 overflow-hidden rounded-xl border border-border bg-white transition-colors duration-200 focus-within:border-sapphire">
 
               <Link
                 href="/categories"
-                className="flex items-center gap-2 border-r px-5 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                className="flex items-center gap-2 border-r border-border px-5 text-sm font-medium text-obsidian/70 hover:bg-muted"
               >
                 Categories
                 <ChevronDown className="h-4 w-4" />
@@ -89,7 +97,7 @@ export default function Navbar() {
 
               <div className="relative flex-1">
 
-                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
 
                 <input
                   placeholder="Search products by name, SKU or description..."
@@ -102,7 +110,7 @@ export default function Navbar() {
 
               <button
                 type="submit"
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 text-sm font-semibold text-white transition hover:opacity-90"
+                className="bg-sapphire px-8 text-sm font-semibold text-white transition-colors hover:bg-sapphire-strong"
               >
                 Search
               </button>
@@ -116,34 +124,20 @@ export default function Navbar() {
 
             <Link
               href="/rfq"
-              className="flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+              className="flex h-11 items-center gap-2 rounded-xl bg-sapphire px-5 text-sm font-semibold text-white transition-colors hover:bg-sapphire-strong"
             >
               <FileText className="h-4 w-4" />
               Get Quotes
             </Link>
 
-            <button className="relative rounded-xl p-3 transition hover:bg-slate-100">
-              <Heart className="h-5 w-5 text-slate-700" />
-
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500" />
-            </button>
-
-            <button className="relative rounded-xl p-3 transition hover:bg-slate-100">
-              <Bell className="h-5 w-5 text-slate-700" />
-
-              <span className="absolute right-2 top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-                3
-              </span>
-            </button>
-
             <Link
               href="/cart"
-              className="relative rounded-xl p-3 transition hover:bg-slate-100"
+              className="relative rounded-xl p-3 transition hover:bg-muted"
             >
-              <ShoppingCart className="h-5 w-5 text-slate-700" />
+              <ShoppingCart className="h-5 w-5 text-obsidian/80" />
 
               {cartCount > 0 && (
-                <span className="absolute right-2 top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold text-white">
+                <span className="absolute right-2 top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-sapphire px-1 text-[10px] font-bold text-white">
                   {cartCount}
                 </span>
               )}
@@ -152,14 +146,14 @@ export default function Navbar() {
             {!loading && user ? (
               <div className="ml-2 flex items-center gap-2">
 
-                <div className="flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700">
+                <div className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-semibold text-obsidian/80">
                   <User className="h-4 w-4" />
                   {user.first_name}
                 </div>
 
                 <button
                   onClick={() => logout()}
-                  className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+                  className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-obsidian/70 transition hover:bg-muted"
                 >
                   <LogOut className="h-4 w-4" />
                   Logout
@@ -170,16 +164,16 @@ export default function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="ml-2 rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold transition hover:border-blue-300 hover:bg-blue-50"
+                  className="ml-2 rounded-xl border border-border px-5 py-2.5 text-sm font-semibold transition hover:border-sapphire hover:bg-sapphire-soft"
                 >
                   Login
                 </Link>
 
                 <Link
                   href="/register"
-                  className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                  className="rounded-xl bg-obsidian px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-obsidian-soft"
                 >
-                  Register
+                  Create business account
                 </Link>
               </>
             )}
@@ -192,25 +186,25 @@ export default function Navbar() {
 
             <button
               onClick={() => setMobileSearch((v) => !v)}
-              className="rounded-xl p-2 hover:bg-slate-100"
+              className="rounded-xl p-2 hover:bg-muted"
             >
               <Search className="h-5 w-5" />
             </button>
 
             <Link
               href="/cart"
-              className="relative rounded-xl p-2 hover:bg-slate-100"
+              className="relative rounded-xl p-2 hover:bg-muted"
             >
               <ShoppingCart className="h-5 w-5" />
 
               {cartCount > 0 && (
-                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
+                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-sapphire" />
               )}
             </Link>
 
             <button
               onClick={() => setOpen(true)}
-              className="rounded-xl p-2 hover:bg-slate-100"
+              className="rounded-xl p-2 hover:bg-muted"
             >
               <Menu className="h-6 w-6" />
             </button>
@@ -222,18 +216,18 @@ export default function Navbar() {
         {/* Mobile Search */}
 
         {mobileSearch && (
-          <div className="border-t border-slate-100 px-4 py-3 lg:hidden">
+          <div className="border-t border-border px-4 py-3 lg:hidden">
             <form onSubmit={handleSearchSubmit} className="flex gap-2">
               <input
                 autoFocus
                 placeholder="Search products..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-11 flex-1 rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-blue-500"
+                className="h-11 flex-1 rounded-xl border border-border px-4 text-sm outline-none focus:border-sapphire"
               />
               <button
                 type="submit"
-                className="rounded-xl bg-blue-600 px-5 text-sm font-semibold text-white"
+                className="rounded-xl bg-sapphire px-5 text-sm font-semibold text-white"
               >
                 Search
               </button>
@@ -241,9 +235,9 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* Secondary Navigation */}
+        {/* Row 3 — buying paths */}
 
-        <div className="hidden border-t border-slate-100 bg-white lg:block">
+        <div className="hidden border-t border-border bg-white lg:block">
           <Container>
 
             <nav className="flex h-12 items-center gap-8 overflow-x-auto">
@@ -255,8 +249,8 @@ export default function Navbar() {
                   className={cn(
                     "whitespace-nowrap text-sm font-medium transition-colors",
                     pathname === item.href
-                      ? "text-blue-600"
-                      : "text-slate-600 hover:text-blue-600"
+                      ? "text-sapphire"
+                      : "text-obsidian/70 hover:text-sapphire"
                   )}
                 >
                   {item.title}

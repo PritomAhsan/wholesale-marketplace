@@ -55,8 +55,8 @@ export default function OrderDetailPage() {
 
   if (authLoading || loading) {
     return (
-      <section className="bg-slate-50 py-24">
-        <Container className="max-w-2xl text-center text-slate-500">
+      <section className="bg-ivory py-24">
+        <Container className="max-w-2xl text-center text-obsidian/50">
           Loading...
         </Container>
       </section>
@@ -65,11 +65,11 @@ export default function OrderDetailPage() {
 
   if (!order) {
     return (
-      <section className="bg-slate-50 py-24">
+      <section className="bg-ivory py-24">
         <Container className="max-w-lg text-center">
           <h1 className="text-2xl font-bold">Order Not Found</h1>
 
-          <p className="mt-3 text-slate-500">
+          <p className="mt-3 text-obsidian/50">
             We couldn&apos;t find that order, or you don&apos;t have access
             to it.
           </p>
@@ -83,14 +83,14 @@ export default function OrderDetailPage() {
   }
 
   return (
-    <section className="bg-slate-50 py-12">
+    <section className="bg-ivory py-12">
       <Container className="max-w-4xl">
-        <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm">
+        <div className="rounded-xl border border-border bg-white p-10 text-center shadow-sm">
           <CheckCircle2 className="mx-auto mb-4 text-green-500" size={56} />
 
           <h1 className="text-2xl font-bold">Order Placed Successfully</h1>
 
-          <p className="mt-2 text-slate-500">
+          <p className="mt-2 text-obsidian/50">
             Order <span className="font-semibold">{order.order_number}</span>{" "}
             · Placed {new Date(order.placed_at).toLocaleDateString()}
           </p>
@@ -106,7 +106,7 @@ export default function OrderDetailPage() {
           </span>
 
           {order.status === "cancelled" && order.cancellation_reason && (
-            <p className="mt-3 text-sm text-slate-500">
+            <p className="mt-3 text-sm text-obsidian/50">
               Reason: {order.cancellation_reason}
             </p>
           )}
@@ -123,13 +123,13 @@ export default function OrderDetailPage() {
           )}
 
           {order.can_cancel && showCancelForm && (
-            <div className="mx-auto mt-6 max-w-md rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left">
-              <label className="block text-sm font-medium text-slate-700">
+            <div className="mx-auto mt-6 max-w-md rounded-lg border border-border bg-ivory p-4 text-left">
+              <label className="block text-sm font-medium text-obsidian/80">
                 Reason for cancelling (optional)
               </label>
 
               <textarea
-                className="mt-2 w-full rounded-xl border border-slate-300 p-3 text-sm"
+                className="mt-2 w-full rounded-xl border border-border p-3 text-sm"
                 rows={3}
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
@@ -157,29 +157,29 @@ export default function OrderDetailPage() {
           )}
         </div>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
+        <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_320px]">
           <div className="space-y-6">
             {order.seller_orders.map((sellerOrder) => (
               <div
                 key={sellerOrder.uuid}
-                className="rounded-3xl border border-slate-200 bg-white p-6"
+                className="rounded-xl border border-border bg-white p-6"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-obsidian/50">
                       {sellerOrder.seller_order_number}
                     </p>
-                    <h2 className="text-lg font-bold text-slate-900">
+                    <h2 className="text-lg font-bold text-obsidian">
                       {sellerOrder.supplier?.display_name}
                     </h2>
                   </div>
 
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-600">
+                  <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold capitalize text-obsidian/70">
                     {sellerOrder.status}
                   </span>
                 </div>
 
-                <div className="mt-4 space-y-3 border-t border-slate-100 pt-4">
+                <div className="mt-4 space-y-3 border-t border-border pt-4">
                   {sellerOrder.items.map((item) => (
                     <div key={item.uuid} className="flex items-center gap-3">
                       {item.product_image && (
@@ -193,24 +193,24 @@ export default function OrderDetailPage() {
                       )}
 
                       <div className="flex-1">
-                        <p className="font-medium text-slate-800">
+                        <p className="font-medium text-obsidian">
                           {item.product_name}
                         </p>
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-obsidian/50">
                           {item.quantity} × ${item.unit_price}
                         </p>
                       </div>
 
-                      <p className="font-semibold text-slate-900">
+                      <p className="font-semibold text-obsidian">
                         ${item.line_total}
                       </p>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-4 flex justify-end border-t border-slate-100 pt-4 text-sm">
-                  <span className="text-slate-500">Subtotal:</span>
-                  <span className="ml-2 font-bold text-slate-900">
+                <div className="mt-4 flex justify-end border-t border-border pt-4 text-sm">
+                  <span className="text-obsidian/50">Subtotal:</span>
+                  <span className="ml-2 font-bold text-obsidian">
                     ${sellerOrder.subtotal}
                   </span>
                 </div>
@@ -219,10 +219,10 @@ export default function OrderDetailPage() {
           </div>
 
           <aside className="h-fit space-y-6">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6">
-              <h3 className="font-bold text-slate-900">Shipping To</h3>
+            <div className="rounded-xl border border-border bg-white p-6">
+              <h3 className="font-bold text-obsidian">Shipping To</h3>
 
-              <p className="mt-3 text-sm text-slate-600">
+              <p className="mt-3 text-sm text-obsidian/70">
                 {order.shipping.name}
                 <br />
                 {order.shipping.address}
@@ -234,10 +234,10 @@ export default function OrderDetailPage() {
               </p>
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-white p-6">
+            <div className="rounded-xl border border-border bg-white p-6">
               <div className="flex items-center justify-between">
-                <span className="text-slate-600">Order Total</span>
-                <span className="text-2xl font-bold text-blue-600">
+                <span className="text-obsidian/70">Order Total</span>
+                <span className="text-2xl font-bold text-sapphire">
                   ${order.total}
                 </span>
               </div>

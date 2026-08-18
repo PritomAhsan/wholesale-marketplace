@@ -9,6 +9,7 @@ interface ApiCategory {
   description: string | null;
   image: string | null;
   children_count: number;
+  children?: ApiCategory[];
   products_count: number;
 }
 
@@ -22,6 +23,11 @@ function toCategory(item: ApiCategory): Category {
     products: item.products_count,
     // Supplier counts per category aren't exposed by the API yet.
     suppliers: 0,
+    children: (item.children ?? []).map((child) => ({
+      id: child.id,
+      slug: child.slug,
+      name: child.name,
+    })),
   };
 }
 

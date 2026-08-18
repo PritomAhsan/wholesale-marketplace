@@ -1,11 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import {
   BadgeCheck,
   Heart,
   Share2,
   Star,
-  MapPin,
   Tag,
   Package,
   Building2,
@@ -33,31 +33,42 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           {product.name}
         </h1>
 
-        {product.verified && (
-          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
-            <BadgeCheck className="h-4 w-4" />
-            Verified Product
-          </div>
-        )}
+        <div className="flex flex-wrap items-center gap-3">
+          {product.verified && (
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
+              <BadgeCheck className="h-4 w-4" />
+              Verified Product
+            </div>
+          )}
+
+          {product.averageRating !== null && product.reviewsCount > 0 && (
+            <div className="inline-flex items-center gap-1.5 text-sm text-slate-600">
+              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+              <span className="font-semibold text-slate-900">
+                {product.averageRating.toFixed(1)}
+              </span>
+              <span className="text-slate-400">
+                ({product.reviewsCount} review{product.reviewsCount !== 1 ? "s" : ""})
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Rating */}
+      {/* Seller */}
       <div className="flex flex-wrap items-center gap-5 border-y border-slate-200 py-4">
-        <div className="flex items-center gap-2">
-          <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
-          <span className="font-semibold text-slate-900">
-            {product.rating.toFixed(1)}
-          </span>
-        </div>
-
         <div className="flex items-center gap-2 text-slate-600">
           <Building2 className="h-4 w-4" />
-          <span>{product.supplier}</span>
-        </div>
-
-        <div className="flex items-center gap-2 text-slate-600">
-          <MapPin className="h-4 w-4" />
-          <span>{product.country}</span>
+          {product.sellerId ? (
+            <Link
+              href={`/sellers/${product.sellerId}`}
+              className="font-medium text-sapphire hover:text-sapphire-strong"
+            >
+              {product.supplier}
+            </Link>
+          ) : (
+            <span>{product.supplier}</span>
+          )}
         </div>
       </div>
 

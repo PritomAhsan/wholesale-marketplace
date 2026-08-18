@@ -6,8 +6,6 @@ import {
   Minus,
   Plus,
   Package,
-  Truck,
-  ShieldCheck,
   Check,
 } from "lucide-react";
 
@@ -36,9 +34,27 @@ export default function PriceCard({ product }: PriceCardProps) {
     setQuantity((q) => Math.max(product.moq, q - product.moq));
   };
 
+  const activeTier = useMemo(() => {
+    return [...product.priceTiers]
+      .sort((a, b) => b.minQuantity - a.minQuantity)
+      .find((tier) => quantity >= tier.minQuantity);
+  }, [product.priceTiers, quantity]);
+
+  const unitPrice = useMemo(() => {
+    if (!activeTier) return product.price;
+
+    if (activeTier.discountPrice !== null) return activeTier.discountPrice;
+
+    if (activeTier.discountPercent !== null) {
+      return product.price * (1 - activeTier.discountPercent / 100);
+    }
+
+    return product.price;
+  }, [activeTier, product.price]);
+
   const total = useMemo(() => {
-    return quantity * product.price;
-  }, [quantity, product.price]);
+    return quantity * unitPrice;
+  }, [quantity, unitPrice]);
 
   function handleAddToCart() {
     addItem(
@@ -47,7 +63,7 @@ export default function PriceCard({ product }: PriceCardProps) {
         slug: product.slug,
         name: product.name,
         image: product.image,
-        price: product.price,
+        price: unitPrice,
         moq: product.moq,
         stock: product.stock,
         supplierUuid: product.supplierUuid,
@@ -74,12 +90,55 @@ export default function PriceCard({ product }: PriceCardProps) {
 
           <div className="mt-2 flex items-end gap-2">
             <span className="text-4xl font-bold text-slate-900">
-              ${product.price.toFixed(2)}
+              ${unitPrice.toFixed(2)}
             </span>
 
             <span className="pb-1 text-sm text-slate-500">/ Piece</span>
+
+            {activeTier && (
+              <span className="pb-1 text-sm text-slate-400 line-through">
+                ${product.price.toFixed(2)}
+              </span>
+            )}
           </div>
         </div>
+
+        {/* Quantity price breaks */}
+        {product.priceTiers.length > 0 && (
+          <div className="rounded-2xl border border-slate-200 p-4">
+            <p className="mb-3 text-sm font-medium text-slate-700">
+              Quantity price breaks
+            </p>
+
+            <div className="space-y-2">
+              {[...product.priceTiers]
+                .sort((a, b) => a.minQuantity - b.minQuantity)
+                .map((tier) => {
+                  const tierPrice =
+                    tier.discountPrice ??
+                    (tier.discountPercent
+                      ? product.price * (1 - tier.discountPercent / 100)
+                      : product.price);
+
+                  const isActive = activeTier?.minQuantity === tier.minQuantity;
+
+                  return (
+                    <div
+                      key={tier.minQuantity}
+                      className={`flex items-center justify-between rounded-xl px-3 py-2 text-sm ${
+                        isActive
+                          ? "bg-primary/10 font-semibold text-primary"
+                          : "text-slate-600"
+                      }`}
+                    >
+                      <span>{tier.minQuantity.toLocaleString()}+ pieces</span>
+                      <span>${tierPrice.toFixed(2)} / piece</span>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        )}
 
         {/* MOQ */}
         <div className="rounded-2xl bg-slate-50 p-4">
@@ -142,19 +201,6 @@ export default function PriceCard({ product }: PriceCardProps) {
                 maximumFractionDigits: 2,
               })}
             </span>
-          </div>
-        </div>
-
-        {/* Info */}
-        <div className="space-y-3 text-sm">
-          <div className="flex items-center gap-3 text-slate-600">
-            <Truck className="h-4 w-4" />
-            <span>Lead time: 15–20 Business Days</span>
-          </div>
-
-          <div className="flex items-center gap-3 text-slate-600">
-            <ShieldCheck className="h-4 w-4" />
-            <span>Trade Assurance Available</span>
           </div>
         </div>
 
