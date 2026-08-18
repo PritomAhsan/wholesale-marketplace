@@ -20,7 +20,7 @@ export default function CategoryCard({
   return (
     <Link
       href={`/categories/${slug}`}
-      className="group flex items-start gap-3 rounded-xl border border-border bg-white p-4 transition hover:border-sapphire hover:shadow-sm"
+      className="group flex min-w-0 items-start gap-3 rounded-xl border border-border bg-white p-4 transition hover:border-sapphire hover:shadow-sm"
     >
       <span
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-xs font-bold"
