@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
         hostname: 'placehold.co',
       },
       {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
       },
