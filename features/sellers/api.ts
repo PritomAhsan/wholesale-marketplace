@@ -17,6 +17,12 @@ interface ApiSellerProfile {
   banner: string | null;
   categories: ApiSellerCategory[];
   listings_count: number;
+  completed_order_count: number;
+  store_rating: number | null;
+  reviews_count: number;
+  verification_score: number;
+  badges: string[];
+  is_followed: boolean | null;
 }
 
 export interface SellerProfile {
@@ -28,6 +34,12 @@ export interface SellerProfile {
   banner: string | null;
   categories: ApiSellerCategory[];
   listingsCount: number;
+  completedOrderCount: number;
+  storeRating: number | null;
+  reviewsCount: number;
+  verificationScore: number;
+  badges: string[];
+  isFollowed: boolean | null;
 }
 
 interface Pagination {
@@ -47,6 +59,12 @@ function toSellerProfile(item: ApiSellerProfile): SellerProfile {
     banner: item.banner,
     categories: item.categories ?? [],
     listingsCount: item.listings_count ?? 0,
+    completedOrderCount: item.completed_order_count ?? 0,
+    storeRating: item.store_rating,
+    reviewsCount: item.reviews_count ?? 0,
+    verificationScore: item.verification_score ?? 0,
+    badges: item.badges ?? [],
+    isFollowed: item.is_followed,
   };
 }
 

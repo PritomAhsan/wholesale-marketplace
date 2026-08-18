@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { BadgeCheck, Package, ShieldCheck } from "lucide-react";
+import { BadgeCheck, Package, ShieldCheck, Star } from "lucide-react";
 
 import Container from "@/components/layout/Container";
 import ProductToolbar from "@/features/products/components/ProductToolbar";
@@ -11,6 +11,9 @@ import NoResultsState from "@/features/products/components/NoResultsState";
 import { fetchSellerProfile } from "@/features/sellers/api";
 import { fetchCategories } from "@/features/categories/api";
 import { fetchBrands } from "@/features/products/brandsApi";
+import TrustBadges from "@/features/sellers/components/TrustBadges";
+import FollowButton from "@/features/sellers/components/FollowButton";
+import StoreReviewsSection from "@/features/sellers/components/StoreReviewsSection";
 
 interface Props {
   params: Promise<{ sellerId: string }>;
@@ -99,10 +102,50 @@ export default async function SellerProfilePage({ params, searchParams }: Props)
               </div>
             </div>
 
-            <div className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm text-obsidian/70">
-              <Package className="h-4 w-4 text-sapphire" />
-              {seller.listingsCount} active listing{seller.listingsCount === 1 ? "" : "s"}
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm text-obsidian/70">
+                <Package className="h-4 w-4 text-sapphire" />
+                {seller.listingsCount} active listing{seller.listingsCount === 1 ? "" : "s"}
+              </div>
+
+              <FollowButton sellerId={seller.sellerId} />
             </div>
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center gap-6">
+            {seller.storeRating !== null && (
+              <div className="flex items-center gap-2">
+                <div className="flex">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${
+                        i < Math.round(seller.storeRating ?? 0)
+                          ? "fill-amber-400 text-amber-400"
+                          : "text-slate-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-sm font-medium text-obsidian">
+                  {seller.storeRating.toFixed(1)}
+                </span>
+                <span className="text-sm text-obsidian/50">
+                  ({seller.reviewsCount} review{seller.reviewsCount === 1 ? "" : "s"})
+                </span>
+              </div>
+            )}
+
+            {seller.completedOrderCount > 0 && (
+              <span className="text-sm text-obsidian/50">
+                {seller.completedOrderCount} completed order
+                {seller.completedOrderCount === 1 ? "" : "s"}
+              </span>
+            )}
+          </div>
+
+          <div className="mt-4">
+            <TrustBadges badges={seller.badges} />
           </div>
 
           {seller.categories.length > 0 && (
@@ -173,6 +216,12 @@ export default async function SellerProfilePage({ params, searchParams }: Props)
               </div>
             </>
           )}
+        </Container>
+      </section>
+
+      <section className="border-t border-border py-12">
+        <Container>
+          <StoreReviewsSection sellerId={seller.sellerId} />
         </Container>
       </section>
     </>
