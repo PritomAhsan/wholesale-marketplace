@@ -10,6 +10,7 @@ import Container from "@/components/layout/Container";
 import { AppButton } from "@/components/ui/app-button";
 import { useAuth } from "@/features/auth/AuthContext";
 import { cancelOrder, fetchOrder, Order } from "@/features/cart/api";
+import DisputeSection from "@/features/disputes/components/DisputeSection";
 
 export default function OrderDetailPage() {
   const { uuid } = useParams<{ uuid: string }>();
@@ -214,6 +215,13 @@ export default function OrderDetailPage() {
                     ${sellerOrder.subtotal}
                   </span>
                 </div>
+
+                {sellerOrder.status === "delivered" && token && (
+                  <DisputeSection
+                    token={token}
+                    sellerOrderUuid={sellerOrder.uuid}
+                  />
+                )}
               </div>
             ))}
           </div>
