@@ -34,6 +34,11 @@ export interface SellerOrder {
   supplier: { uuid: string; display_name: string } | null;
   status: string;
   subtotal: string;
+  tracking_number: string | null;
+  shipping_carrier: string | null;
+  shipped_at: string | null;
+  delivered_at: string | null;
+  cancelled_at: string | null;
   items: OrderItem[];
 }
 
