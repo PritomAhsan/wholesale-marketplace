@@ -17,6 +17,14 @@ export interface CheckoutItemPayload {
   quantity: number;
 }
 
+export interface ShippingRate {
+  carrier: string;
+  service: string;
+  rate: number;
+  currency: string;
+  delivery_days: number | null;
+}
+
 export interface OrderItem {
   uuid: string;
   product: { uuid: string; slug: string } | null;
@@ -59,6 +67,9 @@ export interface Order {
     city: string;
     country: string;
     postal_code: string | null;
+    cost: string | null;
+    carrier: string | null;
+    service: string | null;
   };
   notes: string | null;
   placed_at: string;
@@ -77,7 +88,8 @@ export class CheckoutError extends Error {
 export async function checkout(
   token: string,
   items: CheckoutItemPayload[],
-  shipping: ShippingInfo
+  shipping: ShippingInfo,
+  shippingRate?: ShippingRate | null
 ): Promise<Order> {
   const res = await fetch(`${API_URL}/checkout`, {
     method: "POST",
@@ -86,7 +98,17 @@ export async function checkout(
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ items, shipping }),
+    body: JSON.stringify({
+      items,
+      shipping,
+      shipping_rate: shippingRate
+        ? {
+            carrier: shippingRate.carrier,
+            service: shippingRate.service,
+            rate: shippingRate.rate,
+          }
+        : undefined,
+    }),
   });
 
   const json = await res.json();

@@ -10,7 +10,8 @@ import Container from "@/components/layout/Container";
 import { AppButton } from "@/components/ui/app-button";
 import { useAuth } from "@/features/auth/AuthContext";
 import { useCart } from "@/features/cart/CartContext";
-import { checkout, CheckoutError } from "@/features/cart/api";
+import { checkout, CheckoutError, ShippingRate } from "@/features/cart/api";
+import { getShippingRates } from "@/features/shipping/api";
 
 const initialShipping = {
   name: "",
@@ -39,6 +40,15 @@ export default function CheckoutPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // Live rate-shopping (Phase 18 demo). ratesEnabled stays false whenever
+  // the backend's Shippo flag is off, so this whole block quietly
+  // disappears and checkout behaves exactly as it did before.
+  const [ratesEnabled, setRatesEnabled] = useState(false);
+  const [ratesLoading, setRatesLoading] = useState(false);
+  const [shippingRates, setShippingRates] = useState<ShippingRate[]>([]);
+  const [selectedRate, setSelectedRate] = useState<ShippingRate | null>(null);
+  const [ratesFetchedFor, setRatesFetchedFor] = useState("");
+
   useEffect(() => {
     if (!user) return;
 
@@ -52,6 +62,45 @@ export default function CheckoutPage() {
   function update<K extends keyof typeof initialShipping>(key: K, value: string) {
     setShipping((prev) => ({ ...prev, [key]: value }));
   }
+
+  useEffect(() => {
+    if (step !== 1 || !token) return;
+    if (!shipping.address || !shipping.city || !shipping.country || !shipping.postal_code) return;
+
+    const key = `${shipping.address}|${shipping.city}|${shipping.country}|${shipping.postal_code}`;
+    if (key === ratesFetchedFor) return;
+
+    let cancelled = false;
+    setRatesLoading(true);
+
+    getShippingRates(
+      token,
+      {
+        street1: shipping.address,
+        city: shipping.city,
+        zip: shipping.postal_code,
+        country: shipping.country,
+      },
+      items.map((item) => ({
+        product_uuid: item.productUuid,
+        quantity: item.quantity,
+      }))
+    ).then((result) => {
+      if (cancelled) return;
+      setRatesEnabled(result.enabled);
+      setShippingRates(result.rates);
+      setSelectedRate(result.rates[0] ?? null);
+      setRatesFetchedFor(key);
+      setRatesLoading(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [step, token, shipping.address, shipping.city, shipping.country, shipping.postal_code, items, ratesFetchedFor]);
+
+  const shippingCost = ratesEnabled ? selectedRate?.rate ?? 0 : 0;
+  const orderTotal = total + shippingCost;
 
   function stepHasErrors(index: number): boolean {
     if (index === 0) {
@@ -95,7 +144,8 @@ export default function CheckoutPage() {
           ...shipping,
           postal_code: shipping.postal_code || undefined,
           notes: shipping.notes || undefined,
-        }
+        },
+        ratesEnabled ? selectedRate : null
       );
 
       clear();
@@ -304,6 +354,77 @@ export default function CheckoutPage() {
                   />
                 </div>
 
+                {ratesLoading && (
+                  <div className="mt-8">
+                    <label className="mb-2 block text-sm font-semibold">
+                      Shipping Method
+                    </label>
+                    <p className="text-sm text-obsidian/50">
+                      Getting live rates...
+                    </p>
+                  </div>
+                )}
+
+                {!ratesLoading && ratesEnabled && shippingRates.length === 0 && (
+                  <div className="mt-8">
+                    <label className="mb-2 block text-sm font-semibold">
+                      Shipping Method
+                    </label>
+                    <p className="text-sm text-obsidian/50">
+                      Live rates aren&apos;t available for this address right
+                      now — a flat shipping cost will be arranged after order
+                      review.
+                    </p>
+                  </div>
+                )}
+
+                {!ratesLoading && ratesEnabled && shippingRates.length > 0 && (
+                  <div className="mt-8">
+                    <label className="mb-2 block text-sm font-semibold">
+                      Shipping Method
+                    </label>
+                    <div className="space-y-2">
+                      {shippingRates.map((rate) => (
+                        <label
+                          key={`${rate.carrier}-${rate.service}`}
+                          className={`flex cursor-pointer items-center justify-between gap-4 rounded-xl border px-4 py-3 text-sm transition ${
+                            selectedRate?.carrier === rate.carrier &&
+                            selectedRate?.service === rate.service
+                              ? "border-sapphire bg-sapphire/5"
+                              : "border-border"
+                          }`}
+                        >
+                          <span className="flex items-center gap-3">
+                            <input
+                              type="radio"
+                              name="shipping_rate"
+                              checked={
+                                selectedRate?.carrier === rate.carrier &&
+                                selectedRate?.service === rate.service
+                              }
+                              onChange={() => setSelectedRate(rate)}
+                            />
+                            <span>
+                              <span className="block font-medium text-obsidian">
+                                {rate.carrier} {rate.service}
+                              </span>
+                              {rate.delivery_days != null && (
+                                <span className="block text-obsidian/50">
+                                  ~{rate.delivery_days} business day
+                                  {rate.delivery_days === 1 ? "" : "s"}
+                                </span>
+                              )}
+                            </span>
+                          </span>
+                          <span className="font-semibold text-obsidian">
+                            ${rate.rate.toFixed(2)}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="mt-8 rounded-lg bg-amber-50 px-5 py-4 text-sm text-amber-800">
                   Payment is not collected yet — orders are placed for admin
                   review while payment integration is finalized.
@@ -325,6 +446,12 @@ export default function CheckoutPage() {
                     }`}
                   />
                   <ReviewRow label="Notes" value={shipping.notes || "None"} />
+                  {ratesEnabled && selectedRate && (
+                    <ReviewRow
+                      label="Shipping"
+                      value={`${selectedRate.carrier} ${selectedRate.service} — $${selectedRate.rate.toFixed(2)}`}
+                    />
+                  )}
                 </div>
 
                 <div className="mt-6 rounded-lg bg-amber-50 px-5 py-4 text-sm text-amber-800">
@@ -400,10 +527,37 @@ export default function CheckoutPage() {
               ))}
             </div>
 
-            <div className="mt-6 flex items-center justify-between border-t border-dashed border-border pt-6">
+            {ratesEnabled && (
+              <div className="mt-6 flex items-center justify-between border-t border-dashed border-border pt-6 text-sm">
+                <span className="text-obsidian/70">Subtotal</span>
+                <span className="font-medium text-obsidian">
+                  ${total.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+            )}
+
+            {ratesEnabled && (
+              <div className="mt-2 flex items-center justify-between text-sm">
+                <span className="text-obsidian/70">Shipping</span>
+                <span className="font-medium text-obsidian">
+                  {selectedRate
+                    ? `$${selectedRate.rate.toFixed(2)}`
+                    : "—"}
+                </span>
+              </div>
+            )}
+
+            <div
+              className={`mt-6 flex items-center justify-between pt-6 ${
+                ratesEnabled ? "border-t border-border" : "border-t border-dashed border-border"
+              }`}
+            >
               <span className="text-obsidian/70">Total</span>
               <span className="text-2xl font-bold text-sapphire">
-                ${total.toLocaleString(undefined, {
+                ${orderTotal.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
