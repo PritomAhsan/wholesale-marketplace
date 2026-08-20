@@ -240,9 +240,38 @@ export default function OrderDetailPage() {
                 <br />
                 {order.shipping.phone}
               </p>
+
+              {order.shipping.carrier && (
+                <div className="mt-4 border-t border-border pt-4 text-sm">
+                  <p className="font-semibold text-obsidian">
+                    {order.shipping.carrier} {order.shipping.service}
+                  </p>
+                  <p className="mt-1 text-obsidian/50">
+                    ${order.shipping.cost} shipping
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="rounded-xl border border-border bg-white p-6">
+              {order.shipping.cost && (
+                <>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-obsidian/70">Subtotal</span>
+                    <span className="font-medium text-obsidian">
+                      ${order.subtotal}
+                    </span>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between text-sm">
+                    <span className="text-obsidian/70">Shipping</span>
+                    <span className="font-medium text-obsidian">
+                      ${order.shipping.cost}
+                    </span>
+                  </div>
+                  <div className="mt-4 border-t border-dashed border-border pt-4" />
+                </>
+              )}
+
               <div className="flex items-center justify-between">
                 <span className="text-obsidian/70">Order Total</span>
                 <span className="text-2xl font-bold text-sapphire">
