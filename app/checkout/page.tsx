@@ -18,6 +18,7 @@ const initialShipping = {
   phone: "",
   address: "",
   city: "",
+  state: "",
   country: "",
   postal_code: "",
   notes: "",
@@ -67,7 +68,7 @@ export default function CheckoutPage() {
     if (step !== 1 || !token) return;
     if (!shipping.address || !shipping.city || !shipping.country || !shipping.postal_code) return;
 
-    const key = `${shipping.address}|${shipping.city}|${shipping.country}|${shipping.postal_code}`;
+    const key = `${shipping.address}|${shipping.city}|${shipping.state}|${shipping.country}|${shipping.postal_code}`;
     if (key === ratesFetchedFor) return;
 
     let cancelled = false;
@@ -78,6 +79,7 @@ export default function CheckoutPage() {
       {
         street1: shipping.address,
         city: shipping.city,
+        state: shipping.state || undefined,
         zip: shipping.postal_code,
         country: shipping.country,
       },
@@ -97,7 +99,7 @@ export default function CheckoutPage() {
     return () => {
       cancelled = true;
     };
-  }, [step, token, shipping.address, shipping.city, shipping.country, shipping.postal_code, items, ratesFetchedFor]);
+  }, [step, token, shipping.address, shipping.city, shipping.state, shipping.country, shipping.postal_code, items, ratesFetchedFor]);
 
   const shippingCost = ratesEnabled ? selectedRate?.rate ?? 0 : 0;
   const orderTotal = total + shippingCost;
@@ -142,6 +144,7 @@ export default function CheckoutPage() {
         })),
         {
           ...shipping,
+          state: shipping.state || undefined,
           postal_code: shipping.postal_code || undefined,
           notes: shipping.notes || undefined,
         },
@@ -298,7 +301,7 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                <div className="mt-6 grid gap-6 md:grid-cols-3">
+                <div className="mt-6 grid gap-6 md:grid-cols-2">
                   <div>
                     <label className="mb-2 block text-sm font-semibold">
                       City *
@@ -311,6 +314,23 @@ export default function CheckoutPage() {
                     />
                   </div>
 
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold">
+                      State / Province
+                    </label>
+                    <input
+                      value={shipping.state}
+                      onChange={(e) => update("state", e.target.value)}
+                      placeholder="e.g. NY"
+                      className="w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-sapphire"
+                    />
+                    <p className="mt-1 text-xs text-obsidian/50">
+                      Needed for accurate carrier shipping quotes.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 grid gap-6 md:grid-cols-2">
                   <div>
                     <label className="mb-2 block text-sm font-semibold">
                       Country *
@@ -441,7 +461,9 @@ export default function CheckoutPage() {
                   <ReviewRow label="Phone" value={shipping.phone} />
                   <ReviewRow
                     label="Address"
-                    value={`${shipping.address}, ${shipping.city}, ${shipping.country}${
+                    value={`${shipping.address}, ${shipping.city}${
+                      shipping.state ? ", " + shipping.state : ""
+                    }, ${shipping.country}${
                       shipping.postal_code ? " " + shipping.postal_code : ""
                     }`}
                   />

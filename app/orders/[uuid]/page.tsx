@@ -10,6 +10,7 @@ import Container from "@/components/layout/Container";
 import { AppButton } from "@/components/ui/app-button";
 import { useAuth } from "@/features/auth/AuthContext";
 import { cancelOrder, fetchOrder, Order } from "@/features/cart/api";
+import SellerOrderTracking from "@/features/cart/components/SellerOrderTracking";
 import DisputeSection from "@/features/disputes/components/DisputeSection";
 
 export default function OrderDetailPage() {
@@ -216,6 +217,17 @@ export default function OrderDetailPage() {
                   </span>
                 </div>
 
+                {sellerOrder.tracking_number &&
+                  sellerOrder.shipping_carrier &&
+                  token && (
+                    <SellerOrderTracking
+                      token={token}
+                      sellerOrderUuid={sellerOrder.uuid}
+                      trackingNumber={sellerOrder.tracking_number}
+                      shippingCarrier={sellerOrder.shipping_carrier}
+                    />
+                  )}
+
                 {sellerOrder.status === "delivered" && token && (
                   <DisputeSection
                     token={token}
@@ -235,8 +247,9 @@ export default function OrderDetailPage() {
                 <br />
                 {order.shipping.address}
                 <br />
-                {order.shipping.city}, {order.shipping.country}{" "}
-                {order.shipping.postal_code}
+                {order.shipping.city}
+                {order.shipping.state ? `, ${order.shipping.state}` : ""},{" "}
+                {order.shipping.country} {order.shipping.postal_code}
                 <br />
                 {order.shipping.phone}
               </p>

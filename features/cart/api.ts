@@ -7,6 +7,7 @@ export interface ShippingInfo {
   phone: string;
   address: string;
   city: string;
+  state?: string;
   country: string;
   postal_code?: string;
   notes?: string;
@@ -23,6 +24,24 @@ export interface ShippingRate {
   rate: number;
   currency: string;
   delivery_days: number | null;
+}
+
+export interface TrackingEvent {
+  description: string;
+  location: string | null;
+  timestamp: string | null;
+}
+
+export interface TrackingInfo {
+  status: string;
+  statusDescription: string;
+  estimatedDelivery: string | null;
+  events: TrackingEvent[];
+}
+
+export interface TrackingResult {
+  available: boolean;
+  tracking: TrackingInfo | null;
 }
 
 export interface OrderItem {
@@ -65,6 +84,7 @@ export interface Order {
     phone: string;
     address: string;
     city: string;
+    state: string | null;
     country: string;
     postal_code: string | null;
     cost: string | null;
@@ -154,6 +174,27 @@ export async function fetchOrder(
   const json = await res.json();
 
   return json.data.order;
+}
+
+export async function fetchTracking(
+  token: string,
+  sellerOrderUuid: string
+): Promise<TrackingResult | null> {
+  const res = await fetch(
+    `${API_URL}/seller-orders/${sellerOrderUuid}/tracking`,
+    {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!res.ok) return null;
+
+  const json = await res.json();
+
+  return json.data as TrackingResult;
 }
 
 export async function cancelOrder(
