@@ -23,6 +23,7 @@ interface Props {
     min_moq?: string;
     max_moq?: string;
     in_stock?: string;
+    featured?: string;
     sort?: string;
   }>;
 }
@@ -40,6 +41,7 @@ export default async function ProductsPage({ searchParams }: Props) {
       params.min_moq ||
       params.max_moq ||
       params.in_stock ||
+      params.featured ||
       currentPage > 1
   );
 
@@ -56,6 +58,7 @@ export default async function ProductsPage({ searchParams }: Props) {
         min_moq: params.min_moq ? Number(params.min_moq) : undefined,
         max_moq: params.max_moq ? Number(params.max_moq) : undefined,
         in_stock: params.in_stock === "1" ? true : undefined,
+        featured: params.featured === "1" ? true : undefined,
         sort: params.sort,
       }),
       fetchCategories(),
@@ -76,7 +79,9 @@ export default async function ProductsPage({ searchParams }: Props) {
         {/* Merchandising rail — curated, so hidden once the buyer is filtering/searching */}
 
         {inventoryLanes &&
-          (inventoryLanes.newThisWeek.length >= 4 || inventoryLanes.lowMoq.length >= 4) && (
+          (inventoryLanes.newThisWeek.length >= 4 ||
+            inventoryLanes.lowMoq.length >= 4 ||
+            inventoryLanes.featured.length >= 4) && (
             <div className="mt-8 rounded-xl border border-border bg-white p-5">
               <p className="text-xs font-semibold uppercase tracking-wide text-sapphire">
                 Current opportunities
@@ -88,6 +93,7 @@ export default async function ProductsPage({ searchParams }: Props) {
                 <InventoryLanesTabs
                   newThisWeek={inventoryLanes.newThisWeek}
                   lowMoq={inventoryLanes.lowMoq}
+                  featured={inventoryLanes.featured}
                 />
               </div>
             </div>
@@ -104,12 +110,12 @@ export default async function ProductsPage({ searchParams }: Props) {
         <div className="mt-8 grid gap-8 xl:grid-cols-[280px_1fr]">
 
           <aside className="hidden xl:block">
-            <div className="sticky top-24">
+            <div className="sticky top-20 lg:top-[172px]">
               <ProductFilters categories={categories} brands={brands} />
             </div>
           </aside>
 
-          <div>
+          <div className="min-w-0">
             {products.length > 0 ? (
               <>
                 <ProductGridWithCompare products={products} />

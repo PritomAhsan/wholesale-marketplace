@@ -4,6 +4,9 @@ import "./globals.css";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider } from "@/features/auth/AuthContext";
 import { CartProvider } from "@/features/cart/CartContext";
+import { WishlistProvider } from "@/features/wishlist/WishlistContext";
+import { RecentlyViewedProvider } from "@/features/recently-viewed/RecentlyViewedContext";
+import { ToastProvider } from "@/features/notifications/ToastContext";
 import { BRANDING } from "@/constants/branding";
 
 const roboto = Roboto({
@@ -32,11 +35,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={roboto.variable}>
       <body>
-        <AuthProvider>
-          <CartProvider>
-            <MainLayout>{children}</MainLayout>
-          </CartProvider>
-        </AuthProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <RecentlyViewedProvider>
+                  <MainLayout>{children}</MainLayout>
+                </RecentlyViewedProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </AuthProvider>
+        </ToastProvider>
       </body>
     </html>
   );

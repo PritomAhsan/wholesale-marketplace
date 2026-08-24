@@ -9,7 +9,13 @@ export default async function FeaturedCategories() {
   const featuredCategories = await fetchFeaturedCategories();
 
   return (
-    <section className="border-b border-border bg-white py-16">
+    <section
+      className="border-b border-border py-16"
+      style={{
+        background:
+          "linear-gradient(135deg, var(--sapphire-soft) 0%, var(--ivory) 45%, var(--champagne-soft) 100%)",
+      }}
+    >
       <Container>
         <p className="text-xs font-semibold uppercase tracking-wide text-sapphire">
           Inventory directory
@@ -21,7 +27,7 @@ export default async function FeaturedCategories() {
           Start with the products your business needs most.
         </p>
 
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {featuredCategories.map((category) => (
             <CategoryCard key={category.id} {...category} />
           ))}

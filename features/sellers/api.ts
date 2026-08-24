@@ -73,6 +73,7 @@ export async function fetchSellerProfile(
   params?: {
     page?: number;
     per_page?: number;
+    search?: string;
     brand?: string;
     min_price?: number;
     max_price?: number;

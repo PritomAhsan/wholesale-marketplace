@@ -19,15 +19,21 @@ export default async function ProtectedSupplierNetwork() {
   if (sellers.length === 0) return null;
 
   return (
-    <section className="py-16">
+    <section
+      className="border-y border-border py-16"
+      style={{
+        background:
+          "linear-gradient(135deg, var(--sapphire-soft) 0%, var(--ivory) 45%, var(--champagne-soft) 100%)",
+      }}
+    >
       <Container>
-        <p className="text-xs font-semibold uppercase tracking-wide text-sapphire">
+        <span className="inline-block rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-sapphire shadow-sm">
           Protected supplier network
-        </p>
-        <h2 className="mt-2 text-2xl font-bold text-obsidian">
+        </span>
+        <h2 className="mt-4 text-2xl font-bold text-obsidian sm:text-3xl">
           Evaluate capability without public identity exposure
         </h2>
-        <p className="mt-1.5 max-w-xl text-sm text-obsidian/60">
+        <p className="mt-2 max-w-xl text-sm text-obsidian/60">
           Operational signals replace unsupported badges, public store
           names and vanity statistics.
         </p>

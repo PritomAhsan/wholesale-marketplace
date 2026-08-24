@@ -21,13 +21,22 @@ export interface CartItem {
   supplierUuid: string;
   supplierName: string;
   quantity: number;
+  variantUuid?: string;
+  variantSku?: string;
+  variantLabel?: string;
+}
+
+// A cart line is identified by product + variant together, so two variants
+// of the same product (e.g. different colors) sit as separate lines.
+function lineKey(productUuid: string, variantUuid?: string) {
+  return `${productUuid}::${variantUuid ?? ""}`;
 }
 
 interface CartContextValue {
   items: CartItem[];
   addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
-  removeItem: (productUuid: string) => void;
-  updateQuantity: (productUuid: string, quantity: number) => void;
+  removeItem: (productUuid: string, variantUuid?: string) => void;
+  updateQuantity: (productUuid: string, quantity: number, variantUuid?: string) => void;
   clear: () => void;
   count: number;
   total: number;
@@ -62,13 +71,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   function addItem(item: Omit<CartItem, "quantity">, quantity?: number) {
     const qty = quantity ?? item.moq;
+    const key = lineKey(item.productUuid, item.variantUuid);
 
     setItems((prev) => {
-      const existing = prev.find((i) => i.productUuid === item.productUuid);
+      const existing = prev.find(
+        (i) => lineKey(i.productUuid, i.variantUuid) === key
+      );
 
       if (existing) {
         return prev.map((i) =>
-          i.productUuid === item.productUuid
+          lineKey(i.productUuid, i.variantUuid) === key
             ? { ...i, quantity: Math.min(i.quantity + qty, i.stock) }
             : i
         );
@@ -78,14 +90,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }
 
-  function removeItem(productUuid: string) {
-    setItems((prev) => prev.filter((i) => i.productUuid !== productUuid));
+  function removeItem(productUuid: string, variantUuid?: string) {
+    const key = lineKey(productUuid, variantUuid);
+    setItems((prev) =>
+      prev.filter((i) => lineKey(i.productUuid, i.variantUuid) !== key)
+    );
   }
 
-  function updateQuantity(productUuid: string, quantity: number) {
+  function updateQuantity(productUuid: string, quantity: number, variantUuid?: string) {
+    const key = lineKey(productUuid, variantUuid);
     setItems((prev) =>
       prev.map((i) =>
-        i.productUuid === productUuid
+        lineKey(i.productUuid, i.variantUuid) === key
           ? { ...i, quantity: Math.max(i.moq, Math.min(quantity, i.stock)) }
           : i
       )

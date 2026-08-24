@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import Container from "@/components/layout/Container";
+import { AppButton } from "@/components/ui/app-button";
 import InventoryCard from "../components/InventoryCard";
 import { fetchReadyToOrder } from "../api";
 
@@ -11,31 +12,30 @@ export default async function ReadyToOrder() {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-16">
+    <section className="bg-white py-16">
       <Container>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-sapphire">
+            <span className="inline-block rounded-full bg-sapphire-soft px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-sapphire">
               Approved listings
-            </p>
-            <h2 className="mt-2 text-2xl font-bold text-obsidian">
+            </span>
+            <h2 className="mt-4 text-2xl font-bold text-obsidian sm:text-3xl">
               Ready-to-order inventory
             </h2>
-            <p className="mt-1.5 text-sm text-obsidian/60">
+            <p className="mt-2 text-sm text-obsidian/60">
               Genuine wholesale listings, ready to ship.
             </p>
           </div>
 
-          <Link
-            href="/products"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-sapphire hover:text-sapphire-strong"
-          >
-            View all products
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          <AppButton variant="secondary" size="md" asChild className="shrink-0">
+            <Link href="/products">
+              View all products
+              <ArrowRight className="ml-1.5 h-4 w-4" />
+            </Link>
+          </AppButton>
         </div>
 
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (
             <InventoryCard key={product.uuid} product={product} />
           ))}

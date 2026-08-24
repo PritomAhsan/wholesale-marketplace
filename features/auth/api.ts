@@ -135,6 +135,68 @@ export async function resetPassword(payload: {
   }
 }
 
+export interface UpdateProfilePayload {
+  first_name: string;
+  last_name?: string;
+  phone?: string;
+}
+
+export interface ChangePasswordPayload {
+  current_password: string;
+  password: string;
+  password_confirmation: string;
+}
+
+export async function updateProfile(
+  token: string,
+  payload: UpdateProfilePayload
+): Promise<AuthUser> {
+  const res = await fetch(`${API_URL}/auth/profile`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new AuthApiError(
+      json.message ?? "Unable to update profile",
+      json.errors ?? {}
+    );
+  }
+
+  return json.data.user;
+}
+
+export async function changePassword(
+  token: string,
+  payload: ChangePasswordPayload
+): Promise<void> {
+  const res = await fetch(`${API_URL}/auth/password`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new AuthApiError(
+      json.message ?? "Unable to change password",
+      json.errors ?? {}
+    );
+  }
+}
+
 export async function fetchMe(token: string): Promise<AuthUser | null> {
   const res = await fetch(`${API_URL}/auth/me`, {
     headers: {

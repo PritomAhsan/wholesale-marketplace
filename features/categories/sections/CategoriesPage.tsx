@@ -5,7 +5,6 @@ import { Category } from "../data/categories";
 
 import CategoryGrid from "../components/CategoryGrid";
 import CategoryDirectory from "../components/CategoryDirectory";
-import ShopByNeed from "@/features/home/sections/ShopByNeed";
 import RfqDesk from "@/features/home/sections/RfqDesk";
 
 interface Props {
@@ -24,7 +23,13 @@ export default function CategoriesPage({ categories }: Props) {
             placeholder="Product, brand or UPC"
           />
 
-          <div className="mt-10">
+          <div
+            className="mt-10 rounded-2xl border border-border p-6 md:p-8"
+            style={{
+              background:
+                "linear-gradient(135deg, var(--sapphire-soft) 0%, var(--ivory) 45%, var(--champagne-soft) 100%)",
+            }}
+          >
             <p className="mb-4 text-xs font-semibold uppercase tracking-wide text-sapphire">
               Inventory directory
             </p>
@@ -40,8 +45,6 @@ export default function CategoriesPage({ categories }: Props) {
           <CategoryDirectory categories={categories} />
         </Container>
       </section>
-
-      <ShopByNeed />
 
       <RfqDesk />
     </>

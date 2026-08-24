@@ -1,3 +1,17 @@
+export interface ProductVariant {
+  uuid: string;
+  sku: string;
+  price: number | null;
+  compareAtPrice: number | null;
+  stock: number;
+  moq: number | null;
+  maxOrderQuantity: number | null;
+  isActive: boolean;
+  isDefault: boolean;
+  images: string[];
+  attributes: { attributeName: string; value: string }[];
+}
+
 export interface Product {
   id: number;
   uuid: string;
@@ -28,4 +42,5 @@ export interface Product {
   }[];
   averageRating: number | null;
   reviewsCount: number;
+  variants: ProductVariant[];
 }

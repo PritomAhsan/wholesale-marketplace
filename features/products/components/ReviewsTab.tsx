@@ -56,9 +56,9 @@ export default function ReviewsTab({ product }: Props) {
   return (
     <div className="space-y-8">
       {reviews.length > 0 && (
-        <div className="flex items-center gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-6">
+        <div className="flex items-center gap-4 rounded-2xl border border-border bg-muted p-6">
           <div className="text-center">
-            <p className="text-4xl font-bold text-slate-900">
+            <p className="text-4xl font-bold text-obsidian">
               {average?.toFixed(1)}
             </p>
             <div className="mt-1 flex justify-center gap-0.5">
@@ -67,14 +67,14 @@ export default function ReviewsTab({ product }: Props) {
                   key={i}
                   className={`h-4 w-4 ${
                     i < Math.round(average ?? 0)
-                      ? "fill-amber-400 text-amber-400"
-                      : "text-slate-300"
+                      ? "fill-champagne text-champagne"
+                      : "text-obsidian/20"
                   }`}
                 />
               ))}
             </div>
           </div>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-obsidian/50">
             Based on {reviews.length} verified-purchase review
             {reviews.length !== 1 ? "s" : ""}
           </p>
@@ -102,7 +102,7 @@ export default function ReviewsTab({ product }: Props) {
       )}
 
       {user && alreadyReviewed && (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-obsidian/50">
           You&apos;ve already reviewed this product — thanks for the feedback.
         </p>
       )}
@@ -110,16 +110,16 @@ export default function ReviewsTab({ product }: Props) {
       {loading ? (
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <div key={i} className="h-24 animate-pulse rounded-3xl bg-slate-100" />
+            <div key={i} className="h-24 animate-pulse rounded-2xl bg-muted" />
           ))}
         </div>
       ) : reviews.length === 0 ? (
-        <div className="flex flex-col items-center rounded-3xl border border-slate-200 bg-slate-50 px-6 py-16 text-center">
-          <MessageSquareText className="mb-4 h-10 w-10 text-slate-300" />
-          <h3 className="text-lg font-bold text-slate-900">
+        <div className="flex flex-col items-center rounded-2xl border border-border bg-muted px-6 py-16 text-center">
+          <MessageSquareText className="mb-4 h-10 w-10 text-obsidian/20" />
+          <h3 className="text-lg font-bold text-obsidian">
             No reviews yet for {product.name}
           </h3>
-          <p className="mt-2 max-w-md text-sm text-slate-500">
+          <p className="mt-2 max-w-md text-sm text-obsidian/50">
             Only buyers with a completed order can leave a review — be the
             first once your order is delivered.
           </p>
@@ -129,24 +129,24 @@ export default function ReviewsTab({ product }: Props) {
           {reviews.map((review) => (
             <div
               key={review.uuid}
-              className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+              className="rounded-2xl border border-border bg-white p-6 shadow-sm"
             >
               <div className="flex items-start gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                  <User className="h-6 w-6 text-primary" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-sapphire-soft">
+                  <User className="h-6 w-6 text-sapphire" />
                 </div>
 
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h4 className="font-semibold">{review.author}</h4>
+                    <h4 className="font-semibold text-obsidian">{review.author}</h4>
 
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-sapphire-soft px-2 py-1 text-xs font-medium text-sapphire-strong">
                       <BadgeCheck className="h-3 w-3" />
                       Verified Buyer
                     </span>
                   </div>
 
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className="mt-1 text-sm text-obsidian/50">
                     {new Date(review.created_at).toLocaleDateString()}
                   </p>
 
@@ -154,12 +154,12 @@ export default function ReviewsTab({ product }: Props) {
                     {Array.from({ length: review.rating }).map((_, i) => (
                       <Star
                         key={i}
-                        className="h-4 w-4 fill-amber-400 text-amber-400"
+                        className="h-4 w-4 fill-champagne text-champagne"
                       />
                     ))}
                   </div>
 
-                  <p className="mt-4 leading-7 text-slate-600">
+                  <p className="mt-4 leading-7 text-obsidian/60">
                     {review.comment}
                   </p>
                 </div>
@@ -208,15 +208,15 @@ function ReviewForm({
   }
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h4 className="font-bold text-slate-900">Write a review</h4>
+    <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
+      <h4 className="font-bold text-obsidian">Write a review</h4>
 
       <div className="mt-4 flex gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
           <button key={i} type="button" onClick={() => setRating(i + 1)}>
             <Star
               className={`h-7 w-7 transition ${
-                i < rating ? "fill-amber-400 text-amber-400" : "text-slate-300"
+                i < rating ? "fill-champagne text-champagne" : "text-obsidian/20"
               }`}
             />
           </button>
@@ -228,7 +228,7 @@ function ReviewForm({
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder="How was the product quality, packaging and delivery?"
-        className="mt-4 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-sapphire"
+        className="mt-4 w-full rounded-xl border border-border px-4 py-3 text-sm outline-none focus:border-sapphire"
       />
 
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}

@@ -3,13 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   BadgeCheck,
   Building2,
+  Check,
   ChevronLeft,
   ChevronRight,
   Heart,
-  Lock,
   MapPin,
   MessageSquare,
   Package,
@@ -27,7 +28,10 @@ import {
 } from "@/components/ui/dialog";
 
 import { Product } from "@/features/products/data/products";
+import { fetchProductBySlug } from "@/features/products/api";
 import { useCart } from "@/features/cart/CartContext";
+import { useWishlist } from "@/features/wishlist/WishlistContext";
+import { useToast } from "@/features/notifications/ToastContext";
 
 import { ReactElement } from "react";
 
@@ -41,14 +45,78 @@ export default function ProductQuickView({
   children,
 }: Props) {
   const [imageIndex, setImageIndex] = useState(0);
+  const [shared, setShared] = useState(false);
+  const [fullGallery, setFullGallery] = useState<string[] | null>(null);
   const { addItem } = useCart();
+  const { isSaved, toggleItem } = useWishlist();
+  const { notify } = useToast();
+  const router = useRouter();
 
   const images =
-    product.gallery?.length > 0
-      ? product.gallery
-      : [product.image];
+    fullGallery ??
+    (product.gallery?.length > 0 ? product.gallery : [product.image]);
 
   const outOfStock = product.stock <= 0;
+  const saved = isSaved(product.uuid);
+
+  function handleOpenChange(open: boolean) {
+    if (!open) {
+      setImageIndex(0);
+      return;
+    }
+
+    if (fullGallery) return;
+
+    fetchProductBySlug(product.slug).then((detail) => {
+      if (detail?.gallery?.length) {
+        setFullGallery(detail.gallery);
+      }
+    });
+  }
+
+  function handleToggleWishlist() {
+    const wasSaved = isSaved(product.uuid);
+
+    toggleItem({
+      productUuid: product.uuid,
+      slug: product.slug,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      supplierName: product.supplier,
+      supplierUuid: product.supplierUuid,
+      moq: product.moq,
+      stock: product.stock,
+    });
+
+    notify(
+      wasSaved ? "Removed from wishlist" : "Saved to wishlist",
+      "wishlist"
+    );
+  }
+
+  function handleSendRfq() {
+    router.push(
+      `/rfq?product=${encodeURIComponent(product.name)}&quantity=${product.moq}`
+    );
+  }
+
+  async function handleShare() {
+    const url = `${window.location.origin}/products/${product.slug}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: product.name, url });
+      } catch {
+        // user cancelled share sheet
+      }
+      return;
+    }
+
+    await navigator.clipboard.writeText(url);
+    setShared(true);
+    setTimeout(() => setShared(false), 2000);
+  }
 
   const nextImage = () => {
     setImageIndex((prev) =>
@@ -63,7 +131,7 @@ export default function ProductQuickView({
   };
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={handleOpenChange}>
 
       <DialogTrigger
         render={children}
@@ -102,25 +170,29 @@ export default function ProductQuickView({
               {/* Wishlist */}
 
               <button
-                className="
+                onClick={handleToggleWishlist}
+                className={`
                   absolute
-                  right-6
+                  right-20
                   top-6
+                  lg:right-6
                   flex
                   h-12
                   w-12
                   items-center
                   justify-center
                   rounded-2xl
-                  bg-white
                   shadow-lg
                   transition
-                  hover:bg-red-500
-                  hover:text-white
-                "
+                  ${
+                    saved
+                      ? "bg-red-500 text-white"
+                      : "bg-white hover:bg-red-500 hover:text-white"
+                  }
+                `}
               >
 
-                <Heart size={20} />
+                <Heart size={20} fill={saved ? "currentColor" : "none"} />
 
               </button>
 
@@ -406,6 +478,7 @@ export default function ProductQuickView({
               <AppButton
                 className="w-full justify-center"
                 size="lg"
+                onClick={handleSendRfq}
               >
                 <MessageSquare className="mr-2 h-5 w-5" />
                 Send RFQ
@@ -416,7 +489,7 @@ export default function ProductQuickView({
                 className="w-full justify-center"
                 size="lg"
                 disabled={outOfStock}
-                onClick={() =>
+                onClick={() => {
                   addItem({
                     productUuid: product.uuid,
                     slug: product.slug,
@@ -427,8 +500,9 @@ export default function ProductQuickView({
                     stock: product.stock,
                     supplierUuid: product.supplierUuid,
                     supplierName: product.supplier,
-                  })
-                }
+                  });
+                  notify(`${product.name} added to cart`, "cart");
+                }}
               >
                 {outOfStock ? "Out of Stock" : "Add to Cart"}
               </AppButton>
@@ -455,63 +529,32 @@ export default function ProductQuickView({
               <AppButton
                 variant="secondary"
                 className="flex-1 justify-center"
+                onClick={handleToggleWishlist}
               >
-                <Heart className="mr-2 h-4 w-4" />
-                Save
+                <Heart
+                  className="mr-2 h-4 w-4"
+                  fill={saved ? "currentColor" : "none"}
+                />
+                {saved ? "Saved" : "Save"}
               </AppButton>
 
               <AppButton
                 variant="secondary"
                 className="flex-1 justify-center"
+                onClick={handleShare}
               >
-                <Share2 className="mr-2 h-4 w-4" />
-                Share
+                {shared ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4" />
+                    Link Copied
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="mr-2 h-4 w-4" />
+                    Share
+                  </>
+                )}
               </AppButton>
-
-            </div>
-
-            {/* Trust — real, platform-level claims only */}
-
-            <div className="mt-10 rounded-3xl bg-ivory p-6">
-
-              <h4 className="font-bold text-obsidian">
-                Why Buy Here?
-              </h4>
-
-              <div className="mt-5 space-y-4">
-
-                <div className="flex items-center gap-3">
-
-                  <ShieldCheck className="h-5 w-5 text-emerald-600" />
-
-                  <span className="text-sm text-obsidian/60">
-                    Privately verified suppliers, reviewed before listing.
-                  </span>
-
-                </div>
-
-                <div className="flex items-center gap-3">
-
-                  <Lock className="h-5 w-5 text-sapphire" />
-
-                  <span className="text-sm text-obsidian/60">
-                    Protected seller identity — direct contact stays private
-                    until you engage.
-                  </span>
-
-                </div>
-
-                <div className="flex items-center gap-3">
-
-                  <MessageSquare className="h-5 w-5 text-champagne" />
-
-                  <span className="text-sm text-obsidian/60">
-                    Send a structured RFQ for custom quantities or terms.
-                  </span>
-
-                </div>
-
-              </div>
 
             </div>
 

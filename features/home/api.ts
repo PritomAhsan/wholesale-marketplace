@@ -36,27 +36,33 @@ export async function fetchFeaturedCategories(): Promise<HomeCategory[]> {
 export async function fetchInventoryLanes(): Promise<{
   newThisWeek: Product[];
   lowMoq: Product[];
+  featured: Product[];
 }> {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-  const [newThisWeek, lowMoq] = await Promise.all([
+  const [newThisWeek, lowMoq, featured] = await Promise.all([
     fetchProducts({
       sort: "newest",
       created_after: sevenDaysAgo.toISOString().slice(0, 10),
-      per_page: 6,
+      per_page: 8,
     }),
-    fetchProducts({ max_moq: 5, sort: "newest", per_page: 6 }),
+    fetchProducts({ max_moq: 5, sort: "newest", per_page: 8 }),
+    // Admin-curated via each product's "Featured Product" toggle
+    // (wholesale-admin's PublishCard) — not derived/inferred, only shows
+    // products an admin explicitly picked for homepage placement.
+    fetchProducts({ featured: true, sort: "newest", per_page: 8 }),
   ]);
 
   return {
     newThisWeek: newThisWeek.products,
     lowMoq: lowMoq.products,
+    featured: featured.products,
   };
 }
 
 export async function fetchReadyToOrder(): Promise<Product[]> {
-  const { products } = await fetchProducts({ per_page: 6, sort: "newest" });
+  const { products } = await fetchProducts({ per_page: 8, sort: "newest" });
   return products;
 }
 

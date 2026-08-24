@@ -1,5 +1,5 @@
 import { apiFetch } from "@/lib/api";
-import { Product } from "./data/products";
+import { Product, ProductVariant } from "./data/products";
 
 interface ApiSupplierRef {
   uuid: string;
@@ -43,6 +43,33 @@ interface ApiProductAttribute {
   value: { id: number; value: string };
 }
 
+interface ApiProductVariantImage {
+  image: string;
+  is_primary: boolean;
+}
+
+interface ApiProductVariantAttribute {
+  attribute_id: number;
+  attribute_value_id: number;
+  attribute_name: string | null;
+  value: string | null;
+}
+
+interface ApiProductVariant {
+  uuid: string;
+  sku: string;
+  selling_price: string | null;
+  compare_at_price: string | null;
+  wholesale_price: string | null;
+  stock_quantity: number;
+  minimum_order_quantity: string | null;
+  maximum_order_quantity: string | null;
+  is_active: boolean;
+  is_default: boolean;
+  attributes: ApiProductVariantAttribute[];
+  images: ApiProductVariantImage[];
+}
+
 interface ApiProductDetail {
   uuid: string;
   name: string;
@@ -65,6 +92,7 @@ interface ApiProductDetail {
   }[];
   average_rating?: number | null;
   reviews_count?: number;
+  variants?: ApiProductVariant[];
 }
 
 interface Pagination {
@@ -98,6 +126,28 @@ export function toProduct(item: ApiProductListItem): Product {
     priceTiers: [],
     averageRating: item.average_rating ?? null,
     reviewsCount: item.reviews_count ?? 0,
+    variants: [],
+  };
+}
+
+function toVariant(item: ApiProductVariant): ProductVariant {
+  return {
+    uuid: item.uuid,
+    sku: item.sku,
+    price: item.selling_price ? Number(item.selling_price) : null,
+    compareAtPrice: item.compare_at_price ? Number(item.compare_at_price) : null,
+    stock: item.stock_quantity,
+    moq: item.minimum_order_quantity ? Number(item.minimum_order_quantity) : null,
+    maxOrderQuantity: item.maximum_order_quantity
+      ? Number(item.maximum_order_quantity)
+      : null,
+    isActive: item.is_active,
+    isDefault: item.is_default,
+    images: item.images.map((image) => image.image),
+    attributes: item.attributes.map((attr) => ({
+      attributeName: attr.attribute_name ?? "",
+      value: attr.value ?? "",
+    })),
   };
 }
 
@@ -136,6 +186,9 @@ function toProductDetail(item: ApiProductDetail): Product {
     })),
     averageRating: item.average_rating ?? null,
     reviewsCount: item.reviews_count ?? 0,
+    variants: (item.variants ?? [])
+      .filter((v) => v.is_active)
+      .map(toVariant),
   };
 }
 
@@ -150,6 +203,7 @@ export async function fetchProducts(params?: {
   max_moq?: number;
   created_after?: string;
   in_stock?: boolean;
+  featured?: boolean;
   sort?: string;
   page?: number;
   per_page?: number;

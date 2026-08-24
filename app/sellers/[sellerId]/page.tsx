@@ -19,6 +19,7 @@ interface Props {
   params: Promise<{ sellerId: string }>;
   searchParams: Promise<{
     page?: string;
+    search?: string;
     brand?: string;
     min_price?: string;
     max_price?: string;
@@ -50,6 +51,7 @@ export default async function SellerProfilePage({ params, searchParams }: Props)
     fetchSellerProfile(sellerId, {
       page: sp.page ? Number(sp.page) : undefined,
       per_page: 20,
+      search: sp.search,
       brand: sp.brand,
       min_price: sp.min_price ? Number(sp.min_price) : undefined,
       max_price: sp.max_price ? Number(sp.max_price) : undefined,
@@ -72,7 +74,13 @@ export default async function SellerProfilePage({ params, searchParams }: Props)
 
   return (
     <>
-      <section className="border-b border-border bg-white py-12">
+      <section
+        className="border-b border-border py-12"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--sapphire-soft) 0%, var(--ivory) 55%, var(--champagne-soft) 100%)",
+        }}
+      >
         <Container>
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-5">
@@ -171,7 +179,7 @@ export default async function SellerProfilePage({ params, searchParams }: Props)
         </Container>
       </section>
 
-      <section className="py-12">
+      <section className="bg-white py-12">
         <Container>
           <h2 className="mb-6 text-lg font-semibold text-obsidian">
             Listings from this seller
@@ -192,12 +200,12 @@ export default async function SellerProfilePage({ params, searchParams }: Props)
 
               <div className="mt-8 grid gap-8 xl:grid-cols-[280px_1fr]">
                 <aside className="hidden xl:block">
-                  <div className="sticky top-24">
+                  <div className="sticky top-20 lg:top-[172px]">
                     <ProductFilters categories={categories} brands={brands} hideCategories />
                   </div>
                 </aside>
 
-                <div>
+                <div className="min-w-0">
                   {listings.length > 0 ? (
                     <>
                       <ProductGridWithCompare products={listings} />

@@ -2,15 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 import { BRANDING } from "@/constants/branding";
 import {
   ChevronRight,
+  Heart,
   Home,
   LogIn,
   LogOut,
   Package,
   Search,
+  Settings,
   ShoppingCart,
   UserPlus,
   Users,
@@ -47,9 +50,19 @@ const quickLinks = [
 
 const accountLinks = [
   {
+    title: "Wishlist",
+    href: "/wishlist",
+    icon: Heart,
+  },
+  {
     title: "My Orders",
     href: "/orders",
     icon: Wallet,
+  },
+  {
+    title: "Account Settings",
+    href: "/account",
+    icon: Settings,
   },
 ];
 
@@ -58,9 +71,21 @@ export default function MobileMenu({
   onClose,
 }: Props) {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, logout } = useAuth();
+  const [search, setSearch] = useState("");
 
   if (!open) return null;
+
+  function handleSearchSubmit(e: FormEvent) {
+    e.preventDefault();
+    onClose();
+    router.push(
+      search.trim()
+        ? `/products?search=${encodeURIComponent(search.trim())}`
+        : "/products"
+    );
+  }
 
   return (
     <>
@@ -100,17 +125,19 @@ export default function MobileMenu({
 
           {/* Search */}
 
-          <Link
-            href="/products"
-            onClick={onClose}
-            className="flex h-12 w-full items-center rounded-xl bg-white px-4 text-left text-sm text-muted-foreground shadow-lg"
+          <form
+            onSubmit={handleSearchSubmit}
+            className="flex h-12 w-full items-center rounded-xl bg-white px-4 shadow-lg"
           >
+            <Search className="mr-3 h-5 w-5 shrink-0 text-muted-foreground" />
 
-            <Search className="mr-3 h-5 w-5 text-muted-foreground" />
-
-            Search products...
-
-          </Link>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search products..."
+              className="h-full flex-1 border-0 bg-transparent text-sm text-obsidian outline-none placeholder:text-muted-foreground"
+            />
+          </form>
 
         </div>
 

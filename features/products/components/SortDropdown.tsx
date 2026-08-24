@@ -14,6 +14,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const SORT_LABELS: Record<string, string> = {
+  newest: "Newest Arrivals",
+  price_asc: "Price: Low → High",
+  price_desc: "Price: High → Low",
+};
+
 export default function SortDropdown() {
   const router = useRouter();
   const pathname = usePathname();
@@ -40,24 +46,24 @@ export default function SortDropdown() {
 
       {/* Desktop Label */}
 
-      <div className="hidden h-12 items-center gap-2 rounded-2xl bg-slate-100 px-4 lg:flex">
+      <div className="hidden h-12 items-center gap-2 rounded-2xl bg-muted px-4 lg:flex">
 
         <ArrowDownWideNarrow className="h-4 w-4 text-sapphire" />
 
-        <span className="text-sm font-semibold text-slate-700">
+        <span className="text-sm font-semibold text-obsidian/70">
           Sort By
         </span>
 
       </div>
 
-      <Select value={sort} onValueChange={handleChange}>
+      <Select value={sort} onValueChange={handleChange} items={SORT_LABELS}>
 
         <SelectTrigger
           className="
             h-12
             w-full
             rounded-2xl
-            border-slate-200
+            border-border
             bg-white
             shadow-sm
             transition-all

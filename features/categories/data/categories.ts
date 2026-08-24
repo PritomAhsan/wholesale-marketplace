@@ -6,5 +6,5 @@ export interface Category {
   description: string;
   suppliers: number;
   products: number;
-  children: { id: number; slug: string; name: string }[];
+  children: { id: number; slug: string; name: string; products: number }[];
 }

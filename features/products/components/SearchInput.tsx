@@ -25,20 +25,21 @@ export default function SearchInput({
     value ? params.set("search", value) : params.delete("search");
     params.delete("page");
 
-    const target = pathname === "/products" ? pathname : "/products";
-
-    router.push(`${target}?${params.toString()}`);
+    // Stay on the current listing (category, seller, or /products) — each
+    // reads `search` from its own searchParams, so redirecting to /products
+    // would drop whatever category/seller filter the buyer was already in.
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   return (
-    <form onSubmit={handleSubmit} className="relative">
+    <form onSubmit={handleSubmit} className="relative w-full">
 
-      <div className="group flex overflow-hidden rounded-xl border border-border bg-white transition-colors duration-200 focus-within:border-sapphire">
+      <div className="group flex h-12 overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-colors duration-200 focus-within:border-sapphire">
 
         {/* Left */}
 
-        <div className="flex items-center pl-5">
-          <Search className="h-4.5 w-4.5 text-muted-foreground" />
+        <div className="flex items-center pl-4">
+          <Search className="h-4 w-4 text-muted-foreground" />
         </div>
 
         {/* Input */}
@@ -49,11 +50,11 @@ export default function SearchInput({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           className="
-            h-14
+            h-full
             flex-1
             border-0
             bg-transparent
-            px-4
+            px-3
             text-sm
             font-medium
             text-obsidian
@@ -64,11 +65,11 @@ export default function SearchInput({
 
         {/* Right */}
 
-        <div className="hidden items-center pr-2 lg:flex">
+        <div className="hidden items-center pr-1.5 lg:flex">
 
           <button
             type="submit"
-            className="rounded-lg bg-sapphire px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-sapphire-strong"
+            className="h-9 rounded-xl bg-sapphire px-7 text-sm font-semibold text-white transition-colors hover:bg-sapphire-strong"
           >
             Search
           </button>

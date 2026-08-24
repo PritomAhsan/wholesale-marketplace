@@ -3,9 +3,9 @@ import InventoryLanesTabs from "../components/InventoryLanesTabs";
 import { fetchInventoryLanes } from "../api";
 
 export default async function InventoryLanes() {
-  const { newThisWeek, lowMoq } = await fetchInventoryLanes();
+  const { newThisWeek, lowMoq, featured } = await fetchInventoryLanes();
 
-  if (newThisWeek.length < 4 && lowMoq.length < 4) return null;
+  if (newThisWeek.length < 4 && lowMoq.length < 4 && featured.length < 4) return null;
 
   return (
     <section className="border-t border-border bg-white py-16">
@@ -15,7 +15,11 @@ export default async function InventoryLanes() {
         </h2>
 
         <div className="mt-8">
-          <InventoryLanesTabs newThisWeek={newThisWeek} lowMoq={lowMoq} />
+          <InventoryLanesTabs
+            newThisWeek={newThisWeek}
+            lowMoq={lowMoq}
+            featured={featured}
+          />
         </div>
       </Container>
     </section>

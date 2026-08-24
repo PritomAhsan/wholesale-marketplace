@@ -12,6 +12,7 @@ import { useAuth } from "@/features/auth/AuthContext";
 import { cancelOrder, fetchOrder, Order } from "@/features/cart/api";
 import SellerOrderTracking from "@/features/cart/components/SellerOrderTracking";
 import DisputeSection from "@/features/disputes/components/DisputeSection";
+import { COUNTRIES } from "@/lib/countries";
 
 export default function OrderDetailPage() {
   const { uuid } = useParams<{ uuid: string }>();
@@ -198,6 +199,11 @@ export default function OrderDetailPage() {
                         <p className="font-medium text-obsidian">
                           {item.product_name}
                         </p>
+                        {item.variant && item.variant.attributes.length > 0 && (
+                          <p className="text-xs font-medium text-sapphire">
+                            {item.variant.attributes.map((a) => a.value).join(" / ")}
+                          </p>
+                        )}
                         <p className="text-sm text-obsidian/50">
                           {item.quantity} × ${item.unit_price}
                         </p>
@@ -249,7 +255,9 @@ export default function OrderDetailPage() {
                 <br />
                 {order.shipping.city}
                 {order.shipping.state ? `, ${order.shipping.state}` : ""},{" "}
-                {order.shipping.country} {order.shipping.postal_code}
+                {COUNTRIES.find((c) => c.code === order.shipping.country)?.name ??
+                  order.shipping.country}{" "}
+                {order.shipping.postal_code}
                 <br />
                 {order.shipping.phone}
               </p>

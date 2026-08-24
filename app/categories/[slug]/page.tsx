@@ -10,6 +10,7 @@ interface Props {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{
     page?: string;
+    search?: string;
     brand?: string;
     min_price?: string;
     max_price?: string;
@@ -37,6 +38,7 @@ export default async function Page({ params, searchParams }: Props) {
       category: slug,
       page: currentPage,
       per_page: 20,
+      search: sp.search,
       brand: sp.brand,
       min_price: sp.min_price ? Number(sp.min_price) : undefined,
       max_price: sp.max_price ? Number(sp.max_price) : undefined,

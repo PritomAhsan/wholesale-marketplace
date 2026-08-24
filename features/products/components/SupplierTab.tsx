@@ -37,13 +37,13 @@ export default function SupplierTab({ product }: Props) {
 
   if (loading) {
     return (
-      <div className="h-48 animate-pulse rounded-3xl border border-slate-200 bg-slate-50" />
+      <div className="h-48 animate-pulse rounded-2xl border border-border bg-muted" />
     );
   }
 
   if (!seller) {
     return (
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-obsidian/50">
         Seller information is not available for this listing.
       </p>
     );
@@ -52,28 +52,28 @@ export default function SupplierTab({ product }: Props) {
   return (
     <div className="space-y-8">
       {/* Supplier Card */}
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="rounded-2xl border border-border bg-white p-8 shadow-sm">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-start gap-5">
-            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-obsidian text-2xl font-bold text-white">
+            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-obsidian text-2xl font-bold text-white">
               {seller.sellerId.slice(-2)}
             </div>
 
             <div>
               <div className="flex flex-wrap items-center gap-3">
-                <h3 className="text-3xl font-bold text-slate-900">
+                <h3 className="text-3xl font-bold text-obsidian">
                   {seller.sellerId}
                 </h3>
 
                 {seller.verified && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-sapphire-soft px-3 py-1 text-sm font-medium text-sapphire-strong">
                     <BadgeCheck className="h-4 w-4" />
                     Verified
                   </span>
                 )}
               </div>
 
-              <div className="mt-4 flex flex-wrap gap-5 text-sm text-slate-600">
+              <div className="mt-4 flex flex-wrap gap-5 text-sm text-obsidian/60">
                 <span className="flex items-center gap-2">
                   <Factory className="h-4 w-4" />
                   {BUSINESS_TYPE_LABELS[seller.businessType] ?? seller.businessType}
@@ -89,13 +89,13 @@ export default function SupplierTab({ product }: Props) {
 
           <Link
             href={`/sellers/${seller.sellerId}`}
-            className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-sapphire hover:text-sapphire"
+            className="rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-obsidian/70 transition hover:border-sapphire hover:text-sapphire"
           >
             View full seller profile
           </Link>
         </div>
 
-        <p className="mt-8 leading-8 text-slate-600">
+        <p className="mt-8 leading-8 text-obsidian/60">
           This listing is sold and fulfilled by a Bulkare-verified supplier
           under protected Seller ID {seller.sellerId}. Bulkare privately
           verifies the legal business behind this account; identity is
@@ -109,7 +109,7 @@ export default function SupplierTab({ product }: Props) {
           {seller.categories.map((category) => (
             <span
               key={category.uuid}
-              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600"
+              className="rounded-full border border-border bg-muted px-3 py-1.5 text-xs font-medium text-obsidian/60"
             >
               {category.name}
             </span>

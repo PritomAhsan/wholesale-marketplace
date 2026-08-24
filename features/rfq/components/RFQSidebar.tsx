@@ -7,7 +7,7 @@ import {
 
 export default function RFQSidebar() {
     return (
-        <aside className="sticky top-24 space-y-4">
+        <aside className="sticky top-20 lg:top-[172px] space-y-4">
 
             <div className="rounded-xl border border-border bg-white p-5">
 

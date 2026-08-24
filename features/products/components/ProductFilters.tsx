@@ -107,7 +107,7 @@ export default function ProductFilters({
       className={
         mobile
           ? ""
-          : "sticky top-24 overflow-hidden rounded-xl border border-border bg-white"
+          : "sticky top-20 lg:top-[172px] overflow-hidden rounded-xl border border-border bg-white"
       }
     >
       {/* Header */}

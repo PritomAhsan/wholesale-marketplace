@@ -1,18 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import {
   FileText,
   ListChecks,
   Building2,
   Star,
 } from "lucide-react";
-
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
 
 import { Product } from "../data/products";
 
@@ -25,79 +19,88 @@ interface Props {
   product: Product;
 }
 
+const SECTIONS = [
+  { id: "description", label: "Description", icon: FileText },
+  { id: "specifications", label: "Specifications", icon: ListChecks },
+  { id: "supplier", label: "Supplier", icon: Building2 },
+  { id: "reviews", label: "Reviews", icon: Star },
+] as const;
+
 export default function ProductTabs({ product }: Props) {
+  const [active, setActive] = useState<string>("description");
+
+  function scrollTo(id: string) {
+    setActive(id);
+    document
+      .getElementById(`product-${id}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
-    <section className="mt-16">
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-        {/* Header */}
-        <div className="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white px-8 py-6">
-          <h2 className="text-2xl font-bold text-slate-900">
+    <section>
+      <div className="rounded-2xl border border-border bg-white shadow-sm">
+        {/* Header — `overflow-hidden` lives here (not on the card wrapper)
+            so the rounded top corners still clip the gradient without
+            turning the wrapper into a sticky-breaking scroll container for
+            the nav below. */}
+        <div className="overflow-hidden rounded-t-2xl border-b border-border bg-gradient-to-r from-sapphire-soft/50 to-white px-8 py-6">
+          <h2 className="text-2xl font-bold text-obsidian">
             Product Information
           </h2>
 
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-obsidian/50">
             Explore product details, specifications, supplier information and
             customer reviews.
           </p>
         </div>
 
-        <Tabs defaultValue="description">
-          {/* Tabs */}
-          <div className="sticky top-16 z-20 border-b border-slate-200 bg-white px-6 py-4">
-            <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-2xl bg-slate-100 p-2 lg:grid-cols-4">
-              <TabsTrigger
-                value="description"
-                className="flex items-center gap-2 rounded-xl"
-              >
-                <FileText className="h-4 w-4" />
-                <span>Description</span>
-              </TabsTrigger>
+        {/* Section nav — jumps to the section below rather than swapping
+            visibility, so a buyer can keep skimming past what they already
+            read instead of losing it behind a tab switch. Not sticky —
+            just sits in normal flow. */}
+        <div className="border-b border-border bg-white px-6 py-4">
+          <div className="grid grid-cols-2 gap-2 rounded-2xl bg-muted p-2 lg:grid-cols-4">
+            {SECTIONS.map((section) => {
+              const Icon = section.icon;
+              const isActive = active === section.id;
 
-              <TabsTrigger
-                value="specifications"
-                className="flex items-center gap-2 rounded-xl"
-              >
-                <ListChecks className="h-4 w-4" />
-                <span>Specifications</span>
-              </TabsTrigger>
+              return (
+                <button
+                  key={section.id}
+                  type="button"
+                  onClick={() => scrollTo(section.id)}
+                  className={`flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition ${
+                    isActive
+                      ? "bg-white text-sapphire shadow-sm"
+                      : "text-obsidian/60 hover:text-obsidian"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{section.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-              <TabsTrigger
-                value="supplier"
-                className="flex items-center gap-2 rounded-xl"
-              >
-                <Building2 className="h-4 w-4" />
-                <span>Supplier</span>
-              </TabsTrigger>
-
-              <TabsTrigger
-                value="reviews"
-                className="flex items-center gap-2 rounded-xl"
-              >
-                <Star className="h-4 w-4" />
-                <span>Reviews</span>
-              </TabsTrigger>
-            </TabsList>
+        {/* Sections */}
+        <div className="divide-y divide-border overflow-hidden rounded-b-2xl">
+          <div id="product-description" className="scroll-mt-24 lg:scroll-mt-[180px] p-6 lg:p-8">
+            <DescriptionTab description={product.description} />
           </div>
 
-          {/* Content */}
-          <div className="p-6 lg:p-8">
-            <TabsContent value="description" className="mt-0">
-              <DescriptionTab description={product.description} />
-            </TabsContent>
-
-            <TabsContent value="specifications" className="mt-0">
-              <SpecificationsTab product={product} />
-            </TabsContent>
-
-            <TabsContent value="supplier" className="mt-0">
-              <SupplierTab product={product} />
-            </TabsContent>
-
-            <TabsContent value="reviews" className="mt-0">
-              <ReviewsTab product={product} />
-            </TabsContent>
+          <div id="product-specifications" className="scroll-mt-24 lg:scroll-mt-[180px] p-6 lg:p-8">
+            <SpecificationsTab product={product} />
           </div>
-        </Tabs>
+
+          <div id="product-supplier" className="scroll-mt-24 lg:scroll-mt-[180px] p-6 lg:p-8">
+            <SupplierTab product={product} />
+          </div>
+
+          <div id="product-reviews" className="scroll-mt-24 lg:scroll-mt-[180px] p-6 lg:p-8">
+            <ReviewsTab product={product} />
+          </div>
+        </div>
       </div>
     </section>
   );

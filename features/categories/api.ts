@@ -27,6 +27,7 @@ function toCategory(item: ApiCategory): Category {
       id: child.id,
       slug: child.slug,
       name: child.name,
+      products: child.products_count,
     })),
   };
 }

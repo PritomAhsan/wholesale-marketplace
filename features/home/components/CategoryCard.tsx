@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { categoryAbbreviation, categoryTint } from "@/features/categories/utils/categoryBadge";
+import { categoryTint } from "@/features/categories/utils/categoryBadge";
+import { categoryIcon } from "@/features/categories/utils/categoryIcon";
 
 interface Props {
   slug: string;
@@ -16,31 +16,33 @@ export default function CategoryCard({
   restricted,
 }: Props) {
   const tint = categoryTint(name);
+  const Icon = categoryIcon(name);
 
   return (
     <Link
       href={`/categories/${slug}`}
-      className="group flex min-w-0 items-start gap-3 rounded-xl border border-border bg-white p-4 transition hover:border-sapphire hover:shadow-sm"
+      className="group flex flex-col items-center gap-3 rounded-2xl border border-border bg-white p-6 text-center transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+      style={{ ["--tint-fg" as string]: tint.fg }}
     >
       <span
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-xs font-bold"
-        style={{ backgroundColor: tint.bg, color: tint.fg }}
+        className="flex h-16 w-16 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-110"
+        style={{ backgroundColor: tint.bg }}
       >
-        {categoryAbbreviation(name)}
+        <Icon className="h-8 w-8" style={{ color: tint.fg }} />
       </span>
 
-      <div className="min-w-0 flex-1">
-        <p className="font-semibold text-obsidian">{name}</p>
+      <div className="min-w-0">
+        <p className="font-bold text-obsidian transition group-hover:text-[var(--tint-fg)]">
+          {name}
+        </p>
         <p
-          className={`mt-0.5 truncate text-xs ${
+          className={`mt-1 line-clamp-1 text-xs ${
             restricted ? "font-medium text-champagne" : "text-obsidian/50"
           }`}
         >
           {restricted ? "Business verification required" : subtitle}
         </p>
       </div>
-
-      <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-obsidian/20 transition group-hover:translate-x-0.5 group-hover:text-sapphire" />
     </Link>
   );
 }

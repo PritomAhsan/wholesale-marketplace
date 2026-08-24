@@ -8,10 +8,12 @@ import Container from "@/components/layout/Container";
 import { AppButton } from "@/components/ui/app-button";
 import { useCart } from "@/features/cart/CartContext";
 import { useAuth } from "@/features/auth/AuthContext";
+import { useToast } from "@/features/notifications/ToastContext";
 
 export default function CartPage() {
   const { itemsBySupplier, count, total, updateQuantity, removeItem } = useCart();
   const { user } = useAuth();
+  const { notify } = useToast();
 
   const supplierGroups = Object.entries(itemsBySupplier);
 
@@ -59,7 +61,7 @@ export default function CartPage() {
                 <div className="space-y-3">
                   {group.items.map((item) => (
                     <div
-                      key={item.productUuid}
+                      key={`${item.productUuid}::${item.variantUuid ?? ""}`}
                       className="flex flex-col gap-3 border-b border-border pb-3 last:border-0 last:pb-0 sm:flex-row sm:items-center"
                     >
                       <Image
@@ -78,6 +80,12 @@ export default function CartPage() {
                           {item.name}
                         </Link>
 
+                        {item.variantLabel && (
+                          <p className="mt-0.5 text-xs font-medium text-sapphire">
+                            {item.variantLabel}
+                          </p>
+                        )}
+
                         <p className="mt-0.5 text-xs text-obsidian/50">
                           ${item.price.toFixed(2)} / unit · MOQ {item.moq}
                         </p>
@@ -89,7 +97,8 @@ export default function CartPage() {
                             onClick={() =>
                               updateQuantity(
                                 item.productUuid,
-                                item.quantity - item.moq
+                                item.quantity - item.moq,
+                                item.variantUuid
                               )
                             }
                             className="flex h-8 w-8 items-center justify-center hover:bg-ivory"
@@ -105,7 +114,8 @@ export default function CartPage() {
                             onClick={() =>
                               updateQuantity(
                                 item.productUuid,
-                                item.quantity + item.moq
+                                item.quantity + item.moq,
+                                item.variantUuid
                               )
                             }
                             className="flex h-8 w-8 items-center justify-center hover:bg-ivory"
@@ -122,7 +132,10 @@ export default function CartPage() {
                         </p>
 
                         <button
-                          onClick={() => removeItem(item.productUuid)}
+                          onClick={() => {
+                            removeItem(item.productUuid, item.variantUuid);
+                            notify(`${item.name} removed from cart`, "remove");
+                          }}
                           className="rounded-lg p-1.5 text-obsidian/30 hover:bg-red-50 hover:text-red-600"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -145,7 +158,7 @@ export default function CartPage() {
             ))}
           </div>
 
-          <aside className="sticky top-24 h-fit rounded-xl border border-border bg-white p-4">
+          <aside className="sticky top-20 lg:top-[172px] h-fit rounded-xl border border-border bg-white p-4">
             <h2 className="text-sm font-bold text-obsidian">Order Summary</h2>
 
             <div className="mt-4 flex items-center justify-between border-t border-dashed border-border pt-4">

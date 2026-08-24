@@ -1,39 +1,67 @@
+import { FileCheck, Lock, ShieldCheck, Tag } from "lucide-react";
+
 import Container from "@/components/layout/Container";
 
 const COMMITMENTS = [
-  { num: 1, eyebrow: "Verified", text: "Privately verified businesses", tone: "sapphire" },
-  { num: 2, eyebrow: "Private", text: "Protected seller identities", tone: "sapphire" },
-  { num: 3, eyebrow: "Clear", text: "Wholesale pricing and MOQs", tone: "champagne" },
-  { num: 4, eyebrow: "Recorded", text: "Secure order records", tone: "sapphire" },
+  {
+    icon: ShieldCheck,
+    eyebrow: "Verified",
+    text: "Privately verified businesses",
+    tone: "champagne",
+  },
+  {
+    icon: Lock,
+    eyebrow: "Private",
+    text: "Protected seller identities",
+    tone: "sapphire",
+  },
+  {
+    icon: Tag,
+    eyebrow: "Clear",
+    text: "Wholesale pricing and MOQs",
+    tone: "champagne",
+  },
+  {
+    icon: FileCheck,
+    eyebrow: "Recorded",
+    text: "Secure order records",
+    tone: "sapphire",
+  },
 ] as const;
 
 export default function AssuranceRail() {
   return (
-    <section className="border-b border-border bg-white py-10">
+    <section className="bg-obsidian py-12">
       <Container>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {COMMITMENTS.map((item) => (
-            <div
-              key={item.num}
-              className="flex items-center gap-4 rounded-xl border border-border p-5"
-            >
-              <span
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white ${
-                  item.tone === "champagne" ? "bg-champagne" : "bg-sapphire"
+        <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          {COMMITMENTS.map((item, i) => {
+            const Icon = item.icon;
+            const tone = item.tone === "champagne" ? "text-champagne" : "text-sapphire-soft";
+            const bg = item.tone === "champagne" ? "bg-champagne/15" : "bg-sapphire-soft/10";
+
+            return (
+              <div
+                key={item.eyebrow}
+                className={`flex items-center gap-4 ${
+                  i > 0 ? "lg:border-l lg:border-white/10 lg:pl-6" : ""
                 }`}
               >
-                {item.num}
-              </span>
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-obsidian/40">
-                  {item.eyebrow}
-                </p>
-                <p className="mt-0.5 text-sm font-semibold text-obsidian">
-                  {item.text}
-                </p>
+                <span
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${bg}`}
+                >
+                  <Icon className={`h-6 w-6 ${tone}`} />
+                </span>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-champagne">
+                    {item.eyebrow}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-white">
+                    {item.text}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Container>
     </section>

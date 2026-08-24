@@ -1,36 +1,60 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { BRANDING } from "@/constants/branding";
 import {
+  ChevronDown,
+  Heart,
   LogOut,
   Menu,
+  Package,
   Search,
+  Settings,
   ShoppingCart,
   User,
-  ChevronDown,
   FileText,
 } from "lucide-react";
 
 import Container from "./Container";
 import MobileMenu from "./MobileMenu";
+import CategoriesMegaMenu from "./CategoriesMegaMenu";
 import { NAVIGATION } from "@/constants/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/features/auth/AuthContext";
 import { useCart } from "@/features/cart/CartContext";
+import { useWishlist } from "@/features/wishlist/WishlistContext";
+import { Category } from "@/features/categories/data/categories";
 
-export default function Navbar() {
+interface Props {
+  categories: Category[];
+}
+
+export default function Navbar({ categories }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading, logout } = useAuth();
   const { count: cartCount } = useCart();
+  const { count: wishlistCount } = useWishlist();
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [mobileSearch, setMobileSearch] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const accountRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (accountRef.current && !accountRef.current.contains(e.target as Node)) {
+        setAccountOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   function handleSearchSubmit(e: FormEvent) {
     e.preventDefault();
@@ -85,15 +109,7 @@ export default function Navbar() {
             onSubmit={handleSearchSubmit}
             className="hidden flex-1 lg:block"
           >
-            <div className="flex h-12 overflow-hidden rounded-xl border border-border bg-white transition-colors duration-200 focus-within:border-sapphire">
-
-              <Link
-                href="/categories"
-                className="flex items-center gap-2 border-r border-border px-5 text-sm font-medium text-obsidian/70 hover:bg-muted"
-              >
-                Categories
-                <ChevronDown className="h-4 w-4" />
-              </Link>
+            <div className="flex h-12 items-center overflow-hidden rounded-xl border-2 border-sapphire/25 bg-white shadow-[0_0_0_4px_var(--sapphire-soft)] transition-shadow focus-within:border-sapphire/50 focus-within:shadow-[0_0_0_4px_var(--sapphire-soft),0_6px_18px_-6px_var(--sapphire)]">
 
               <div className="relative flex-1">
 
@@ -110,8 +126,9 @@ export default function Navbar() {
 
               <button
                 type="submit"
-                className="bg-sapphire px-8 text-sm font-semibold text-white transition-colors hover:bg-sapphire-strong"
+                className="relative m-1 flex h-10 shrink-0 items-center gap-1.5 overflow-hidden rounded-lg bg-gradient-to-l from-sapphire via-sapphire to-sapphire-strong px-6 text-sm font-semibold text-white shadow-md shadow-sapphire/25 transition-all hover:shadow-lg hover:shadow-sapphire/40 before:absolute before:inset-y-0 before:left-0 before:w-1/3 before:skew-x-12 before:-translate-x-[150%] before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:transition-transform before:duration-700 before:ease-out hover:before:translate-x-[350%]"
               >
+                <Search className="h-4 w-4" />
                 Search
               </button>
 
@@ -131,6 +148,19 @@ export default function Navbar() {
             </Link>
 
             <Link
+              href="/wishlist"
+              className="relative rounded-xl p-3 transition hover:bg-muted"
+            >
+              <Heart className="h-5 w-5 text-obsidian/80" />
+
+              {wishlistCount > 0 && (
+                <span className="absolute right-2 top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-sapphire px-1 text-[10px] font-bold text-white">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+
+            <Link
               href="/cart"
               className="relative rounded-xl p-3 transition hover:bg-muted"
             >
@@ -144,21 +174,55 @@ export default function Navbar() {
             </Link>
 
             {!loading && user ? (
-              <div className="ml-2 flex items-center gap-2">
-
-                <div className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-semibold text-obsidian/80">
+              <div ref={accountRef} className="relative ml-2">
+                <button
+                  onClick={() => setAccountOpen((v) => !v)}
+                  className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-semibold text-obsidian/80 transition hover:border-sapphire hover:bg-sapphire-soft"
+                >
                   <User className="h-4 w-4" />
                   {user.first_name}
-                </div>
-
-                <button
-                  onClick={() => logout()}
-                  className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-obsidian/70 transition hover:bg-muted"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Logout
+                  <ChevronDown className="h-3.5 w-3.5 text-obsidian/40" />
                 </button>
 
+                {accountOpen && (
+                  <div className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-border bg-white shadow-xl">
+                    <div className="border-b border-border px-4 py-3">
+                      <p className="truncate text-sm font-semibold text-obsidian">
+                        {user.first_name} {user.last_name}
+                      </p>
+                      <p className="truncate text-xs text-obsidian/50">{user.email}</p>
+                    </div>
+
+                    <Link
+                      href="/orders"
+                      onClick={() => setAccountOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-obsidian/70 transition hover:bg-muted hover:text-sapphire"
+                    >
+                      <Package className="h-4 w-4" />
+                      My Orders
+                    </Link>
+
+                    <Link
+                      href="/account"
+                      onClick={() => setAccountOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-obsidian/70 transition hover:bg-muted hover:text-sapphire"
+                    >
+                      <Settings className="h-4 w-4" />
+                      Account Settings
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        setAccountOpen(false);
+                        logout();
+                      }}
+                      className="flex w-full items-center gap-2.5 border-t border-border px-4 py-2.5 text-left text-sm text-obsidian/70 transition hover:bg-muted"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <>
@@ -173,7 +237,7 @@ export default function Navbar() {
                   href="/register"
                   className="rounded-xl bg-obsidian px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-obsidian-soft"
                 >
-                  Create business account
+                  Register
                 </Link>
               </>
             )}
@@ -242,7 +306,9 @@ export default function Navbar() {
 
             <nav className="flex h-12 items-center gap-8 overflow-x-auto">
 
-              {NAVIGATION.map((item) => (
+              <CategoriesMegaMenu categories={categories} />
+
+              {NAVIGATION.filter((item) => item.href !== "/categories").map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}

@@ -10,10 +10,12 @@ import { Product } from "@/features/products/data/products";
 interface Props {
   newThisWeek: Product[];
   lowMoq: Product[];
+  featured?: Product[];
 }
 
-export default function InventoryLanesTabs({ newThisWeek, lowMoq }: Props) {
+export default function InventoryLanesTabs({ newThisWeek, lowMoq, featured = [] }: Props) {
   const tabs = [
+    { key: "featured", label: "Featured", products: featured, href: "/products?featured=1" },
     { key: "new", label: "New this week", products: newThisWeek, href: "/products?sort=newest" },
     { key: "low-moq", label: "Low MOQ", products: lowMoq, href: "/products?max_moq=5" },
   ].filter((tab) => tab.products.length >= 4);
@@ -52,8 +54,8 @@ export default function InventoryLanesTabs({ newThisWeek, lowMoq }: Props) {
         </Link>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        {activeTab.products.slice(0, 6).map((product) => (
+      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {activeTab.products.slice(0, 8).map((product) => (
           <InventoryCard key={product.uuid} product={product} />
         ))}
       </div>

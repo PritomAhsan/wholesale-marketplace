@@ -292,11 +292,11 @@ export default function ApplicationForm({
           </AppButton>
 
           {step < STEPS.length - 1 ? (
-            <AppButton type="button" onClick={goNext}>
+            <AppButton key="next-button" type="button" onClick={goNext}>
               Next <ChevronRight size={16} className="ml-1" />
             </AppButton>
           ) : (
-            <AppButton type="submit" disabled={submitting} className="px-8">
+            <AppButton key="submit-button" type="submit" disabled={submitting} className="px-8">
               {submitting ? "Submitting..." : "Submit Application"}
             </AppButton>
           )}

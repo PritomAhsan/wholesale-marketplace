@@ -12,6 +12,7 @@ import { useAuth } from "@/features/auth/AuthContext";
 import { useCart } from "@/features/cart/CartContext";
 import { checkout, CheckoutError, ShippingRate } from "@/features/cart/api";
 import { getShippingRates } from "@/features/shipping/api";
+import { COUNTRIES } from "@/lib/countries";
 
 const initialShipping = {
   name: "",
@@ -19,7 +20,7 @@ const initialShipping = {
   address: "",
   city: "",
   state: "",
-  country: "",
+  country: "US",
   postal_code: "",
   notes: "",
 };
@@ -85,6 +86,7 @@ export default function CheckoutPage() {
       },
       items.map((item) => ({
         product_uuid: item.productUuid,
+        product_variant_id: item.variantUuid,
         quantity: item.quantity,
       }))
     ).then((result) => {
@@ -140,6 +142,7 @@ export default function CheckoutPage() {
         token,
         items.map((item) => ({
           product_uuid: item.productUuid,
+          product_variant_id: item.variantUuid,
           quantity: item.quantity,
         })),
         {
@@ -335,12 +338,21 @@ export default function CheckoutPage() {
                     <label className="mb-2 block text-sm font-semibold">
                       Country *
                     </label>
-                    <input
+                    <select
                       required
                       value={shipping.country}
                       onChange={(e) => update("country", e.target.value)}
-                      className="w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-sapphire"
-                    />
+                      className="w-full rounded-xl border border-border bg-white px-4 py-3 outline-none focus:border-sapphire"
+                    >
+                      <option value="" disabled>
+                        Select a country
+                      </option>
+                      {COUNTRIES.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
@@ -463,7 +475,10 @@ export default function CheckoutPage() {
                     label="Address"
                     value={`${shipping.address}, ${shipping.city}${
                       shipping.state ? ", " + shipping.state : ""
-                    }, ${shipping.country}${
+                    }, ${
+                      COUNTRIES.find((c) => c.code === shipping.country)?.name ??
+                      shipping.country
+                    }${
                       shipping.postal_code ? " " + shipping.postal_code : ""
                     }`}
                   />
@@ -495,11 +510,12 @@ export default function CheckoutPage() {
               </AppButton>
 
               {step < STEPS.length - 1 ? (
-                <AppButton type="button" onClick={goNext}>
+                <AppButton key="next-button" type="button" onClick={goNext}>
                   Next <ChevronRight size={16} className="ml-1" />
                 </AppButton>
               ) : (
                 <AppButton
+                  key="place-order-button"
                   type="submit"
                   disabled={submitting}
                   className="px-8"
@@ -522,7 +538,7 @@ export default function CheckoutPage() {
 
                   {group.items.map((item) => (
                     <div
-                      key={item.productUuid}
+                      key={`${item.productUuid}::${item.variantUuid ?? ""}`}
                       className="mt-2 flex items-center gap-3"
                     >
                       <Image
@@ -537,6 +553,9 @@ export default function CheckoutPage() {
                         <p className="line-clamp-1 font-medium text-obsidian">
                           {item.name}
                         </p>
+                        {item.variantLabel && (
+                          <p className="text-xs text-sapphire">{item.variantLabel}</p>
+                        )}
                         <p className="text-obsidian/50">Qty: {item.quantity}</p>
                       </div>
 

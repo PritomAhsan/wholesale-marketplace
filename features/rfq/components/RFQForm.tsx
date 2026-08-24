@@ -433,11 +433,12 @@ export default function RFQForm() {
           </AppButton>
 
           {step < STEPS.length - 1 ? (
-            <AppButton type="button" onClick={goNext}>
+            <AppButton key="next-button" type="button" onClick={goNext}>
               Next <ChevronRight size={16} className="ml-1" />
             </AppButton>
           ) : (
             <AppButton
+              key="submit-button"
               type="submit"
               disabled={status === "submitting"}
               className="px-8"

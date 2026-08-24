@@ -27,11 +27,11 @@ export default function RelatedProducts({
 
         <div>
 
-          <h2 className="text-3xl font-bold">
-            Related Products
+          <h2 className="text-2xl font-bold text-obsidian sm:text-3xl">
+            Other Recommendations
           </h2>
 
-          <p className="mt-2 text-slate-500">
+          <p className="mt-2 text-obsidian/50">
             More products from the same category.
           </p>
 

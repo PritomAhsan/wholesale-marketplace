@@ -1,9 +1,13 @@
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
+
 import Container from "@/components/layout/Container";
 
 import { Product } from "../data/products";
 import { fetchProducts } from "../api";
-import ProductTabs from "../components/ProductTabs";
 import RelatedProducts from "../components/RelatedProducts";
+import SupplierOtherProducts from "../components/SupplierOtherProducts";
+import RecentlyViewedSection from "../components/RecentlyViewedSection";
 import { ProductHero } from "./ProductHero";
 
 interface Props {
@@ -16,32 +20,35 @@ export default async function ProductDetails({
   const { products } = await fetchProducts({ per_page: 8 });
 
   return (
-    <section className="bg-slate-50 py-8">
-
+    <section className="bg-ivory py-8">
       <Container>
-
         {/* Breadcrumb */}
 
-        <div className="mb-8 text-sm text-slate-500">
-          Home / Products /{" "}
-          <span className="font-medium text-slate-900">
-            {product.name}
-          </span>
+        <div className="mb-6 flex items-center gap-1.5 text-sm text-obsidian/50">
+          <Link href="/" className="hover:text-sapphire">
+            Home
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5" />
+          <Link href="/products" className="hover:text-sapphire">
+            Products
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5" />
+          <span className="font-medium text-obsidian">{product.name}</span>
         </div>
 
-        <ProductHero product={product}/> 
+        <ProductHero product={product} />
 
-        <div className="mt-16">
-            <ProductTabs product={product} />
+        {product.sellerId && (
+          <SupplierOtherProducts
+            sellerId={product.sellerId}
+            currentProductUuid={product.uuid}
+          />
+        )}
 
-            <RelatedProducts
-    currentProduct={product}
-    products={products}
-/>
-        </div>
+        <RelatedProducts currentProduct={product} products={products} />
 
+        <RecentlyViewedSection currentProductUuid={product.uuid} />
       </Container>
-
     </section>
   );
 }
