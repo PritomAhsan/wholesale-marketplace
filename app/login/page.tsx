@@ -48,22 +48,22 @@ export default function LoginPage() {
   return (
     <div className="grid min-h-[calc(100vh-74px)] lg:grid-cols-2">
       {/* Brand and value panel */}
-      <div className="hidden flex-col justify-center bg-obsidian px-14 py-16 text-white lg:flex">
+      <div className="hidden flex-col justify-center bg-sapphire-soft px-14 py-16 lg:flex">
         <Image
-          src={BRANDING.logoDark}
+          src={BRANDING.logo}
           alt={BRANDING.siteName}
           width={167}
           height={50}
           className="h-10 w-auto"
         />
 
-        <h1 className="mt-10 max-w-sm text-3xl font-bold leading-tight">
+        <h1 className="mt-10 max-w-sm text-3xl font-bold leading-tight text-obsidian">
           One account for sourcing, quotations and orders.
         </h1>
 
         <ul className="mt-8 space-y-3">
           {BENEFITS.map((b) => (
-            <li key={b} className="flex items-center gap-3 text-sm text-ivory/70">
+            <li key={b} className="flex items-center gap-3 text-sm text-obsidian/70">
               <span className="h-1.5 w-1.5 rounded-full bg-sapphire" />
               {b}
             </li>

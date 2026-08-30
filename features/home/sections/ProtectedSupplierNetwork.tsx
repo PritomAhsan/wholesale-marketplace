@@ -11,7 +11,7 @@ const BUSINESS_TYPE_LABELS: Record<string, string> = {
   retailer: "Retailer",
 };
 
-const AVATAR_TONES = ["bg-obsidian", "bg-champagne", "bg-sapphire"];
+const AVATAR_TONES = ["bg-sapphire", "bg-champagne", "bg-obsidian/70"];
 
 export default async function ProtectedSupplierNetwork() {
   const sellers = await fetchFeaturedSellers();
@@ -47,10 +47,10 @@ export default async function ProtectedSupplierNetwork() {
               <Link
                 key={seller.sellerId}
                 href={`/sellers/${seller.sellerId}`}
-                className={`rounded-xl p-5 transition ${
+                className={`rounded-xl border p-5 transition ${
                   featured
-                    ? "bg-obsidian text-white hover:bg-obsidian-soft"
-                    : "border border-border bg-white hover:border-sapphire"
+                    ? "border-champagne/40 bg-champagne-soft hover:border-champagne"
+                    : "border-border bg-white hover:border-sapphire"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -67,34 +67,34 @@ export default async function ProtectedSupplierNetwork() {
                     >
                       {seller.verified ? "Privately verified" : "Seller"}
                     </p>
-                    <p className={`font-semibold ${featured ? "text-white" : "text-obsidian"}`}>
+                    <p className="font-semibold text-obsidian">
                       Seller {seller.sellerId.replace("BLK-", "")}
                     </p>
                   </div>
                 </div>
 
-                <dl className={`mt-4 space-y-2 border-t pt-3 text-xs ${featured ? "border-white/10" : "border-border"}`}>
+                <dl className={`mt-4 space-y-2 border-t pt-3 text-xs ${featured ? "border-champagne/20" : "border-border"}`}>
                   <div className="flex items-center justify-between">
-                    <dt className={featured ? "text-ivory/40" : "text-obsidian/40"}>Categories</dt>
-                    <dd className={`text-right font-medium ${featured ? "text-white" : "text-obsidian"}`}>
+                    <dt className="text-obsidian/40">Categories</dt>
+                    <dd className="text-right font-medium text-obsidian">
                       {seller.categories.slice(0, 2).map((c) => c.name).join(" · ") || "—"}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
-                    <dt className={featured ? "text-ivory/40" : "text-obsidian/40"}>Type</dt>
-                    <dd className={`font-medium ${featured ? "text-white" : "text-obsidian"}`}>
+                    <dt className="text-obsidian/40">Type</dt>
+                    <dd className="font-medium text-obsidian">
                       {BUSINESS_TYPE_LABELS[seller.businessType] ?? seller.businessType}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
-                    <dt className={featured ? "text-ivory/40" : "text-obsidian/40"}>Fulfillment</dt>
-                    <dd className={`font-medium ${featured ? "text-white" : "text-obsidian"}`}>
+                    <dt className="text-obsidian/40">Fulfillment</dt>
+                    <dd className="font-medium text-obsidian">
                       {seller.fulfillmentRegion ?? "—"}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
-                    <dt className={featured ? "text-ivory/40" : "text-obsidian/40"}>Typical lead</dt>
-                    <dd className={`font-medium ${featured ? "text-white" : "text-obsidian"}`}>
+                    <dt className="text-obsidian/40">Typical lead</dt>
+                    <dd className="font-medium text-obsidian">
                       {seller.typicalLeadTime ?? "—"}
                     </dd>
                   </div>

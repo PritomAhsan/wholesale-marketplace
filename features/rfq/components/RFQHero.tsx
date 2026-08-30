@@ -1,14 +1,14 @@
 export default function RFQHero() {
     return (
-        <section className="bg-obsidian py-12 text-white">
+        <section className="border-b border-border bg-sapphire-soft py-12">
 
             <div className="mx-auto max-w-4xl px-6 text-center">
 
-                <h1 className="text-3xl font-bold">
+                <h1 className="text-3xl font-bold text-obsidian">
                     Request for Quotation
                 </h1>
 
-                <p className="mt-3 text-sm text-ivory/60">
+                <p className="mt-3 text-sm text-obsidian/60">
                     Tell verified suppliers what you need and receive
                     competitive quotations for your business.
                 </p>

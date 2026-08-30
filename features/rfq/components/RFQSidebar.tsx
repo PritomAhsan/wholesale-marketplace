@@ -41,11 +41,11 @@ export default function RFQSidebar() {
 
             </div>
 
-            <div id="how-offers-work" className="rounded-xl bg-obsidian p-5 text-white">
+            <div id="how-offers-work" className="rounded-xl border border-champagne/30 bg-champagne-soft p-5">
                 <p className="text-xs font-semibold uppercase tracking-wide text-champagne">
                     How offers work
                 </p>
-                <ol className="mt-3 space-y-2 text-xs text-ivory/70">
+                <ol className="mt-3 space-y-2 text-xs text-obsidian/70">
                     <li>1. Bulkare reviews the request.</li>
                     <li>2. Matching approved suppliers respond.</li>
                     <li>3. You compare terms and continue securely.</li>

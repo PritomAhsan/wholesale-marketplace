@@ -31,15 +31,15 @@ export default function DealsPage() {
 
   return (
     <>
-      <section className="bg-obsidian py-14 text-white">
+      <section className="border-b border-border bg-champagne-soft py-14">
         <Container>
           <p className="text-xs font-semibold uppercase tracking-widest text-champagne">
             Volume Deals
           </p>
-          <h1 className="mt-3 max-w-2xl text-3xl font-bold sm:text-4xl">
+          <h1 className="mt-3 max-w-2xl text-3xl font-bold text-obsidian sm:text-4xl">
             Transparent, time-bound pricing from verified suppliers.
           </h1>
-          <p className="mt-3 max-w-xl text-sm text-ivory/60">
+          <p className="mt-3 max-w-xl text-sm text-obsidian/60">
             Flash discounts, bulk-quantity price breaks and clearance runs —
             every deal here is authored by an approved supplier, not a
             marketing estimate.

@@ -1,4 +1,5 @@
 import Hero from "@/features/home/sections/Hero";
+import CategoryShowcase from "@/features/home/sections/CategoryShowcase";
 import AssuranceRail from "@/features/home/sections/AssuranceRail";
 // import ShopByNeed from "@/features/home/sections/ShopByNeed";
 import FeaturedCategories from "@/features/home/sections/FeaturedCategories";
@@ -15,6 +16,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <CategoryShowcase />
       <InventoryLanes />
       <AssuranceRail />
       {/* <ShopByNeed /> */}

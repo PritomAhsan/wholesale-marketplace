@@ -31,19 +31,19 @@ const COMMITMENTS = [
 
 export default function AssuranceRail() {
   return (
-    <section className="bg-obsidian py-12">
+    <section className="border-y border-border bg-white py-12">
       <Container>
         <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
           {COMMITMENTS.map((item, i) => {
             const Icon = item.icon;
-            const tone = item.tone === "champagne" ? "text-champagne" : "text-sapphire-soft";
-            const bg = item.tone === "champagne" ? "bg-champagne/15" : "bg-sapphire-soft/10";
+            const tone = item.tone === "champagne" ? "text-champagne" : "text-sapphire";
+            const bg = item.tone === "champagne" ? "bg-champagne-soft" : "bg-sapphire-soft";
 
             return (
               <div
                 key={item.eyebrow}
                 className={`flex items-center gap-4 ${
-                  i > 0 ? "lg:border-l lg:border-white/10 lg:pl-6" : ""
+                  i > 0 ? "lg:border-l lg:border-border lg:pl-6" : ""
                 }`}
               >
                 <span
@@ -55,7 +55,7 @@ export default function AssuranceRail() {
                   <p className="text-[11px] font-bold uppercase tracking-widest text-champagne">
                     {item.eyebrow}
                   </p>
-                  <p className="mt-1 text-sm font-semibold text-white">
+                  <p className="mt-1 text-sm font-semibold text-obsidian">
                     {item.text}
                   </p>
                 </div>

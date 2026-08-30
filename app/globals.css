@@ -56,16 +56,19 @@
 }
 
 :root {
-    /* Brand system: obsidian (authority), sapphire (actions),
-       champagne (premium detail), warm ivory (breathing room). */
-    --obsidian: #14171f;
-    --obsidian-soft: #262b38;
-    --sapphire: #1e3a70;
-    --sapphire-strong: #16294f;
-    --sapphire-soft: #eaf0fa;
-    --champagne: #b8935a;
-    --champagne-soft: #f3e6d0;
-    --ivory: #faf8f3;
+    /* Brand system, retinted to the client's purple/pink reference:
+       obsidian (authority, purple-black undertone), sapphire (actions,
+       now violet), champagne (premium detail, now rose), cool ivory
+       (breathing room). Token names kept as-is so every component that
+       already reads var(--sapphire) etc. re-themes automatically. */
+    --obsidian: #1a1625;
+    --obsidian-soft: #2c2540;
+    --sapphire: #7c3aed;
+    --sapphire-strong: #5b21b6;
+    --sapphire-soft: #f1eafe;
+    --champagne: #ec4899;
+    --champagne-soft: #fce7f3;
+    --ivory: #faf9fe;
 
     --background: var(--ivory);
     --foreground: var(--obsidian);
@@ -77,13 +80,13 @@
     --primary-foreground: #ffffff;
     --secondary: var(--champagne-soft);
     --secondary-foreground: var(--obsidian);
-    --muted: #f1efe7;
-    --muted-foreground: #6b6f7a;
+    --muted: #f4f1fc;
+    --muted-foreground: #6f6b85;
     --accent: var(--sapphire-soft);
     --accent-foreground: var(--sapphire-strong);
     --destructive: oklch(0.577 0.245 27.325);
-    --border: #e4e0d6;
-    --input: #e4e0d6;
+    --border: #e7e1f5;
+    --input: #e7e1f5;
     --ring: var(--sapphire);
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
@@ -157,4 +160,49 @@ body {
 
 ::selection {
   @apply bg-sapphire text-white;
+}
+
+/* Hero background — slow color-shifting wash + drifting blob accents. */
+@keyframes hero-bg-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes hero-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.08); }
+}
+
+@keyframes hero-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-35px, 30px) scale(1.1); }
+}
+
+.hero-animated-bg {
+  background: linear-gradient(
+    120deg,
+    var(--sapphire-soft) 0%,
+    var(--ivory) 25%,
+    var(--champagne-soft) 50%,
+    var(--ivory) 75%,
+    var(--sapphire-soft) 100%
+  );
+  background-size: 300% 300%;
+  animation: hero-bg-shift 18s ease-in-out infinite;
+}
+
+.hero-blob-a {
+  animation: hero-drift-a 14s ease-in-out infinite;
+}
+
+.hero-blob-b {
+  animation: hero-drift-b 16s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-animated-bg,
+  .hero-blob-a,
+  .hero-blob-b {
+    animation: none;
+  }
 }

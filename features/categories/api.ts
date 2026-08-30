@@ -11,6 +11,7 @@ interface ApiCategory {
   children_count: number;
   children?: ApiCategory[];
   products_count: number;
+  max_discount_percent?: number | null;
 }
 
 function toCategory(item: ApiCategory): Category {
@@ -21,6 +22,7 @@ function toCategory(item: ApiCategory): Category {
     image: item.image ?? "/images/product-placeholder.svg",
     description: item.description ?? "",
     products: item.products_count,
+    maxDiscountPercent: item.max_discount_percent ?? null,
     // Supplier counts per category aren't exposed by the API yet.
     suppliers: 0,
     children: (item.children ?? []).map((child) => ({

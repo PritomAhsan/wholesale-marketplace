@@ -387,13 +387,19 @@ export default function ProductQuickView({
 
             {/* Price */}
 
-            <div className="mt-8 rounded-3xl bg-obsidian p-6 text-white shadow-xl">
+            <div
+              className="mt-8 rounded-3xl p-6 shadow-sm"
+              style={{
+                background:
+                  "linear-gradient(135deg, var(--sapphire-soft) 0%, var(--champagne-soft) 100%)",
+              }}
+            >
 
               <div className="flex items-end justify-between">
 
                 <div>
 
-                  <p className="text-sm text-ivory/50">
+                  <p className="text-sm text-obsidian/50">
 
                     Unit Price
 
@@ -401,13 +407,13 @@ export default function ProductQuickView({
 
                   <div className="mt-2 flex items-end gap-2">
 
-                    <span className="text-5xl font-black">
+                    <span className="text-5xl font-black text-obsidian">
 
                       ${product.price.toFixed(2)}
 
                     </span>
 
-                    <span className="pb-2 text-ivory/50">
+                    <span className="pb-2 text-obsidian/50">
 
                       / unit
 
@@ -417,15 +423,15 @@ export default function ProductQuickView({
 
                 </div>
 
-                <div className="rounded-2xl bg-white/10 px-5 py-4 text-center backdrop-blur">
+                <div className="rounded-2xl bg-white/70 px-5 py-4 text-center shadow-sm backdrop-blur">
 
-                  <p className="text-xs uppercase tracking-wider text-ivory/50">
+                  <p className="text-xs uppercase tracking-wider text-obsidian/50">
 
                     MOQ
 
                   </p>
 
-                  <p className="mt-2 text-3xl font-black">
+                  <p className="mt-2 text-3xl font-black text-obsidian">
 
                     {product.moq}
 

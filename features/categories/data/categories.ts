@@ -6,5 +6,6 @@ export interface Category {
   description: string;
   suppliers: number;
   products: number;
+  maxDiscountPercent: number | null;
   children: { id: number; slug: string; name: string; products: number }[];
 }

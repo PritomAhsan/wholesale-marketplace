@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { BRANDING } from "@/constants/branding";
 import {
   ChevronDown,
+  Globe,
   Heart,
   LogOut,
   Menu,
@@ -15,7 +16,6 @@ import {
   Settings,
   ShoppingCart,
   User,
-  FileText,
 } from "lucide-react";
 
 import Container from "./Container";
@@ -73,12 +73,12 @@ export default function Navbar({ categories }: Props) {
 
         {/* Row 1 — commercial message */}
 
-        <div className="hidden bg-obsidian text-ivory/90 lg:block">
+        <div className="hidden border-b border-border bg-sapphire-soft text-obsidian/70 lg:block">
           <Container className="flex h-9 items-center justify-between text-xs">
             <p>Private wholesale sourcing for qualified businesses.</p>
             <Link
               href="/products"
-              className="font-medium text-champagne transition hover:text-champagne-soft"
+              className="font-medium text-sapphire transition hover:text-sapphire-strong"
             >
               Explore the marketplace
             </Link>
@@ -139,13 +139,18 @@ export default function Navbar({ categories }: Props) {
 
           <div className="hidden items-center gap-2 lg:flex">
 
-            <Link
-              href="/rfq"
-              className="flex h-11 items-center gap-2 rounded-xl bg-sapphire px-5 text-sm font-semibold text-white transition-colors hover:bg-sapphire-strong"
+            {/* Decorative for now — no ship-to region logic exists yet
+                anywhere downstream (checkout, rates, catalog). Styled as
+                inert rather than a fake-functional dropdown so it doesn't
+                promise a feature that isn't there. */}
+            <span
+              title="Ship-to region selection is coming soon"
+              className="flex cursor-default items-center gap-1.5 rounded-xl px-3 py-2.5 text-sm text-obsidian/50"
             >
-              <FileText className="h-4 w-4" />
-              Get Quotes
-            </Link>
+              <Globe className="h-4 w-4 text-obsidian/40" />
+              <span className="hidden xl:inline">Ship to</span>
+              <span className="font-semibold text-obsidian/70">USA</span>
+            </span>
 
             <Link
               href="/wishlist"
@@ -225,21 +230,12 @@ export default function Navbar({ categories }: Props) {
                 )}
               </div>
             ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="ml-2 rounded-xl border border-border px-5 py-2.5 text-sm font-semibold transition hover:border-sapphire hover:bg-sapphire-soft"
-                >
-                  Login
-                </Link>
-
-                <Link
-                  href="/register"
-                  className="rounded-xl bg-obsidian px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-obsidian-soft"
-                >
-                  Register
-                </Link>
-              </>
+              <Link
+                href="/login"
+                className="ml-2 rounded-xl bg-gradient-to-l from-sapphire via-sapphire to-sapphire-strong px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-sapphire/25 transition-all hover:shadow-lg hover:shadow-sapphire/40"
+              >
+                Sign in
+              </Link>
             )}
 
           </div>

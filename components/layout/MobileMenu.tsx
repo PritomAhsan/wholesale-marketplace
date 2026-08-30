@@ -102,12 +102,12 @@ export default function MobileMenu({
 
         {/* Header */}
 
-        <div className="border-b border-obsidian-soft bg-obsidian px-6 py-6 text-white">
+        <div className="border-b border-border bg-sapphire-soft px-6 py-6">
 
           <div className="mb-6 flex items-center justify-between">
 
             <Image
-              src={BRANDING.logoDark}
+              src={BRANDING.logo}
               alt={BRANDING.siteName}
               width={150}
               height={45}
@@ -116,7 +116,7 @@ export default function MobileMenu({
 
             <button
               onClick={onClose}
-              className="rounded-xl p-2 transition hover:bg-white/10"
+              className="rounded-xl p-2 text-obsidian transition hover:bg-white/60"
             >
               <X className="h-5 w-5" />
             </button>
@@ -127,7 +127,7 @@ export default function MobileMenu({
 
           <form
             onSubmit={handleSearchSubmit}
-            className="flex h-12 w-full items-center rounded-xl bg-white px-4 shadow-lg"
+            className="flex h-12 w-full items-center rounded-xl border border-border bg-white px-4 shadow-sm"
           >
             <Search className="mr-3 h-5 w-5 shrink-0 text-muted-foreground" />
 

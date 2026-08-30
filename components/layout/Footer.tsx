@@ -75,7 +75,7 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="border-l-4 border-champagne bg-obsidian text-ivory/70">
+    <footer className="border-l-4 border-champagne border-t border-border bg-white text-obsidian/70">
       <Container>
 
         <div className="grid gap-10 py-14 lg:grid-cols-12">
@@ -86,7 +86,7 @@ export default function Footer() {
 
             <Link href="/" className="inline-flex items-center gap-2">
               <Image
-                src={BRANDING.logoDark}
+                src={BRANDING.logo}
                 alt={BRANDING.siteName}
                 width={167}
                 height={50}
@@ -94,7 +94,7 @@ export default function Footer() {
               />
             </Link>
 
-            <p className="mt-4 text-sm leading-6 text-ivory/60">
+            <p className="mt-4 text-sm leading-6 text-obsidian/60">
               A controlled B2B marketplace for wholesale discovery, quotation
               and purchasing between qualified buyers and privately verified
               suppliers.
@@ -137,12 +137,12 @@ export default function Footer() {
 
         {/* Legal bar */}
 
-        <div className="border-t border-white/10 py-6">
+        <div className="border-t border-border py-6">
 
-          <div className="flex flex-wrap gap-4 text-xs text-ivory/50">
+          <div className="flex flex-wrap gap-4 text-xs text-obsidian/50">
             {legalLinks.map((item, i) => (
               <span key={item.name} className="flex items-center gap-4">
-                {i > 0 && <span className="text-ivory/20">·</span>}
+                {i > 0 && <span className="text-obsidian/20">·</span>}
                 <Link href={item.href} className="transition hover:text-champagne">
                   {item.name}
                 </Link>
@@ -152,13 +152,13 @@ export default function Footer() {
 
           <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-            <p className="text-xs text-ivory/40">
+            <p className="text-xs text-obsidian/40">
               © {BRANDING.shortName}. Verified legal business details and
               monitored support contact.
             </p>
 
             <div className="flex items-center gap-4">
-              <span className="text-xs font-medium text-ivory/40">
+              <span className="text-xs font-medium text-obsidian/40">
                 US / USD / EN
               </span>
 
@@ -167,7 +167,7 @@ export default function Footer() {
                   <Link
                     key={index}
                     href={href}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 transition hover:border-champagne hover:text-champagne"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-border transition hover:border-champagne hover:text-champagne"
                   >
                     <Icon size={13} />
                   </Link>

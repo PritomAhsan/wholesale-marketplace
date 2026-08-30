@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight, Package, Search, ShieldCheck, Truck } from "lucide-react";
 
 import { AppButton } from "@/components/ui/app-button";
 
@@ -12,7 +12,14 @@ const MODES = [
   { key: "rfq", label: "RFQ" },
 ] as const;
 
-const POPULAR = ["Water", "Energy drinks", "Store supplies", "Low MOQ"];
+// Only claims the platform can actually back today — no "secure payments"
+// badge, since checkout doesn't collect real payment yet (Phase 14 is still
+// pending a gateway).
+const TRUST_ITEMS = [
+  { icon: ShieldCheck, label: "Verified suppliers" },
+  { icon: Package, label: "Real wholesale MOQs" },
+  { icon: Truck, label: "Live order tracking" },
+] as const;
 
 export default function HeroSearchPanel() {
   const router = useRouter();
@@ -34,10 +41,6 @@ export default function HeroSearchPanel() {
     );
   }
 
-  function handlePopular(term: string) {
-    router.push(`/products?search=${encodeURIComponent(term)}`);
-  }
-
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sapphire">
@@ -47,11 +50,6 @@ export default function HeroSearchPanel() {
       <h1 className="mt-3 text-3xl font-bold leading-tight tracking-tight text-obsidian md:text-4xl">
         Restock your business with greater control.
       </h1>
-
-      <p className="mt-3 max-w-lg text-sm leading-6 text-obsidian/60">
-        Discover wholesale inventory, compare case economics and request
-        qualified offers from privately verified suppliers.
-      </p>
 
       <div className="mt-5 flex shrink-0 items-center gap-1">
         {MODES.map((m) => (
@@ -92,7 +90,7 @@ export default function HeroSearchPanel() {
 
           <button
             type="submit"
-            className="relative m-1.5 flex h-11 shrink-0 items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-l from-sapphire via-sapphire to-sapphire-strong px-6 text-sm font-semibold text-white shadow-md shadow-sapphire/25 transition-all hover:shadow-lg hover:shadow-sapphire/40 before:absolute before:inset-y-0 before:left-0 before:w-1/3 before:skew-x-12 before:-translate-x-[150%] before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:transition-transform before:duration-700 before:ease-out hover:before:translate-x-[350%]"
+            className="relative m-1.5 flex h-11 shrink-0 items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-sapphire to-champagne px-6 text-sm font-semibold text-white shadow-md shadow-sapphire/25 transition-all hover:shadow-lg hover:shadow-sapphire/40 before:absolute before:inset-y-0 before:left-0 before:w-1/3 before:skew-x-12 before:-translate-x-[150%] before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:transition-transform before:duration-700 before:ease-out hover:before:translate-x-[350%]"
           >
             <Search className="h-4 w-4" />
             {mode === "rfq" ? "Start" : "Search"}
@@ -100,18 +98,15 @@ export default function HeroSearchPanel() {
         </div>
       </form>
 
-      <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-obsidian/30">
-          Popular
-        </span>
-        {POPULAR.map((term) => (
-          <button
-            key={term}
-            onClick={() => handlePopular(term)}
-            className="rounded-full border border-border px-3 py-1 text-xs font-medium text-obsidian/60 transition hover:border-sapphire hover:text-sapphire"
+      <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+        {TRUST_ITEMS.map(({ icon: Icon, label }) => (
+          <span
+            key={label}
+            className="flex items-center gap-1.5 text-xs font-medium text-obsidian/60"
           >
-            {term}
-          </button>
+            <Icon className="h-4 w-4 text-sapphire" />
+            {label}
+          </span>
         ))}
       </div>
 

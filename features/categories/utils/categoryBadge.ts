@@ -1,10 +1,10 @@
 const TINTS = [
-  { bg: "#eaf0fa", fg: "#1e3a70" }, // sapphire tint
-  { bg: "#f3e6d0", fg: "#8a6a34" }, // champagne tint
-  { bg: "#f3e6ee", fg: "#8a3a63" }, // rose tint
-  { bg: "#e9e6f5", fg: "#4a3a8a" }, // violet tint
-  { bg: "#e2f2ee", fg: "#1f6b57" }, // teal tint
-  { bg: "#f3ece0", fg: "#8a5a2a" }, // tan tint
+  { bg: "#f1eafe", fg: "#7c3aed" }, // sapphire tint
+  { bg: "#fce7f3", fg: "#ec4899" }, // champagne tint
+  { bg: "#ede9fe", fg: "#5b21b6" }, // deep violet tint
+  { bg: "#e0e7ff", fg: "#4338ca" }, // indigo tint
+  { bg: "#fae8ff", fg: "#a21caf" }, // magenta tint
+  { bg: "#f3e8ff", fg: "#7e22ce" }, // plum tint
 ];
 
 function hashString(value: string): number {

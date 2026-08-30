@@ -7,11 +7,11 @@ export default function BuyerSupplierCTA() {
     <section className="py-16">
       <Container>
         <div className="grid gap-6 sm:grid-cols-2">
-          <div className="rounded-2xl bg-obsidian p-8 text-white">
-            <h3 className="text-lg font-semibold">
+          <div className="rounded-2xl border border-sapphire/20 bg-sapphire-soft p-8">
+            <h3 className="text-lg font-semibold text-obsidian">
               Strengthen your inventory pipeline
             </h3>
-            <p className="mt-2 text-sm text-ivory/60">
+            <p className="mt-2 text-sm text-obsidian/60">
               Explore wholesale inventory from privately verified suppliers.
             </p>
             <Link href="/products" className="mt-5 inline-block">

@@ -17,6 +17,7 @@ export interface HomeCategory {
   name: string;
   subtitle: string;
   restricted: boolean;
+  maxDiscountPercent: number | null;
 }
 
 export async function fetchFeaturedCategories(): Promise<HomeCategory[]> {
@@ -30,6 +31,7 @@ export async function fetchFeaturedCategories(): Promise<HomeCategory[]> {
       category.description ||
       `${category.products.toLocaleString()} products available`,
     restricted: RESTRICTED_CATEGORY_SLUGS.includes(category.slug),
+    maxDiscountPercent: category.maxDiscountPercent,
   }));
 }
 
