@@ -126,7 +126,7 @@ export default function Navbar({ categories }: Props) {
 
               <button
                 type="submit"
-                className="relative m-1 flex h-10 shrink-0 items-center gap-1.5 overflow-hidden rounded-lg bg-gradient-to-l from-sapphire via-sapphire to-sapphire-strong px-6 text-sm font-semibold text-white shadow-md shadow-sapphire/25 transition-all hover:shadow-lg hover:shadow-sapphire/40 before:absolute before:inset-y-0 before:left-0 before:w-1/3 before:skew-x-12 before:-translate-x-[150%] before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:transition-transform before:duration-700 before:ease-out hover:before:translate-x-[350%]"
+                className="relative m-1 flex h-10 shrink-0 items-center gap-1.5 overflow-hidden rounded-lg bg-gradient-to-l from-cta via-cta to-cta-strong px-6 text-sm font-semibold text-white shadow-md shadow-cta/25 transition-all hover:shadow-lg hover:shadow-cta/40 before:absolute before:inset-y-0 before:left-0 before:w-1/3 before:skew-x-12 before:-translate-x-[150%] before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:transition-transform before:duration-700 before:ease-out hover:before:translate-x-[350%]"
               >
                 <Search className="h-4 w-4" />
                 Search
@@ -232,7 +232,7 @@ export default function Navbar({ categories }: Props) {
             ) : (
               <Link
                 href="/login"
-                className="ml-2 rounded-xl bg-gradient-to-l from-sapphire via-sapphire to-sapphire-strong px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-sapphire/25 transition-all hover:shadow-lg hover:shadow-sapphire/40"
+                className="ml-2 rounded-xl bg-gradient-to-l from-cta via-cta to-cta-strong px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-cta/25 transition-all hover:shadow-lg hover:shadow-cta/40"
               >
                 Sign in
               </Link>

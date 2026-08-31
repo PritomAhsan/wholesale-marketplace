@@ -169,7 +169,7 @@ export default function ProductInfo({
       {/* Actions */}
       <div className="flex flex-wrap gap-3">
         <AppButton
-          variant="secondary"
+          variant="primary"
           onClick={() =>
             router.push(
               `/rfq?product=${encodeURIComponent(product.name)}&quantity=${effectiveMoq}`

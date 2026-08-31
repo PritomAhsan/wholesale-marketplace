@@ -69,7 +69,7 @@ export default function SearchInput({
 
           <button
             type="submit"
-            className="h-9 rounded-xl bg-sapphire px-7 text-sm font-semibold text-white transition-colors hover:bg-sapphire-strong"
+            className="h-9 rounded-xl bg-cta px-7 text-sm font-semibold text-white transition-colors hover:bg-cta-strong"
           >
             Search
           </button>

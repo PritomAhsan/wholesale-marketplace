@@ -9,7 +9,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-gradient-to-l from-sapphire via-sapphire to-sapphire-strong text-white shadow-md shadow-sapphire/25 hover:shadow-lg hover:shadow-sapphire/40 hover:-translate-y-0.5 before:absolute before:inset-y-0 before:left-0 before:w-1/3 before:skew-x-12 before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:-translate-x-[150%] hover:before:translate-x-[350%] before:transition-transform before:duration-700 before:ease-out",
+          "bg-gradient-to-l from-cta via-cta to-cta-strong text-white shadow-md shadow-cta/25 hover:shadow-lg hover:shadow-cta/40 hover:-translate-y-0.5 before:absolute before:inset-y-0 before:left-0 before:w-1/3 before:skew-x-12 before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:-translate-x-[150%] hover:before:translate-x-[350%] before:transition-transform before:duration-700 before:ease-out",
 
         secondary:
           "border border-border bg-white text-obsidian hover:bg-muted hover:-translate-y-0.5",

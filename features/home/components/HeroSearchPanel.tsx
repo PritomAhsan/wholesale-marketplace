@@ -90,7 +90,7 @@ export default function HeroSearchPanel() {
 
           <button
             type="submit"
-            className="relative m-1.5 flex h-11 shrink-0 items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-sapphire to-champagne px-6 text-sm font-semibold text-white shadow-md shadow-sapphire/25 transition-all hover:shadow-lg hover:shadow-sapphire/40 before:absolute before:inset-y-0 before:left-0 before:w-1/3 before:skew-x-12 before:-translate-x-[150%] before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:transition-transform before:duration-700 before:ease-out hover:before:translate-x-[350%]"
+            className="relative m-1.5 flex h-11 shrink-0 items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-l from-cta via-cta to-cta-strong px-6 text-sm font-semibold text-white shadow-md shadow-cta/25 transition-all hover:shadow-lg hover:shadow-cta/40 before:absolute before:inset-y-0 before:left-0 before:w-1/3 before:skew-x-12 before:-translate-x-[150%] before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:transition-transform before:duration-700 before:ease-out hover:before:translate-x-[350%]"
           >
             <Search className="h-4 w-4" />
             {mode === "rfq" ? "Start" : "Search"}
